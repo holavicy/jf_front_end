@@ -62,7 +62,23 @@ const frameIn = [
   plugins,
   charts,
   components,
-  business
+  business,
+  {
+    path: '/jf',
+    redirect: { name: 'jf' },
+    component: layoutHeaderAside,
+    children: [
+      {
+        path: 'index',
+        name: 'index',
+        meta: {
+          title: '积分看板',
+          auth: true
+        },
+        component: _import('jf/staff/index')
+      }
+    ]
+  }
 ]
 
 /**

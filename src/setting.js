@@ -9,7 +9,7 @@ export default {
   },
   // 侧边栏默认配置
   menu: {
-    asideCollapse: false,
+    asideCollapse: true,
     asideTransition: true
   },
   // 在读取持久化数据失败时默认页面

@@ -15,6 +15,9 @@ import demoD2Crud from './modules/demo-d2-crud'
 // 第三方网页
 import demoFrame from './modules/demo-frame'
 
+// 积分管理系统菜单
+import jfStaff from './modules/jf-staff'
+
 /**
  * @description 给菜单数据补充上 path 字段
  * @description https://github.com/d2-projects/d2-admin/issues/209
@@ -32,13 +35,44 @@ function supplementPath (menu) {
 
 // 菜单 侧边栏
 export const menuAside = supplementPath([
-  demoComponents,
-  demoPlugins,
-  demoCharts,
-  demoPlayground,
-  demoBusiness,
-  demoD2Crud,
-  demoFrame
+  {
+    path: '/jf/index',
+    title: '我的积分',
+    icon: 'home'
+  },
+  {
+    path: '/index',
+    title: '积分兑换',
+    icon: 'home'
+  },
+  {
+    path: '/index',
+    title: '积分汇总',
+    icon: 'home'
+  },
+  {
+    path: '/index',
+    title: '兑换中心',
+    icon: 'home'
+  },
+  {
+    path: '/index',
+    title: '积分活动',
+    icon: 'home'
+  },
+  {
+    path: '/index',
+    title: '统计看板',
+    icon: 'home'
+  },
+  // demoComponents,
+  // demoPlugins,
+  // demoCharts,
+  // demoPlayground,
+  // demoBusiness,
+  // demoD2Crud,
+  // demoFrame,
+  jfStaff
 ])
 
 // 菜单 顶栏

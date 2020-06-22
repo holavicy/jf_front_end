@@ -64,7 +64,6 @@ router.beforeEach(async (to, from, next) => {
             corpId: corpId, // 企业id
             onSuccess: (info) => {
               const code = info.code // 通过该免登授权码可以获取用户身份
-              util.cookies.set('code', code)
               api.DING_LOGIN(code, corpId)
                 .then(async (res) => {
                   util.cookies.set('uuid', res.userId)
