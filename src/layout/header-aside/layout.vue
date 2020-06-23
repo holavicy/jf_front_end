@@ -50,9 +50,15 @@
           <transition name="fade-scale">
             <div v-if="!searchActive" class="d2-theme-container-main-layer" flex="dir:top">
               <!-- tab -->
-              <!-- <div class="d2-theme-container-main-header" flex-box="0">
-                <d2-tabs/>
-              </div> -->
+              <div class="d2-theme-container-main-header" flex-box="0">
+                <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+                  <el-menu-item index="1">积分看板</el-menu-item>
+                  <el-menu-item index="2">A分明细</el-menu-item>
+                  <el-menu-item index="3">B管理积分明细</el-menu-item>
+                  <el-menu-item index="4">B固定积分</el-menu-item>
+                  <el-menu-item index="5">积分活动</el-menu-item>
+                </el-menu>
+              </div>
               <!-- 页面 -->
               <div class="d2-theme-container-main-body" flex-box="1">
                 <transition :name="transitionActive ? 'fade-transverse' : ''">
@@ -90,7 +96,8 @@ export default {
       // [侧边栏宽度] 正常状态
       asideWidth: '180px',
       // [侧边栏宽度] 折叠状态
-      asideWidthCollapse: '65px'
+      asideWidthCollapse: '65px',
+      activeIndex: '1'
     }
   },
   computed: {
@@ -122,6 +129,13 @@ export default {
      */
     handleToggleAside () {
       this.asideCollapseToggle()
+    },
+
+    /**
+     * 点击
+     */
+    handleSelect (key, keyPath) {
+      console.log(key, keyPath)
     }
   }
 }
