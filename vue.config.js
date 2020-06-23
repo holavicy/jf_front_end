@@ -37,14 +37,20 @@ module.exports = {
   publicPath,
   lintOnSave: true,
   devServer: {
-  publicPath, // 和 publicPath 保持一致
-    disableHostCheck: process.env.NODE_ENV === 'development' ,// 关闭 host check，方便使用 ngrok 之类的内网转发工具
-  proxy: {
-    '/api': {
-        target: 'http://127.0.0.1:8082'
+  // publicPath, // 和 publicPath 保持一致
+  // disableHostCheck: process.env.NODE_ENV === 'development' ,// 关闭 host check，方便使用 ngrok 之类的内网转发工具
+    proxy: {
+      '/api': {
+          target: 'http://127.0.0.1:8082/jf',
+          ws: true,
+          changeOrigin: true,
+          pathRewrite: {
+            '^/api': ''
+          }
+      },
+      
     }
-}
-},
+  },
   css: {
     loaderOptions: {
       // 设置 scss 公用变量文件
