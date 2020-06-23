@@ -1,23 +1,5 @@
 import { uniqueId } from 'lodash'
 
-// 插件
-import demoPlugins from './modules/demo-plugins'
-// 组件
-import demoComponents from './modules/demo-components'
-// 组件
-import demoCharts from './modules/demo-charts'
-// 试验台
-import demoPlayground from './modules/demo-playground'
-// 示例
-import demoBusiness from './modules/demo-business'
-// CRUD
-import demoD2Crud from './modules/demo-d2-crud'
-// 第三方网页
-import demoFrame from './modules/demo-frame'
-
-// 积分管理系统菜单
-import jfStaff from './modules/jf-staff'
-
 /**
  * @description 给菜单数据补充上 path 字段
  * @description https://github.com/d2-projects/d2-admin/issues/209
@@ -36,43 +18,35 @@ function supplementPath (menu) {
 // 菜单 侧边栏
 export const menuAside = supplementPath([
   {
-    path: '/jf/index',
+    path: '/jf/myJF',
     title: '我的积分',
-    icon: 'home'
+    icon: 'tachometer'
   },
   {
-    path: '/index',
+    path: '/jf/JFChange',
     title: '积分兑换',
-    icon: 'home'
+    icon: 'credit-card'
   },
   {
-    path: '/index',
+    path: '/jf/JFSummary',
     title: '积分汇总',
-    icon: 'home'
+    icon: 'file-text-o'
   },
   {
-    path: '/index',
+    path: '/jf/JFExchangeConfig',
     title: '兑换中心',
-    icon: 'home'
+    icon: 'gear'
   },
   {
-    path: '/index',
+    path: '/jf/activity',
     title: '积分活动',
-    icon: 'home'
+    icon: 'audio-description'
   },
   {
-    path: '/index',
+    path: '/jf/charts',
     title: '统计看板',
-    icon: 'home'
-  },
-  // demoComponents,
-  // demoPlugins,
-  // demoCharts,
-  // demoPlayground,
-  // demoBusiness,
-  // demoD2Crud,
-  // demoFrame,
-  jfStaff
+    icon: 'pie-chart'
+  }
 ])
 
 // 菜单 顶栏
@@ -86,11 +60,6 @@ export const menuHeader = supplementPath([
     title: '功能',
     icon: 'puzzle-piece',
     children: [
-      demoD2Crud,
-      demoComponents,
-      demoCharts,
-      demoPlugins,
-      demoFrame,
       {
         title: '新窗口打开链接',
         icon: 'link',
@@ -104,7 +73,5 @@ export const menuHeader = supplementPath([
         ]
       }
     ]
-  },
-  demoPlayground,
-  demoBusiness
+  }
 ])

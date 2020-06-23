@@ -69,13 +69,58 @@ const frameIn = [
     component: layoutHeaderAside,
     children: [
       {
-        path: 'index',
-        name: 'index',
+        path: 'myJF',
+        name: 'myJF',
         meta: {
           title: '积分看板',
           auth: true
         },
         component: _import('jf/staff/index')
+      },
+      {
+        path: 'JFChange',
+        name: 'JFChange',
+        meta: {
+          title: '积分兑换',
+          auth: true
+        },
+        component: _import('jf/exchange/index')
+      },
+      {
+        path: 'JFSummary',
+        name: 'JFSummary',
+        meta: {
+          title: '积分汇总',
+          auth: true
+        },
+        component: _import('jf/admin/index')
+      },
+      {
+        path: 'JFExchangeConfig',
+        name: 'JFExchangeConfig',
+        meta: {
+          title: '兑换中心',
+          auth: true
+        },
+        component: _import('jf/exchange/index')
+      },
+      {
+        path: 'activity',
+        name: 'activity',
+        meta: {
+          title: '积分活动',
+          auth: true
+        },
+        component: _import('jf/activity/index')
+      },
+      {
+        path: 'charts',
+        name: 'charts',
+        meta: {
+          title: '统计看板',
+          auth: true
+        },
+        component: _import('jf/charts/index')
       }
     ]
   }

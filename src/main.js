@@ -23,8 +23,6 @@ new Vue({
   created () {
     // 处理路由 得到每一级的路由设置
     this.$store.commit('d2admin/page/init', frameInRoutes)
-    // 设置顶栏菜单
-    // this.$store.commit('d2admin/menu/headerSet', menuHeader)
     // 设置侧栏菜单
     this.$store.commit('d2admin/menu/asideSet', menuAside)
     // 初始化菜单搜索功能
