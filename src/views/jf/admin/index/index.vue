@@ -1,3 +1,5 @@
 <template>
-    <div>积分汇总管理员首页</div>
+    <d2-container class="page">
+        积分管理员首页
+    </d2-container>
 </template>

@@ -8,6 +8,8 @@ export default {
     header: [],
     // 侧栏菜单
     aside: [],
+    // 顶部tab
+    topTab: [],
     // 侧边栏收缩
     asideCollapse: setting.menu.asideCollapse,
     // 侧边栏折叠动画
@@ -110,6 +112,15 @@ export default {
     asideSet (state, menu) {
       // store 赋值
       state.aside = menu
+    },
+    /**
+     * @description 设置顶部tab菜单
+     * @param {Object} state state
+     * @param {Array} menu menu setting
+     */
+    topTabSet (state, menu) {
+      // store 赋值
+      state.topTab = menu
     }
   }
 }

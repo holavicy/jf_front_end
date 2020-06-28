@@ -50,15 +50,9 @@
           <transition name="fade-scale">
             <div v-if="!searchActive" class="d2-theme-container-main-layer" flex="dir:top">
               <!-- tab -->
-              <div class="d2-theme-container-main-header header" flex-box="0">
-                <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
-                  <el-menu-item index="1">积分看板</el-menu-item>
-                  <el-menu-item index="2">A分明细</el-menu-item>
-                  <el-menu-item index="3">B管理积分明细</el-menu-item>
-                  <el-menu-item index="4">B固定积分</el-menu-item>
-                  <el-menu-item index="5">积分活动</el-menu-item>
-                </el-menu>
-              </div>
+              <!-- <div class="d2-theme-container-main-header header" flex-box="0">
+                <container-header/>
+              </div> -->
               <!-- 页面 -->
               <div class="d2-theme-container-main-body" flex-box="1">
                 <transition :name="transitionActive ? 'fade-transverse' : ''">
@@ -145,9 +139,7 @@ export default {
 // 注册主题
 @import '~@/assets/style/theme/register.scss';
 
-.header{
-  & >>> .el-menu{
-    background: red;
-  }
+.header >>> .el-menu{
+    background-color: red;
 }
 </style>
