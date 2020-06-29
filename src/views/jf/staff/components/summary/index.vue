@@ -4,10 +4,24 @@
             <div class="top">
                 <div class="sum-item-small" v-for="(item, index) in sumItemSmall" :key="index">
                     <div class="item-top">
-                        <d2-icon name="bar-chart" :style="{color: item.color,opacity: item.opacity, fontSize: '50px'}"/>
+                        <span class="icon iconfont icon-data" :style="{color: item.color, opacity: item.opacity}">&#xe65c;</span>
+
                         <div>
-                            <p>{{item.num}}</p>
-                            <p>{{item.title}}</p>
+                            <p class="num" :style="{color: item.color, opacity: item.opacity}">{{item.num}}</p>
+                            <p class="title">{{item.title}}</p>
+                        </div>
+                    </div>
+                    <p class="info">{{item.info}}</p>
+                </div>
+            </div>
+            <div class="center">
+              <div class="sum-item-big" v-for="(item, index) in sumItemBig" :key="index">
+                    <div class="item-top">
+                        <span class="icon iconfont icon-data" :style="{color: item.color, opacity: item.opacity}">&#xe65c;</span>
+
+                        <div>
+                            <p class="num" :style="{color: item.color, opacity: item.opacity}">{{item.num}}</p>
+                            <p class="title">{{item.title}}</p>
                         </div>
                     </div>
                     <p class="info">{{item.info}}</p>
@@ -18,21 +32,21 @@
             </div>
         </div>
         <div class="activities-box">
-            <input type="file" ref="file"  @change="importFile">
-            <button @click="importFile">上传</button>
+            <!-- <input type="file" ref="file"  @change="importFile">
+            <button @click="importFile">上传</button> -->
             <!-- <progress-bar class="progress-bar" :uploadPercent="uploadPercent" @cancelRequest="cancelRequest"></progress-bar> -->
         </div>
     </div>
 </template>
 
 <script>
-import ProgressBar from '@/components/ProgressBar.vue'
+// import ProgressBar from '@/components/ProgressBar.vue'
 import axios from 'axios'
 export default {
   name: 'summary-index',
-  components: {
-    ProgressBar
-  },
+  // components: {
+  //   ProgressBar
+  // },
   data () {
     return {
       sumItemSmall: [
@@ -69,6 +83,22 @@ export default {
           info: '固定积分=职务积分+职称积分+学历积分+工龄积分',
           num: 2167,
           color: '#EB111D',
+          opacity: 1
+        }
+      ],
+      sumItemBig: [
+        {
+          title: '年度累计积分',
+          info: '1. 年度累计积分=年度固定积分+年度管理积分\n2. 年度累计积分将作为年度评比、评级、评优等的参考依据\n3. 如果年度累计积分为零甚至为负值时，由人力资源部约谈，提出整改意见，并可与员工所在部门共同制定相应培训计划，促其改进。',
+          num: 2187,
+          color: '#409EFF',
+          opacity: 0.8
+        },
+        {
+          title: '总累计积分',
+          info: '1. 总累计积分=∑年度累计积分\n2. 用于积分排名，且当总积分达到5万分及不同数量的等级的积分时，可享受“员工积分特殊奖励”',
+          num: 2187,
+          color: '#409EFF',
           opacity: 1
         }
       ],
@@ -127,22 +157,85 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.sum-box{
+  margin-top: 40px;
+}
 .top{
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     .sum-item-small{
-        width: 200px;
+        width: 140px;
+        margin-right: 10px;
         .item-top{
             display: flex;
             justify-content: flex-start;
             align-items: center;
+
+            .icon-data{
+              font-size: 40px;
+              margin-right: 10px;
+            }
+
+            .num{
+              font-size: 24px;
+              line-height: 24px;
+              margin: 0;
+              padding: 0;
+            }
+
+            .title{
+              padding: 0;
+              margin: 0;
+              font-size: 10px;
+              color: #101010;
+            }
         }
         .info{
-            font-size: 14px;
+            font-size: 10px;
             color: #929292;
         }
     }
+}
+
+.center{
+  display: flex;
+  justify-content: space-around;
+  align-content: center;
+  margin-top: 80px;
+
+  .sum-item-big{
+    width: 400px;
+    margin-right: 20px;
+    .item-top{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+
+        .icon-data{
+          font-size: 50px;
+          margin-right: 15px;
+        }
+
+        .num{
+          font-size: 40px;
+          line-height: 44px;
+          margin: 0;
+          padding: 0;
+        }
+
+        .title{
+          padding: 0;
+          margin: 0;
+          font-size: 16px;
+          color: #101010;
+        }
+      }
+      .info{
+          font-size: 14px;
+          color: #929292;
+        }
+  }
 }
 </style>
