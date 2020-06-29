@@ -42,6 +42,7 @@ module.exports = {
     proxy: {
       '/api': {
           target: 'http://127.0.0.1:8082/jf',
+          // target: 'http:/192.168.40.229:8080/Interface',
           ws: true,
           changeOrigin: true,
           pathRewrite: {
