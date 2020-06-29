@@ -7,7 +7,7 @@
                         <span class="icon iconfont icon-data" :style="{color: item.color, opacity: item.opacity}">&#xe65c;</span>
 
                         <div>
-                            <p class="num" :style="{color: item.color, opacity: item.opacity}">{{item.num}}</p>
+                            <d2-count-up class="num" :style="{color: item.color, opacity: item.opacity}" :end="item.num" :duration="1"/>
                             <p class="title">{{item.title}}</p>
                         </div>
                     </div>
@@ -20,7 +20,7 @@
                         <span class="icon iconfont icon-data" :style="{color: item.color, opacity: item.opacity}">&#xe65c;</span>
 
                         <div>
-                            <p class="num" :style="{color: item.color, opacity: item.opacity}">{{item.num}}</p>
+                            <d2-count-up class="num" :style="{color: item.color, opacity: item.opacity}" :end="item.num" :duration="2"/>
                             <p class="title">{{item.title}}</p>
                         </div>
                     </div>
@@ -32,6 +32,15 @@
             </div>
         </div>
         <div class="activities-box">
+
+          <el-carousel height="150px">
+            <el-carousel-item v-for="(item, index) in activityList" :key="index">
+              <div class="activity-item-box">
+                <p>{{item.title}}</p>
+              </div>
+            </el-carousel-item>
+          </el-carousel>
+          
             <!-- <input type="file" ref="file"  @change="importFile">
             <button @click="importFile">上传</button> -->
             <!-- <progress-bar class="progress-bar" :uploadPercent="uploadPercent" @cancelRequest="cancelRequest"></progress-bar> -->
@@ -107,7 +116,16 @@ export default {
       totalCount:0,
       pagingPage:1,
       source:axios.CancelToken.source(),
-      list:[]
+      list:[],
+      activityList: [{
+        title: '俱乐部活动',
+        slogon: '快来参加活动吧'
+      },
+      {
+        title: '资格考核',
+        slogon: '钉钉'
+      }
+      ]
     }
   },
 
@@ -237,5 +255,14 @@ export default {
           color: #929292;
         }
   }
+}
+
+.activities-box{
+  margin-top: 80px;
+}
+
+.activity-item-box{
+  height: 200px;
+  background: #E5E5E5;
 }
 </style>
