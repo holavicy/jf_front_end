@@ -2,10 +2,10 @@
     <d2-container class="page">
         <el-tabs>
             <el-tab-pane label="积分看板">
-                <a-detail/>
+               <summary-index/>
             </el-tab-pane>
             <el-tab-pane label="A分明细">
-                A分明细组件
+                <a-detail/>
             </el-tab-pane>
             <el-tab-pane label="B管理积分明细">
                 B管理积分明细组件
@@ -22,9 +22,11 @@
 
 <script>
 import ADetail from '../components/ADetail'
+import SummaryIndex from '../components/summary'
 export default {
   components: {
-    ADetail
+    ADetail,
+    SummaryIndex
   }
 }
 </script>
