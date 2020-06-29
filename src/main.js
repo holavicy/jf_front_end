@@ -2,6 +2,7 @@
 import Vue from 'vue'
 import i18n from './i18n'
 import App from './App'
+import axios from 'axios'
 // 核心插件
 import d2Admin from '@/plugin/d2admin'
 // store
@@ -11,9 +12,12 @@ import store from '@/store/index'
 import router from './router'
 import { menuHeader, menuAside } from '@/menu'
 import { frameInRoutes } from '@/router/routes'
+import globalFunc from '@/global.js'
 
 // 核心插件
 Vue.use(d2Admin)
+Vue.use(globalFunc)
+Vue.use(axios)
 
 new Vue({
   router,

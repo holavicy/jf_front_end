@@ -18,15 +18,21 @@
             </div>
         </div>
         <div class="activities-box">
-            <input type="file" ref="file"  @change="fileUpload">
+            <input type="file" ref="file"  @change="importFile">
             <button @click="importFile">上传</button>
+            <!-- <progress-bar class="progress-bar" :uploadPercent="uploadPercent" @cancelRequest="cancelRequest"></progress-bar> -->
         </div>
     </div>
 </template>
 
 <script>
+import ProgressBar from '@/components/ProgressBar.vue'
+import axios from 'axios'
 export default {
   name: 'summary-index',
+  components: {
+    ProgressBar
+  },
   data () {
     return {
       sumItemSmall: [
@@ -65,19 +71,56 @@ export default {
           color: '#EB111D',
           opacity: 1
         }
-      ]
+      ],
+      fileName:'',
+      uploadPercent:0,
+      totalCount:0,
+      pagingPage:1,
+      source:axios.CancelToken.source(),
+      list:[]
     }
   },
 
   methods: {
     fileUpload (event) {
       const file = event.target.files
-      let formData = new FormData()
+      const formData = new FormData()
       formData.append('fileType', '.xlsx')
       formData.append('file', file[0])
       console.log(formData)
 
       this.$api.UPLOAD_TEST(formData)
+    },
+
+    importFile () {
+      const _this = this;
+      _this.source = axios.CancelToken.source();
+
+      if (!_this.$refs.file.files[0]) {
+        alert('请选择文件');
+        return
+      }
+      let fileData = new FormData();
+      fileData.append('file', _this.$refs.file.files[0])
+      let url = '/api/test';
+      this.uploadFile(url, fileData, _this.source.token, (res) => {
+          let loaded = res.loaded
+          let total = res.total
+          _this.$nextTick(() => {
+              _this.uploadPercent = Math.floor(loaded/total*100)>1? Math.floor(loaded/total*100):1;
+              })
+              }).then((res) => {
+                  if (res.data.code === 0) {
+                      alert('上传成功');
+                      _this.uploadPercent = 0;
+                  }
+              }, (rej) => {
+                  if (rej === -2) {
+                      alert('取消上传成功')
+                  } else {
+                      alert('上传失败')
+                  }
+              })
     }
   }
 }

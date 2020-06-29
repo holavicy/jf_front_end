@@ -3,6 +3,9 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
       return request({
         url: '/test',
         method: 'post',
+        config: {
+          'Content-Type': 'multipart/form-data'
+        },
         data
       })
     }
