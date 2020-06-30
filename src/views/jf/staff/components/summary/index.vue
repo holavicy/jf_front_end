@@ -245,13 +245,14 @@ export default {
         .title{
           padding: 0;
           margin: 0;
-          font-size: 16px;
+          font-size: 14px;
           color: #101010;
         }
       }
       .info{
-          font-size: 14px;
+          font-size: 12px;
           color: #929292;
+          white-space: pre-wrap;
         }
   }
 }

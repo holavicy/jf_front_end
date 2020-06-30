@@ -7,7 +7,7 @@
         <el-collapse accordion>
   <el-collapse-item>
     <template slot="title">
-      <div class="line-item"><span class="title">职位积分</span><span class="num">0</span></div>
+      <div class="line-item"><span class="title">职务积分</span><span class="num">0</span></div>
     </template>
     <div class="rule-item" :class="{'active': zwLevel == item.id}" v-for="(item, index) in zwRules" :key="index">
       <span class="title"><i class="header-icon el-icon-wind-power" v-if="zwLevel == item.id"></i>{{item.title}}</span><span class="num">{{item.num}}</span>
@@ -15,76 +15,53 @@
   </el-collapse-item>
   <el-collapse-item>
     <template slot="title">
-      <div class="line-item"><span class="title">职务积分</span><span class="num">0</span></div>
+      <div class="line-item"><span class="title">职位积分</span><span class="num">0</span></div>
     </template>
+    <p>国家职业资格职称</p>
+    <div class="rule-item" :class="{'active': titleCountryLevel == item.id}" v-for="(item, index) in titleCountryLevels" :key="index">
+      <span class="title"><i class="header-icon el-icon-wind-power" v-if="titleCountryLevel == item.id"></i>{{item.title}}</span><span class="num">{{item.num}}</span>
+    </div>
+     <p>公司内部职称</p>
+     <div class="rule-item" :class="{'active': titleCompanyLevel == item.id}" v-for="(item, index) in titleCompanyLevels" :key="index">
+      <span class="title"><i class="header-icon el-icon-wind-power" v-if="titleCompanyLevel == item.id"></i>{{item.title}}</span><span class="num">{{item.num}}</span>
+    </div>
   </el-collapse-item>
   <el-collapse-item>
     <template slot="title">
       <div class="line-item"><span class="title">学历积分</span><span class="num">1000</span></div>
     </template>
+    <div class="rule-item" :class="{'active': educationLevel == item.id}" v-for="(item, index) in educationLevels" :key="index">
+      <span class="title"><i class="header-icon el-icon-wind-power" v-if="educationLevel == item.id"></i>{{item.title}}</span><span class="num">{{item.num}}</span>
+    </div>
   </el-collapse-item>
   <el-collapse-item>
    <template slot="title">
       <div class="line-item"><span class="title">工龄积分</span><span class="num">1167</span></div>
     </template>
+    <div class="rule-item">
+      <span class="title">自2014年1月1日起计算，每满一年，加2000分。<br>当年新入职的员工工龄积分为：当年合同履行时间/全年时间×2000分（取整）</span>
+      <span class="title date">入职日期：2020-04-14</span>
+    </div>
   </el-collapse-item>
 </el-collapse>
     </div>
 </template>
 
 <script>
+import base from './mixins/index'
 export default {
     name: 'b-fixed',
+    mixins: [
+      base
+    ],
     data () {
       return {
         activeNames: ['1'],
         zwLevel: 1,
-        zwRules: [{
-          title: '一般科员、一般员工',
-          num: 0,
-          id: 1
-        },
-        {
-          title: '经理助理',
-          num: 200,
-          id: 2
-        },
-        {
-          title: '副经理',
-          num: 300,
-          id: 3
-        },
-        {
-          title: '经理',
-          num: 400,
-          id: 4
-        },
-        {
-          title: '中心总经理助理',
-          num: 500,
-          id: 5
-        },
-        {
-          title: '中心副总监',
-          num: 600,
-          id: 6
-        },
-        {
-          title: '高级副总裁、副总裁',
-          num: 700,
-          id: 7
-        },
-        {
-          title: '总裁助理、中心总监',
-          num: 800,
-          id: 8
-        },
-        {
-          title: '总裁',
-          num: 1000,
-          id: 9
-        }]
-      };
+        titleCountryLevel: 1,
+        titleCompanyLevel: 1,
+        educationLevel: 3
+      }
     },
     methods: {
       handleChange (val) {
@@ -140,6 +117,9 @@ export default {
 
   .title{
     font-size: 12px;
+    &.date{
+      color: #101010;
+    }
   }
 
   .num{
