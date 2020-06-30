@@ -40,7 +40,6 @@
               </div>
             </el-carousel-item>
           </el-carousel>
-          
             <!-- <input type="file" ref="file"  @change="importFile">
             <button @click="importFile">上传</button> -->
             <!-- <progress-bar class="progress-bar" :uploadPercent="uploadPercent" @cancelRequest="cancelRequest"></progress-bar> -->
@@ -237,8 +236,8 @@ export default {
         }
 
         .num{
-          font-size: 40px;
-          line-height: 44px;
+          font-size: 34px;
+          line-height: 34px;
           margin: 0;
           padding: 0;
         }

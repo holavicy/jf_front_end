@@ -14,6 +14,8 @@ import { menuHeader, menuAside } from '@/menu'
 import { frameInRoutes } from '@/router/routes'
 import globalFunc from '@/global.js'
 import '../public/iconfont.css'
+import D2Crud from '@d2-projects/d2-crud'
+Vue.use(D2Crud)
 
 // 核心插件
 Vue.use(d2Admin)

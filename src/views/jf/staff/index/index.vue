@@ -8,10 +8,10 @@
                 <a-detail/>
             </el-tab-pane>
             <el-tab-pane label="B管理积分明细">
-                B管理积分明细组件
+                <b-manage-detail/>
             </el-tab-pane>
             <el-tab-pane label="B固定积分">
-                B固定积分
+                <b-fixed/>
             </el-tab-pane>
             <el-tab-pane label="积分活动">
                 积分活动
@@ -23,10 +23,14 @@
 <script>
 import ADetail from '../components/ADetail'
 import SummaryIndex from '../components/summary'
+import BManageDetail from '../components/BManageDetail'
+import BFixed from '../components/BFixed'
 export default {
   components: {
     ADetail,
-    SummaryIndex
+    SummaryIndex,
+    BManageDetail,
+    BFixed
   }
 }
 </script>
