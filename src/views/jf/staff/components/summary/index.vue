@@ -123,8 +123,7 @@ export default {
       {
         title: '资格考核',
         slogon: '钉钉'
-      }
-      ]
+      }]
     }
   },
 
