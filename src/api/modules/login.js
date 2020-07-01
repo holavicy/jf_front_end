@@ -1,4 +1,4 @@
-export default ({ service, request, serviceForMock, requestForMock, mock, faker, tools }) => ({
+export default ({ request }) => ({
   DING_LOGIN (code, corpId) {
     return request({
       url: '/user/getUserInfo',
