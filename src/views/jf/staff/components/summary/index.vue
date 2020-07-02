@@ -40,8 +40,8 @@
               </div>
             </el-carousel-item>
           </el-carousel>
-            <input type="file" ref="file"  @change="importFile">
-            <button @click="importFile">上传</button>
+            <!-- <input type="file" ref="file"  @change="importFile">
+            <button @click="importFile">上传</button> -->
             <!-- <progress-bar class="progress-bar" :uploadPercent="uploadPercent" @cancelRequest="cancelRequest"></progress-bar> -->
         </div>
     </div>
