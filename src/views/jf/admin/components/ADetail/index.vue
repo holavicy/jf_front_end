@@ -34,7 +34,7 @@
         </div>
 
         <el-row class="button-wrapper">
-            <el-button type="primary" plain size="mini">查询</el-button>
+            <el-button type="primary" plain size="mini" @click="getList">查询</el-button>
             <el-upload action="default" :before-upload="beforeUpload" :http-request="importFile" :show-file-list="false" style="margin: 0 10px">
                 <el-button type="primary" plain size="mini">导入</el-button>
             </el-upload>
@@ -55,6 +55,8 @@ export default {
     name: 'a-detail',
     data () {
         return {
+            staffNo: '',
+            name: '',
             file: null,
             operator: {
                 Operator: '100297'
@@ -119,6 +121,10 @@ export default {
         this.fetchData()
   },
   methods: {
+
+      getList () {
+          console.log('查询开始')
+      },
     paginationCurrentChange (currentPage) {
       this.pagination.currentPage = currentPage
       this.fetchData()

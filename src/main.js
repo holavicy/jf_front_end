@@ -20,7 +20,9 @@ Vue.use(D2Crud)
 // 核心插件
 Vue.use(d2Admin)
 Vue.use(globalFunc)
-Vue.use(axios)
+// Vue.use(axios)
+
+Vue.prototype.$axios = axios
 
 new Vue({
   router,
