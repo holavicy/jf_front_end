@@ -43,7 +43,29 @@
             <el-button type="primary" plain size="mini">结算</el-button>
         </el-row>
         <div class="table-wrapper">
-            <d2-crud :columns="columns" :data="data" :loading="loading" :pagination="pagination" @pagination-current-change="paginationCurrentChange"/>
+            <!-- <d2-crud :columns="columns" :data="data" :loading="loading" :pagination="pagination" @pagination-current-change="paginationCurrentChange" selection-row
+      @selection-change="handleSelectionChange" :rowHandle="rowHandle" @custom-emit-1="handleCustomEvent"/> -->
+            <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="55"></el-table-column>
+                <el-table-column prop="jobid" label="工号" width="70"></el-table-column>
+                <el-table-column prop="name" label="姓名"></el-table-column>
+                <el-table-column prop="DepartmentLv1" label="业务单元"></el-table-column>
+                <el-table-column prop="DepartmentLv3" label="部门"></el-table-column>
+                <el-table-column prop="IsAccounted" label="是否结算"></el-table-column>
+                <el-table-column prop="BonusPoints" label="加分"></el-table-column>
+                <el-table-column prop="MinusPoints" label="减分"></el-table-column>
+                <el-table-column prop="Reason" label="加减分理由" width="180"></el-table-column>
+                <el-table-column prop="AssessmentDate" label="考核日期" width="100"></el-table-column>
+                <el-table-column fixed="right" label="操作" width="60">
+                    <template slot-scope="scope">
+                        <!-- <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button> -->
+                        <el-popconfirm title="确定删除此条记录吗？" @onConfirm="deleteDetail(scope.row)">
+                            <el-button type="text" size="mini" slot="reference">删除</el-button>
+                        </el-popconfirm>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
         </div>
     </div>
 </template>
@@ -51,111 +73,99 @@
 
 <script>
 import axios from 'axios'
+import js from './mixins/index'
+import dayjs from 'dayjs'
 export default {
     name: 'a-detail',
+    mixins: [
+        js
+    ],
     data () {
         return {
             staffNo: '',
             name: '',
-            file: null,
-            operator: {
-                Operator: '100297'
-            },
             addOrMin: '',
             isEnd: '',
             checkDate: null,
-            addOrMinOptions: [{
-                value: '',
-                label: '全部'
-            }, {
-                value: '1',
-                label: '加分'
-            }, {
-                value: '2',
-                label: '减分'
-            }],
-            isEndOptions: [{
-                value: '',
-                label: '全部'
-            }, {
-                value: '1',
-                label: '是'
-            }, {
-                value: '0',
-                label: '否'
-            }],
-    columns: [
-        {
-          title: '卡密',
-          key: 'key',
-          width: 320
-        },
-        {
-          title: '面值',
-          key: 'value'
-        },
-        {
-          title: '管理员',
-          key: 'admin'
-        },
-        {
-          title: '创建时间',
-          key: 'dateTimeCreat'
-        },
-        {
-          title: '使用时间',
-          key: 'dateTimeUse'
-        }
-      ],
-      data: [],
-      loading: false,
-      pagination: {
-        currentPage: 1,
-        pageSize: 5,
-        total: 0
-      }
+            file: null
         }
     },
-
     mounted () {
-        this.fetchData()
-  },
+        this.getList()
+    },
   methods: {
-
+      /**
+       * 获取列表数据
+       */
       getList () {
-          console.log('查询开始')
+          let data = {
+              name: this.name,
+              jobid: this.staffNo,
+              isBonus: this.addOrMin,
+              isAccounted: this.isEnd,
+              beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
+              endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
+              page: this.pagination.currentPage,
+              pageSize: this.pagination.pageSize
+          }
+          this.loading = true;
+          this.$api.GET_DETAIL_LIST(data).then(res => {
+              this.loading = false
+            //   this.data = res.detail
+            //   this.pagination.total = res.total
+          }).catch(err => {
+              console.log('err', err);
+            //   this.$notify({
+            //     title: '错误',
+            //     message: '查询失败，请联系管理员',
+            //     type: 'error'
+            //     })
+              this.loading = false
+          })
       },
-    paginationCurrentChange (currentPage) {
-      this.pagination.currentPage = currentPage
-      this.fetchData()
-    },
-    fetchData () {
-      this.loading = true
-      this.$api.DEMO_BUSINESS_TABLE_1_LIST({
-        ...this.pagination
-      }).then(res => {
-        this.data = res.list
-        this.pagination.total = res.page.total
-        this.loading = false
-      }).catch(err => {
-        console.log('err', err)
-        this.loading = false
-      })
-    },
 
-    beforeUpload (file) {
+      /**
+       * 分页
+       */
+      paginationCurrentChange (currentPage) {
+        this.pagination.currentPage = currentPage
+        this.getList()
+      },
+
+      beforeUpload (file) {
         this.file = file;
-    },
+      },
 
-    importFile () {
+          /**
+         * 删除
+         */
+        deleteDetail (val) {
+            console.log(val);
+            let data = {
+                RewardPointsdetailID: val.RewardPointsdetailID
+            }
+
+            this.$api.DELETE_DETAIL_RECORD(data).then(res => {
+                if (res.code === 0) {
+                    this.$message.success('删除成功')
+                    this.getList()
+                } else {
+                    this.$$message.error(res.msg || '删除失败')
+                }
+            }).catch(err => {
+                console.log(err)
+            })
+        },
+
+      importFile () {
         const _this = this;
         _this.source = axios.CancelToken.source();
         let fileData = new FormData();
         //   fileData.append('file', _this.$refs.file.files[0])
-        // fileData.append('file', _this.file)
+        fileData.append('file', _this.file)
         fileData.append('Operator', '100297')
-        // let url = '/api/import_rewardPoint';
-        let url = '/api/test';
+        let url = '/api/import_rewardPoint';
+        // let url = '/api/test';
         this.uploadFile(url, fileData, _this.source.token, (res) => {
             let loaded = res.loaded
             let total = res.total
@@ -174,9 +184,10 @@ export default {
                         alert('上传失败')
                     }
                 })
-                }
-  }
-}
+            }
+        }
+      }
+
 </script>
 
 <style scoped lang="scss">

@@ -42,10 +42,10 @@ module.exports = {
     //关闭禁止混用tab和空格
     "no-mixed-spaces-and-tabs": [0],
     //数组第一个指定是否启用这个规则，第二个指定几个空格
-    "indent":[1,2],
+    "indent":'off',
     "prefer-const": [0],
-    "no-trailing-spaces ": [0],
-    "space-infix-ops": 'off'
+    "space-infix-ops": 'off',
+    "no-trailing-spaces": 'off'
   },
   parserOptions: {
     parser: 'babel-eslint'
