@@ -4,6 +4,13 @@ import { get } from 'lodash'
 import util from '@/libs/util'
 import { errorLog, errorCreate } from './tools'
 
+function formatObj (obj) {
+  Object.keys(obj).forEach(item=>{
+      if(obj[item] !== 0 && !obj[item])  delete obj[item]
+  })
+  return obj;
+}
+
 /**
  * @description 创建请求实例
  */
@@ -88,6 +95,9 @@ function createRequestFunction (service) {
       baseURL: process.env.VUE_APP_API,
       data: {}
     }
+    console.log(config.data)
+    config.data = formatObj(config.data)
+    console.log(config.data)
     return service(Object.assign(configDefault, config))
   }
 }

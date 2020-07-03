@@ -2,7 +2,7 @@
     <div class="a-detail">
         <div class="sum-box">
             <div class="top">
-                <div class="sum-item-small" v-for="(item, index) in sumItemSmall" :key="index">
+                <div class="sum-item-small" v-for="(item, index) in sumItemSmall" :key="index" @click="changeTab(index)">
                     <div class="item-top">
                         <span class="icon iconfont icon-data" :style="{color: item.color, opacity: item.opacity}">&#xe65c;</span>
 
@@ -128,6 +128,9 @@ export default {
   },
 
   methods: {
+    changeTab (i) {
+      this.$emit('changeTab',i)
+    },
     fileUpload (event) {
       const file = event.target.files
       const formData = new FormData()
@@ -184,6 +187,9 @@ export default {
     .sum-item-small{
         width: 140px;
         margin-right: 10px;
+        padding: 10px;
+        box-sizing: border-box;
+        flex-grow: 1;
         .item-top{
             display: flex;
             justify-content: flex-start;
@@ -211,6 +217,10 @@ export default {
         .info{
             font-size: 10px;
             color: #929292;
+        }
+        &:hover{
+          box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+          cursor: pointer;
         }
     }
 }

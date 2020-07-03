@@ -115,11 +115,6 @@ export default {
             //   this.pagination.total = res.total
           }).catch(err => {
               console.log('err', err);
-            //   this.$notify({
-            //     title: '错误',
-            //     message: '查询失败，请联系管理员',
-            //     type: 'error'
-            //     })
               this.loading = false
           })
       },

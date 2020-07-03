@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-carousel height="150px" autoplay="false">
+        <el-carousel height="150px" :autoplay="false">
             <el-carousel-item v-for="(item, index) in activityList" :key="index">
               <div class="activity-item-box">
                 <p>{{item.title}}</p>

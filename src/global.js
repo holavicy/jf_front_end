@@ -40,9 +40,18 @@ function getAllCategory(){
     })
 }
 
+//判空
+function isNull(str){
+    if($.trim(str)==null || $.trim(str)==""){
+        return true;
+    }
+    return false;
+}
+
 export default{
     install: function(Vue){
         Vue.prototype.uploadFile = (url,payload,cancelToken,callback1) => uploadFile (url,payload,cancelToken,callback1);
         Vue.prototype.getAllCategory = () => getAllCategory ();
+        Vue.prototype.isNull = () => isNull();
     }
 };

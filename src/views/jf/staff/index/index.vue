@@ -2,10 +2,10 @@
     <d2-container class="page">
         <el-tabs v-model="activeTab">
             <el-tab-pane label="积分看板" name="summary">
-               <summary-index/>
+               <summary-index @changeTab="changeTab"/>
             </el-tab-pane>
             <el-tab-pane label="A分明细" name="a-detail">
-                <a-detail/>
+                <a-detail :isEndVal="isEnd"/>
             </el-tab-pane>
             <el-tab-pane label="B管理积分明细" name="b-manage-detail">
                 <b-manage-detail/>
@@ -36,7 +36,32 @@ export default {
   },
   data () {
       return {
+          isEnd: '',
           activeTab: 'summary'
+      }
+  },
+
+  methods: {
+      changeTab (i) {
+          switch(i) {
+              case 0:
+                  this.isEnd = '是'
+                  this.activeTab = 'a-detail'
+                  break
+              case 1:
+                  this.activeTab = 'a-detail'
+                  this.isEnd = ''
+                  break
+              case 2:
+                  this.activeTab = 'b-manage-detail'
+                  break
+              case 3:
+                  this.activeTab = 'b-manage-detail'
+                  break
+              case 4:
+                  this.activeTab = 'b-fixed'
+                  break
+          }
       }
   }
 }

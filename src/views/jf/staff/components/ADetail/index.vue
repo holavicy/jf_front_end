@@ -4,8 +4,8 @@
         <div class="search-item">
           <label>考核日期</label>
           <el-date-picker
-            size="small"
-            v-model="value1"
+            size="mini"
+            v-model="checkDate"
             type="daterange"
             range-separator="至"
             start-placeholder="开始日期"
@@ -13,97 +13,115 @@
           </el-date-picker>
         </div>
 
-        <el-button type="primary" size="small" @click="getList">查询</el-button>
+        <div class="search-item">
+            <label>是否结算：</label><el-select v-model="isEnd" placeholder="请选择" size="mini">
+                <el-option v-for="item in isEndOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+            </el-select>
+        </div>
+
+        <el-button type="primary" size="mini" @click="getList">查询</el-button>
       </div>
-      <d2-crud ref="d2Crud" :columns="columns" :data="data"/>
+      <d2-crud ref="d2Crud" index-row :columns="columns" :data="data"/>
     </div>
 </template>
 
 <script>
+import {isEndOptions} from '@/dataDic.js' 
+import {ADetailStaff} from '@/mockData.js'
+import dayjs from 'dayjs'
 export default {
   name: 'a-detail',
+  props: {
+    isEndVal: {
+      type: String,
+      default: ''
+    }
+  },
+
   data () {
     return {
-      value1: '',
+      ADetailStaff,
+      isEnd: this.isEndVal,
+      isEndOptions,
+      checkDate: '',
       columns: [
         {
-          title: '序号',
-          key: 'index',
-          width: '100'
-        },
-        {
           title: '积分类别',
-          key: 'type',
+          key: 'RewardPointsType',
           width: '100'
         },
         {
           title: '加分',
-          key: 'plus',
+          key: 'BonusPoints',
           width: '100'
         },
         {
           title: '减分',
-          key: 'minus',
+          key: 'MinusPoints',
           width: '100'
         },
         {
           title: '加减分理由',
-          key: 'reason',
+          key: 'Reason',
           width: '280'
         },
         {
           title: '是否结算',
           key: 'isEnd',
-          width: '100',
-          filters: [
-            { text: '是', value: '是' },
-            { text: '否', value: '否' }
-          ],
-          filterMethod (value, row) {
-            return row.isEnd === value
-          },
-          filterPlacement: 'bottom-end'
+          width: '100'
         },
         {
           title: '考核日期',
-          key: 'date',
+          key: 'checkDate',
           width: '120'
         }
       ],
-
-      data: [{
-        index: 1,
-        type: 'A分',
-        plus: '20',
-        minus: '0',
-        reason: '完成钉钉数字化管理专员认证',
-        isEnd: '是',
-        date: '2020-04-28'
-      },
-      {
-        index: 1,
-        type: 'A分',
-        plus: '0',
-        minus: '20',
-        reason: '绩效扣除',
-        isEnd: '否',
-        date: '2020-04-28'
-      },
-      {
-        index: 1,
-        type: 'A分',
-        plus: '100',
-        minus: '0',
-        reason: '年度十佳青年',
-        isEnd: '是',
-        date: '2020-04-28'
-      }]
+      data: [],
+      pagination: {
+        currentPage: 0,
+        pageSize: 10,
+        total: 4
+      }
     }
   },
 
+  watch: {
+    isEndVal: function(val) {
+      console.log('watch', val)
+      this.isEnd = val;
+
+      this.getList(val);
+    }
+  },
+
+  mounted () {
+      this.getList()
+  },
+
   methods: {
-    getList () {
-      console.log(this.value1)
+    getList (isEndVal) {
+      let data = {
+            name: '陈明姣',
+            jobid: 100297,
+            isAccounted: isEndVal === '是'?1: isEndVal === ''?'':this.isEnd===''?'': Number(this.isEnd),
+            beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
+            endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('day').format('YYYY-M-D HH:mm:ss') :'',
+            page: this.pagination.currentPage,
+            pageSize: this.pagination.pageSize
+          }
+          this.loading = true;
+          this.$api.GET_DETAIL_LIST(data).then(res => {
+              this.loading = false
+              res.detail.map((item) => {
+                item.checkDate = dayjs(item.AssessmentDate).format('YYYY-M-D')
+                item.isEnd = item.isAccounted === 0? '否': '是'
+              })
+              this.data = res.detail
+              this.pagination.total = res.total.totalLength
+          }).catch(err => {
+              console.log('err', err);
+              this.loading = false
+          })
     }
   }
 }
