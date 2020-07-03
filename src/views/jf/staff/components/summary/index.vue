@@ -33,7 +33,7 @@
         </div>
         <div class="activities-box">
 
-          <el-carousel height="150px">
+          <el-carousel ref="carousel" height="150px" @click.native="linkTo">
             <el-carousel-item v-for="(item, index) in activityList" :key="index">
               <div class="activity-item-box">
                 <p>{{item.title}}</p>
@@ -128,6 +128,12 @@ export default {
   },
 
   methods: {
+
+    linkTo () {
+      let activeIndex = this.$refs.carousel.activeIndex;
+      this.$emit('activityTab',activeIndex)
+    },
+
     changeTab (i, type) {
       let data = {
         index: i,

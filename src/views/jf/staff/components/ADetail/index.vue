@@ -87,9 +87,7 @@ export default {
 
   watch: {
     isEndVal: function(val) {
-      console.log('watch', val)
       this.isEnd = val;
-
       this.getList(val);
     }
   },

@@ -2,7 +2,7 @@
     <d2-container class="page">
         <el-tabs v-model="activeTab" v-show="showTab == 1">
             <el-tab-pane label="积分看板" name="summary">
-               <summary-index @changeTab="changeTab"/>
+               <summary-index @changeTab="changeTab" @activityTab="activityTab"/>
             </el-tab-pane>
             <el-tab-pane label="A分明细" name="a-detail">
                 <a-detail :isEndVal="isEnd"/>
@@ -14,7 +14,7 @@
                 <b-fixed/>
             </el-tab-pane>
             <el-tab-pane label="积分活动" name="activity">
-                <activity-index/>
+                <activity-index :defaultIndex="activeIndex"/>
             </el-tab-pane>
         </el-tabs>
 
@@ -53,6 +53,7 @@ export default {
   },
   data () {
       return {
+          activeIndex: 0,
           isEnd: '',
           activeTab: 'summary',
           showTab: 1
@@ -96,6 +97,12 @@ export default {
             }
           }
 
+      },
+
+      activityTab (i) {
+           this.activeTab = 'activity'
+           this.activeIndex = i;
+           console.log(this.activeIndex)
       }
   }
 }
