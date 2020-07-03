@@ -2,7 +2,7 @@
     <div class="a-detail">
         <div class="sum-box">
             <div class="top">
-                <div class="sum-item-small" v-for="(item, index) in sumItemSmall" :key="index" @click="changeTab(index)">
+                <div class="sum-item-small" v-for="(item, index) in sumItemSmall" :key="index" @click="changeTab(index,1)">
                     <div class="item-top">
                         <span class="icon iconfont icon-data" :style="{color: item.color, opacity: item.opacity}">&#xe65c;</span>
 
@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="center">
-              <div class="sum-item-big" v-for="(item, index) in sumItemBig" :key="index">
+              <div class="sum-item-big" v-for="(item, index) in sumItemBig" :key="index"  @click="changeTab(index,2)">
                     <div class="item-top">
                         <span class="icon iconfont icon-data" :style="{color: item.color, opacity: item.opacity}">&#xe65c;</span>
 
@@ -128,8 +128,12 @@ export default {
   },
 
   methods: {
-    changeTab (i) {
-      this.$emit('changeTab',i)
+    changeTab (i, type) {
+      let data = {
+        index: i,
+        type: type
+      }
+      this.$emit('changeTab',data)
     },
     fileUpload (event) {
       const file = event.target.files
@@ -182,7 +186,6 @@ export default {
 .top{
     display: flex;
     justify-content: space-between;
-    align-items: center;
 
     .sum-item-small{
         width: 140px;
@@ -234,10 +237,10 @@ export default {
   .sum-item-big{
     width: 400px;
     margin-right: 20px;
+    padding: 10px;
     .item-top{
         display: flex;
         justify-content: flex-start;
-        align-items: center;
 
         .icon-data{
           font-size: 50px;
@@ -262,6 +265,10 @@ export default {
           font-size: 12px;
           color: #929292;
           white-space: pre-wrap;
+      }
+        &:hover{
+          box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+          cursor: pointer;
         }
   }
 }

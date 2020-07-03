@@ -15,6 +15,8 @@ import { frameInRoutes } from '@/router/routes'
 import globalFunc from '@/global.js'
 import '../public/iconfont.css'
 import D2Crud from '@d2-projects/d2-crud'
+import VCharts from 'v-charts'
+Vue.use(VCharts)
 Vue.use(D2Crud)
 
 // 核心插件

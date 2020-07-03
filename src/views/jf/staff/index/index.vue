@@ -1,6 +1,6 @@
 <template>
     <d2-container class="page">
-        <el-tabs v-model="activeTab">
+        <el-tabs v-model="activeTab" v-show="showTab == 1">
             <el-tab-pane label="积分看板" name="summary">
                <summary-index @changeTab="changeTab"/>
             </el-tab-pane>
@@ -17,6 +17,19 @@
                 <activity-index/>
             </el-tab-pane>
         </el-tabs>
+
+        <el-tabs v-model="activeTab" v-show="showTab == 2">
+            <el-tab-pane label="积分看板" name="summary">
+               <summary-index @changeTab="changeTab"/>
+            </el-tab-pane>
+            <el-tab-pane label="年度累计积分" name="year-total-summary">
+                <year-total-summary/>
+            </el-tab-pane>
+            <el-tab-pane label="总累计积分" name="total-summary">
+                <total-summary/>
+            </el-tab-pane>
+        </el-tabs>
+    
     </d2-container>
 </template>
 
@@ -26,24 +39,32 @@ import SummaryIndex from '../components/summary'
 import BManageDetail from '../components/BManageDetail'
 import BFixed from '../components/BFixed'
 import ActivityIndex from '../components/activity'
+import YearTotalSummary  from '../components/YearTotalSummary'
+import TotalSummary from '../components/TotalSummary'
 export default {
   components: {
     ADetail,
     SummaryIndex,
     BManageDetail,
     BFixed,
-    ActivityIndex
+    ActivityIndex,
+    YearTotalSummary,
+    TotalSummary
   },
   data () {
       return {
           isEnd: '',
-          activeTab: 'summary'
+          activeTab: 'summary',
+          showTab: 1
       }
   },
 
   methods: {
-      changeTab (i) {
-          switch(i) {
+      changeTab (data) {
+          console.log(data)
+          this.showTab = data.type
+          if(data.type == 1) {
+            switch(data.index) {
               case 0:
                   this.isEnd = '是'
                   this.activeTab = 'a-detail'
@@ -61,7 +82,20 @@ export default {
               case 4:
                   this.activeTab = 'b-fixed'
                   break
+            }
           }
+
+          if (data.type == 2) {
+            switch(data.index) {
+              case 0:
+                  this.activeTab = 'year-total-summary'
+                  break
+              case 1:
+                  this.activeTab = 'total-summary'
+                  break
+            }
+          }
+
       }
   }
 }
