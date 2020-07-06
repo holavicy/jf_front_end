@@ -126,9 +126,6 @@ export default {
     },
 
     methods: {
-      handleSelectionChange (selection) {
-        console.log(selection);
-      },
       handleCustomEvent ({ index, row }) {
         console.log(index)
         console.log(row)

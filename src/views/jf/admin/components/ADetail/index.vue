@@ -39,12 +39,10 @@
                 <el-button type="primary" plain size="mini">导入</el-button>
             </el-upload>
 
-            <el-button type="primary" size="mini">导出</el-button>
-            <el-button type="primary" plain size="mini">结算</el-button>
+            <el-button type="primary" size="mini" @click="exportFile">导出</el-button>
+            <el-button type="primary" plain size="mini" @click="settleAccounts">结算</el-button>
         </el-row>
         <div class="table-wrapper">
-            <!-- <d2-crud :columns="columns" :data="data" :loading="loading" :pagination="pagination" @pagination-current-change="paginationCurrentChange" selection-row
-      @selection-change="handleSelectionChange" :rowHandle="rowHandle" @custom-emit-1="handleCustomEvent"/> -->
             <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="jobid" label="工号" width="70"></el-table-column>
@@ -58,7 +56,6 @@
                 <el-table-column prop="AssessmentDate" label="考核日期" width="100"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="60">
                     <template slot-scope="scope">
-                        <!-- <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button> -->
                         <el-popconfirm title="确定删除此条记录吗？" @onConfirm="deleteDetail(scope.row)">
                             <el-button type="text" size="mini" slot="reference">删除</el-button>
                         </el-popconfirm>
@@ -106,17 +103,31 @@ export default {
               beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
               endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
               page: this.pagination.currentPage,
-              pageSize: this.pagination.pageSize
+              pageSize: this.pagination.pageSize,
+              rewardPointsType: 'A'
           }
           this.loading = true;
           this.$api.GET_DETAIL_LIST(data).then(res => {
               this.loading = false
-            //   this.data = res.detail
-            //   this.pagination.total = res.total
+              this.data = res.detail
+              this.pagination.total = res.total
           }).catch(err => {
               console.log('err', err);
               this.loading = false
           })
+      },
+
+    handleSelectionChange (selection) {
+        console.log(selection);
+        let selectedJobIds = [];
+        let selectedRewards = [];
+        selection.map((item) => {
+            selectedJobIds.push(item.jobid)
+            selectedRewards.push(item.RewardPointsdetailID)
+        })
+
+        this.jobids = selectedJobIds.join(',')
+        this.rewards = selectedRewards.join(',')
       },
 
       /**
@@ -145,22 +156,68 @@ export default {
                     this.$message.success('删除成功')
                     this.getList()
                 } else {
-                    this.$$message.error(res.msg || '删除失败')
+                    this.$message.error(res.msg || '删除失败')
                 }
             }).catch(err => {
                 console.log(err)
             })
         },
 
+        /**
+         * 导出
+         */
+        exportFile () {
+            let data = {
+              name: this.name,
+              jobid: this.staffNo,
+              isBonus: this.addOrMin,
+              isAccounted: this.isEnd,
+              beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
+              endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
+              rewardPointsType: 'A'
+          }
+          this.$api.EXPORT_DETAIL_LIST(data).then(res => {
+              if (res.code === 0) {
+                  this.$message.success('导出成功')
+              } else {
+                  this.$message.error(res.msg || '导出失败，请联系管理员')
+              }
+          }).catch(err => {
+              console.log('err', err)
+          })
+        },
+
+        /**
+         * 结算
+         */
+        settleAccounts () {
+            if (!this.jobids) {
+                this.$message.warning('请选择要结算的记录')
+                return
+            }
+            let data = {
+              jobid: this.jobids,
+              RewardPointsdetailID: this.rewards
+          }
+          this.$api.ACCOUNT_DETAIL_LIST(data).then(res => {
+              if (res.code === 0) {
+                  this.$message.success('结算成功');
+                  this.getList()
+              } else {
+                  this.$message.error(res.msg || '结算失败，请联系管理员')
+              }
+          }).catch(err => {
+              console.log('err', err)
+          })
+        },
+
       importFile () {
         const _this = this;
         _this.source = axios.CancelToken.source();
         let fileData = new FormData();
-        //   fileData.append('file', _this.$refs.file.files[0])
         fileData.append('file', _this.file)
         fileData.append('Operator', '100297')
         let url = '/api/import_rewardPoint';
-        // let url = '/api/test';
         this.uploadFile(url, fileData, _this.source.token, (res) => {
             let loaded = res.loaded
             let total = res.total
@@ -169,14 +226,15 @@ export default {
                 })
                 }).then((res) => {
                     if (res.data.code === 0) {
-                        alert('上传成功');
-                        _this.uploadPercent = 0;
+                        _this.$message.success('导入成功')
+                        _this.uploadPercent = 0
+                        _this.getList()
                     }
                 }, (rej) => {
                     if (rej === -2) {
-                        alert('取消上传成功')
+                        _this.$message.info(res.msg || '取消上传成功')
                     } else {
-                        alert('上传失败')
+                        _this.$message.error(res.msg || '上传失败')
                     }
                 })
             }
