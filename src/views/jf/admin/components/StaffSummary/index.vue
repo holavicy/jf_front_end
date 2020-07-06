@@ -23,20 +23,19 @@
         </div>
 
         <div class="table-wrapper">
-            <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading">
+             <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" size="mini">
                 <el-table-column prop="jobid" label="工号" width="70" fixed></el-table-column>
                 <el-table-column prop="name" label="姓名" fixed></el-table-column>
                 <el-table-column prop="DepartmentLv1" label="业务单元"></el-table-column>
                 <el-table-column prop="DepartmentLv3" label="部门"></el-table-column>
-                <el-table-column prop="BonusPoints" label="职务"></el-table-column>
-                <el-table-column prop="MinusPoints" label="职称"></el-table-column>
-                <el-table-column prop="Reason" label="学历"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="入职时间" width="180"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="职务积分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="职称积分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="学历积分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="工龄积分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="合计" width="100"></el-table-column>
+                <el-table-column prop="BonusPoints" label="现有A分"></el-table-column>
+                <el-table-column prop="MinusPoints" label="现有B管理积分" width="120"></el-table-column>
+                <el-table-column prop="Reason" label="固定积分"></el-table-column>
+                <el-table-column prop="AssessmentDate" label="年度管理积分" width="120"></el-table-column>
+                <el-table-column prop="AssessmentDate" label="年度累计积分" width="120"></el-table-column>
+                <el-table-column prop="AssessmentDate" label="总获得A分" width="80"></el-table-column>
+                <el-table-column prop="AssessmentDate" label="总获得B管理积分" width="120"></el-table-column>
+                <el-table-column prop="AssessmentDate" label="总累计积分" width="80"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
         </div>
@@ -61,7 +60,6 @@ export default {
 .staff-summary {
     .search-wrapper{
         display: flex;
-        justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
 

@@ -1,28 +1,16 @@
 export default {
     data () {
       return {
-        addOrMinOptions: [
+        goodsStatusOptions: [
           {
             label: '全部',
             value: ''
           }, {
-            label: '加分',
+            label: '上架',
             value: 0 
           }, {
-            label: '减分',
+            label: '下架',
             value: 1
-          }
-        ],
-        isEndOptions: [
-          {
-            label: '全部',
-            value: ''
-          }, {
-            label: '是',
-            value: 1 
-          }, {
-            label: '否',
-            value: 0
           }
         ],
         loading: false,

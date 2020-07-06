@@ -11,4 +11,25 @@ const isEndOptions = [
     }
   ]
 
-export { isEndOptions }
+  //0:交易完成 1:待确定 2:可领取 3:退回 4:取消
+const orderStatusOptions = [{
+    label: '全部',
+    value: ''
+  }, {
+    label: '交易完成',
+    value: 0
+  },  {
+    label: '待确定',
+    value: 1
+  },  {
+    label: '可领取',
+    value: 2
+  },  {
+    label: '退回',
+    value: 3
+  },  {
+    label: '取消',
+    value: 4
+  }]
+
+export { isEndOptions, orderStatusOptions }

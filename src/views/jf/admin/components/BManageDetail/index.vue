@@ -36,7 +36,7 @@
             <el-button type="primary" size="mini" @click="exportFile">导出</el-button>
         </el-row>
         <div class="table-wrapper">
-            <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading">
+            <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" size="mini">
                 <el-table-column prop="jobid" label="工号" width="70"></el-table-column>
                 <el-table-column prop="name" label="姓名"></el-table-column>
                 <el-table-column prop="DepartmentLv1" label="业务单元"></el-table-column>
@@ -88,20 +88,20 @@ export default {
       getList () {
           let data = {
               name: this.name,
-              jobid: this.staffNo,
+              jobid: this.staffNo? Number(this.staffNo):'',
               isBonus: this.addOrMin,
               isAccounted: this.isEnd,
               beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
               endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
               page: this.pagination.currentPage,
               pageSize: this.pagination.pageSize,
-              rewardPointsType: 'B'
+              rewardPointsType: '管理积分'
           }
           this.loading = true;
           this.$api.GET_DETAIL_LIST(data).then(res => {
               this.loading = false
-              this.data = res.detail
-              this.pagination.total = res.total
+              this.data = res.data.detail
+              this.pagination.total = res.data.total.totalLength
           }).catch(err => {
               console.log('err', err);
               this.loading = false
@@ -126,12 +126,13 @@ export default {
       exportFile () {
             let data = {
               name: this.name,
-              jobid: this.staffNo,
+              jobid: this.staffNo? Number(this.staffNo):'',
               isBonus: this.addOrMin,
               isAccounted: this.isEnd,
               beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
               endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
-              rewardPointsType: 'B'
+              rewardPointsType: '管理积分',
+              Operator: 100297
           }
           this.$api.EXPORT_DETAIL_LIST(data).then(res => {
               if (res.code === 0) {

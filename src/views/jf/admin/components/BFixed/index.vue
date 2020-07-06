@@ -24,21 +24,23 @@
 
         
         <div class="table-wrapper">
-            <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading">
+            <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" size="mini">
                 <el-table-column prop="jobid" label="工号" width="70" fixed></el-table-column>
                 <el-table-column prop="name" label="姓名" fixed></el-table-column>
                 <el-table-column prop="DepartmentLv1" label="业务单元"></el-table-column>
                 <el-table-column prop="DepartmentLv3" label="部门"></el-table-column>
-                <el-table-column prop="BonusPoints" label="现有A分"></el-table-column>
-                <el-table-column prop="MinusPoints" label="现有B管理积分"></el-table-column>
-                <el-table-column prop="Reason" label="固定积分"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="年度管理积分" width="180"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="年度累计积分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="总获得A分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="总获得B管理积分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="总累计积分" width="80"></el-table-column>
+                <el-table-column prop="BonusPoints" label="职务"></el-table-column>
+                <el-table-column prop="MinusPoints" label="职称"></el-table-column>
+                <el-table-column prop="Reason" label="学历"></el-table-column>
+                <el-table-column prop="AssessmentDate" label="入职时间" width="180"></el-table-column>
+                <el-table-column prop="AssessmentDate" label="职务积分" width="80"></el-table-column>
+                <el-table-column prop="AssessmentDate" label="职称积分" width="80"></el-table-column>
+                <el-table-column prop="AssessmentDate" label="学历积分" width="80"></el-table-column>
+                <el-table-column prop="AssessmentDate" label="工龄积分" width="80"></el-table-column>
+                <el-table-column prop="AssessmentDate" label="合计" width="100" fixed="right"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
+
         </div>
     </div>
 </template>
@@ -68,26 +70,18 @@ export default {
       getList () {
           let data = {
               name: this.name,
-              jobid: this.staffNo,
-              isBonus: this.addOrMin,
-              isAccounted: this.isEnd,
-              beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
-              endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
+              jobid: Number(this.staffNo),
               page: this.pagination.currentPage,
-              pageSize: this.pagination.pageSize
+              pageSize: this.pagination.pageSize,
+              rewardPointsType: '固定积分'
           }
           this.loading = true;
           this.$api.GET_DETAIL_LIST(data).then(res => {
               this.loading = false
-            //   this.data = res.detail
-            //   this.pagination.total = res.total
+              this.data = res.detail
+              this.pagination.total = res.total.totalLength
           }).catch(err => {
               console.log('err', err);
-            //   this.$notify({
-            //     title: '错误',
-            //     message: '查询失败，请联系管理员',
-            //     type: 'error'
-            //     })
               this.loading = false
           })
       },
@@ -98,7 +92,25 @@ export default {
       paginationCurrentChange (currentPage) {
         this.pagination.currentPage = currentPage
         this.getList()
-      }
+      },
+
+      exportFile () {
+            let data = {
+              name: this.name,
+              jobid: Number(this.staffNo),
+              rewardPointsType: '固定积分',
+              Operator: 100297
+          }
+          this.$api.EXPORT_DETAIL_LIST(data).then(res => {
+              if (res.code === 0) {
+                  this.$message.success('导出成功')
+              } else {
+                  this.$message.error(res.msg || '导出失败，请联系管理员')
+              }
+          }).catch(err => {
+              console.log('err', err)
+          })
+        },
     }
 }
 
@@ -108,7 +120,6 @@ export default {
 .a-detail {
     .search-wrapper{
         display: flex;
-        justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
 
