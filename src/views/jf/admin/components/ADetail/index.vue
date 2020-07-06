@@ -229,12 +229,14 @@ export default {
                         _this.$message.success('导入成功')
                         _this.uploadPercent = 0
                         _this.getList()
+                    } else {
+                        _this.$message.error(res.msg || '导入失败，请联系管理员')
                     }
                 }, (rej) => {
                     if (rej === -2) {
-                        _this.$message.info(res.msg || '取消上传成功')
+                        _this.$message.info('取消上传成功')
                     } else {
-                        _this.$message.error(res.msg || '上传失败')
+                        _this.$message.error('上传失败')
                     }
                 })
             }

@@ -19,7 +19,7 @@
         </div>
         <!-- <d2-menu-header flex-box="1"/> -->
         <!-- 顶栏右侧 -->
-        <div class="d2-header-right" flex-box="0">
+        <div class="d2-header-right" flex-box="1" style="justify-content: flex-end">
           <!-- 如果你只想在开发环境显示这个按钮请添加 v-if="$env === 'development'" -->
            <d2-header-color/>
           <d2-header-fullscreen/>

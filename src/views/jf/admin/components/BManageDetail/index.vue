@@ -33,13 +33,10 @@
                 <el-button type="primary" plain size="mini">导入</el-button>
             </el-upload>
 
-            <el-button type="primary" size="mini">导出</el-button>
+            <el-button type="primary" size="mini" @click="exportFile">导出</el-button>
         </el-row>
         <div class="table-wrapper">
-            <!-- <d2-crud :columns="columns" :data="data" :loading="loading" :pagination="pagination" @pagination-current-change="paginationCurrentChange" selection-row
-      @selection-change="handleSelectionChange" :rowHandle="rowHandle" @custom-emit-1="handleCustomEvent"/> -->
-            <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="55"></el-table-column>
+            <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading">
                 <el-table-column prop="jobid" label="工号" width="70"></el-table-column>
                 <el-table-column prop="name" label="姓名"></el-table-column>
                 <el-table-column prop="DepartmentLv1" label="业务单元"></el-table-column>
@@ -50,7 +47,6 @@
                 <el-table-column prop="AssessmentDate" label="考核日期" width="100"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="60">
                     <template slot-scope="scope">
-                        <!-- <el-button @click="handleClick(scope.row)" type="text" size="small">删除</el-button> -->
                         <el-popconfirm title="确定删除此条记录吗？" @onConfirm="deleteDetail(scope.row)">
                             <el-button type="text" size="mini" slot="reference">删除</el-button>
                         </el-popconfirm>
@@ -98,20 +94,16 @@ export default {
               beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
               endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
               page: this.pagination.currentPage,
-              pageSize: this.pagination.pageSize
+              pageSize: this.pagination.pageSize,
+              rewardPointsType: 'B'
           }
           this.loading = true;
           this.$api.GET_DETAIL_LIST(data).then(res => {
               this.loading = false
-            //   this.data = res.detail
-            //   this.pagination.total = res.total
+              this.data = res.detail
+              this.pagination.total = res.total
           }).catch(err => {
               console.log('err', err);
-            //   this.$notify({
-            //     title: '错误',
-            //     message: '查询失败，请联系管理员',
-            //     type: 'error'
-            //     })
               this.loading = false
           })
       },
@@ -127,6 +119,30 @@ export default {
       beforeUpload (file) {
         this.file = file;
       },
+
+        /**
+         * 导出
+         */
+      exportFile () {
+            let data = {
+              name: this.name,
+              jobid: this.staffNo,
+              isBonus: this.addOrMin,
+              isAccounted: this.isEnd,
+              beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
+              endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
+              rewardPointsType: 'B'
+          }
+          this.$api.EXPORT_DETAIL_LIST(data).then(res => {
+              if (res.code === 0) {
+                  this.$message.success('导出成功')
+              } else {
+                  this.$message.error(res.msg || '导出失败，请联系管理员')
+              }
+          }).catch(err => {
+              console.log('err', err)
+          })
+        },
 
           /**
          * 删除
@@ -153,11 +169,9 @@ export default {
         const _this = this;
         _this.source = axios.CancelToken.source();
         let fileData = new FormData();
-        //   fileData.append('file', _this.$refs.file.files[0])
         fileData.append('file', _this.file)
         fileData.append('Operator', '100297')
         let url = '/api/import_rewardPoint';
-        // let url = '/api/test';
         this.uploadFile(url, fileData, _this.source.token, (res) => {
             let loaded = res.loaded
             let total = res.total
@@ -166,14 +180,17 @@ export default {
                 })
                 }).then((res) => {
                     if (res.data.code === 0) {
-                        alert('上传成功');
-                        _this.uploadPercent = 0;
+                        _this.$message.success('导入成功')
+                        _this.uploadPercent = 0
+                        _this.getList()
+                    } else {
+                        _this.$message.error(res.msg || '导入失败，请联系管理员')
                     }
                 }, (rej) => {
                     if (rej === -2) {
-                        alert('取消上传成功')
+                        _this.$message.info('取消上传成功')
                     } else {
-                        alert('上传失败')
+                        _this.$message.error('上传失败')
                     }
                 })
             }
