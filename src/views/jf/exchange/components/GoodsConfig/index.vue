@@ -21,7 +21,6 @@
             </el-row>
         </div>
 
-        
         <div class="table-wrapper">
             <el-table :data="data" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading" @selection-change="handleSelectionChange">
                 <el-table-column type="index" width="55"></el-table-column>
