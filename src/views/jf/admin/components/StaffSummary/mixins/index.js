@@ -1,7 +1,6 @@
 export default {
     data () {
       return {
-        // data: [],
         loading: false,
         pagination: {
           currentPage: 0,
@@ -9,47 +8,7 @@ export default {
           total: 0
         },
 
-        data: [{
-          RewardPointsdetailID: 1,
-          jobid:100297,
-          name: '陈明姣'
-      }, {
-          RewardPointsdetailID: 2,
-          jobid:100297,
-          name: '陈明姣'
-      }, {
-          RewardPointsdetailID: 3,
-          jobid:100297,
-          name: '陈明姣'
-      },
-      {
-          jobid:100297,
-          name: '陈明姣'
-      },
-      {
-          jobid:100297,
-          name: '陈明姣'
-      },
-      {
-          jobid:100297,
-          name: '陈明姣'
-      },
-      {
-          jobid:100297,
-          name: '陈明姣'
-      },
-      {
-          jobid:100297,
-          name: '陈明姣'
-      },
-      {
-          jobid:100297,
-          name: '陈明姣'
-      },
-      {
-          jobid:100297,
-          name: '陈明姣'
-      }]
+        data: []
       }
     },
 

@@ -59,27 +59,33 @@ router.beforeEach(async (to, from, next) => {
       const isDD = dd.env.platform !== 'notInDingTalk'
       const corpId = 'dingcd0f5a2514db343b35c2f4657eb6378f'
       if (isDD) {
-        dd.ready(function () {
-          dd.runtime.permission.requestAuthCode({
-            corpId: corpId, // 企业id
-            onSuccess: (info) => {
-              const code = info.code // 通过该免登授权码可以获取用户身份
-              api.DING_LOGIN(code, corpId)
-                .then(async (res) => {
-                  util.cookies.set('uuid', res.userId)
-                  util.cookies.set('token', res.token)
-                  // // 设置 vuex 用户信息
-                  await store.dispatch('d2admin/user/set', { name: res.name }, { root: true })
-                  // 用户登录后从持久化数据加载一系列的设置
-                  await store.dispatch('load')
-                  next()
-                })
-                .catch(err => {
-                  console.log('err', err)
-                })
-            }
-          })
+        next({
+          name: 'login',
+          query: {
+            redirect: to.fullPath
+          }
         })
+        // dd.ready(function () {
+        //   dd.runtime.permission.requestAuthCode({
+        //     corpId: corpId, // 企业id
+        //     onSuccess: (info) => {
+        //       const code = info.code // 通过该免登授权码可以获取用户身份
+        //       api.DING_LOGIN(code, corpId)
+        //         .then(async (res) => {
+        //           util.cookies.set('uuid', res.userId)
+        //           util.cookies.set('token', res.token)
+        //           // // 设置 vuex 用户信息
+        //           await store.dispatch('d2admin/user/set', { name: res.name }, { root: true })
+        //           // 用户登录后从持久化数据加载一系列的设置
+        //           await store.dispatch('load')
+        //           next()
+        //         })
+        //         .catch(err => {
+        //           console.log('err', err)
+        //         })
+        //     }
+        //   })
+        // })
       } else {
         next({
           name: 'login',

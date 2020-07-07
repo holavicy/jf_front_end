@@ -88,7 +88,7 @@ export default {
                   item.isEnd = item.IsAccounted == 0?'否':'是'
               })
               this.data = res.data.detail
-              this.pagination.total = res.data.total.totalLength
+              this.pagination.total = res.data.totalLength
           }).catch(err => {
               console.log('err', err);
               this.loading = false

@@ -50,8 +50,58 @@ export default {
     ],
     data () {
         return {
-            data: []
+            staffNo: '',
+            name: ''
         }
+    },
+
+    methods: {
+        /**
+       * 获取列表数据
+       */
+      getList () {
+          let data = {
+              name: this.name,
+              jobid: this.staffNo? Number(this.staffNo):'',
+              page: this.pagination.currentPage,
+              pageSize: this.pagination.pageSize
+          }
+          this.loading = true;
+          this.$api.GET_SUMMARY_LIST(data).then(res => {
+              this.loading = false
+              res.data.detail.map((item) => {
+                  item.checkDate = dayjs(item.AssessmentDate).format('YYYY-M-D')
+                  item.isEnd = item.IsAccounted == 0?'否':'是'
+              })
+              this.data = res.data.detail
+              this.pagination.total = res.data.totalLength
+          }).catch(err => {
+              console.log('err', err);
+              this.loading = false
+          })
+      },
+
+      
+        /**
+         * 导出
+         */
+        exportFile () {
+            let data = {
+              name: this.name,
+              jobid: this.staffNo? Number(this.staffNo):'',
+              Operator: 100297
+          }
+          this.$api.EXPORT_SUMMARY_LIST(data).then(res => {
+              if (res.code === 0) {
+                  window.location.href = res.data
+              } else {
+                  this.$message.error(res.msg || '导出失败，请联系管理员')
+              }
+              
+          }).catch(err => {
+              console.log('err', err)
+          })
+        },
     }
 }
 </script>

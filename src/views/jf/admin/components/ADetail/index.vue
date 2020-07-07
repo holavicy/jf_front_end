@@ -47,12 +47,16 @@
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="JobId" label="工号" width="70"></el-table-column>
                 <el-table-column prop="Name" label="姓名" width="80"></el-table-column>
-                <el-table-column prop="DepartmentLv1" label="业务单元"></el-table-column>
-                <el-table-column prop="DepartmentLv3" label="部门" width="100"></el-table-column>
+                <el-table-column prop="DepartmentLv1" label="一级部门"></el-table-column>
+                <el-table-column prop="DepartmentLv2" label="二级部门"></el-table-column>
+                <el-table-column prop="DepartmentLv3" label="三级部门"></el-table-column>
+                <el-table-column prop="Post" label="职务名称"></el-table-column>
                 <el-table-column prop="isEnd" label="是否结算" width="80"></el-table-column>
                 <el-table-column prop="BonusPoints" label="加分" width="80"></el-table-column>
                 <el-table-column prop="MinusPoints" label="减分" width="80"></el-table-column>
                 <el-table-column prop="Reason" label="加减分理由" width="180"></el-table-column>
+                <el-table-column prop="Proof" label="加减分依据" width="180"></el-table-column>
+                <el-table-column prop="ReasonType" label="理由分类" width="180"></el-table-column>
                 <el-table-column prop="checkDate" label="考核日期" width="100"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="60">
                     <template slot-scope="scope">
@@ -112,11 +116,10 @@ export default {
               this.loading = false
               res.data.detail.map((item) => {
                   item.checkDate = dayjs(item.AssessmentDate).format('YYYY-M-D')
-                  console.log(item.checkDate)
                   item.isEnd = item.IsAccounted == 0?'否':'是'
               })
               this.data = res.data.detail
-              this.pagination.total = res.data.total.totalLength
+              this.pagination.total = res.data.totalLength
           }).catch(err => {
               console.log('err', err);
               this.loading = false
@@ -196,7 +199,7 @@ export default {
          * 结算
          */
         settleAccounts () {
-            if (!this.jobids) {
+            if (!this.rewards) {
                 this.$message.warning('请选择要结算的记录')
                 return
             }
@@ -234,7 +237,8 @@ export default {
                         _this.uploadPercent = 0
                         _this.getList()
                     } else {
-                        _this.$message.error(res.msg || '导入失败，请联系管理员')
+                        console.log(res)
+                        _this.$message.error(res.data.msg || '导入失败，请联系管理员')
                     }
                 }, (rej) => {
                     if (rej === -2) {

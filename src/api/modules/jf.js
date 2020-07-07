@@ -40,7 +40,29 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
     */
   DELETE_DETAIL_RECORD (data) {
     return request({
-      url: 'delete_rewardPoint',
+      url: '/delete_rewardPoint',
+      method: 'post',
+      data
+    })
+  },
+
+  /**
+   * 获取汇总
+   */
+  GET_SUMMARY_LIST (data) {
+    return request({
+      url: '/query_RewardPointSummary',
+      method: 'post',
+      data
+    })
+  },
+
+  /**
+   * 导出汇总
+   */
+  EXPORT_SUMMARY_LIST (data) {
+    return request({
+      url: '/export_RewardPointSummary',
       method: 'post',
       data
     })

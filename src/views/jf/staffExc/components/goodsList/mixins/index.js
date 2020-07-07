@@ -1,43 +1,42 @@
 export default {
     data () {
       return {
-        addOrMinOptions: [
+        goodsStatusOptions: [
           {
             label: '全部',
             value: ''
           }, {
-            label: '加分',
+            label: '上架',
             value: 0 
           }, {
-            label: '减分',
+            label: '下架',
             value: 1
           }
         ],
-        data: [],
         loading: false,
         pagination: {
           currentPage: 0,
           pageSize: 10,
           total: 0
-        }
+        },
+
+        data: [{
+            goodsName: '小方巾',
+            price: '20',
+            stock: 180,
+            imgUrl: ''
+        }]
       }
     },
 
     methods: {
-      handleSelectionChange (selection) {
-        console.log(selection);
-      },
-      handleCustomEvent ({ index, row }) {
-        console.log(index)
-        console.log(row)
-      },
       handleSizeChange (val) {
-        console.log(`每页 ${val} 条`);
         this.pagination.pageSize = val;
+        this.getList()
       },
       handleCurrentChange (val) {
-        console.log(`当前页: ${val}`);
         this.pagination.currentPage = val-1;
+        this.getList()
       }
     }
   }

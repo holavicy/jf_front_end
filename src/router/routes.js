@@ -69,7 +69,7 @@ const frameIn = [
           title: '积分兑换',
           auth: true
         },
-        component: _import('jf/exchange/index')
+        component: _import('jf/staffExc/index')
       },
       {
         path: 'JFSummary',

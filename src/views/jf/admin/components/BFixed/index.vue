@@ -78,8 +78,8 @@ export default {
           this.loading = true;
           this.$api.GET_DETAIL_LIST(data).then(res => {
               this.loading = false
-              this.data = res.detail
-              this.pagination.total = res.total.totalLength
+              this.data = res.data.detail
+              this.pagination.total = res.data.totalLength
           }).catch(err => {
               console.log('err', err);
               this.loading = false
