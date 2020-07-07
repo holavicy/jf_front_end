@@ -47,16 +47,16 @@
                 <el-table-column type="selection" width="55"></el-table-column>
                 <el-table-column prop="JobId" label="工号" width="70"></el-table-column>
                 <el-table-column prop="Name" label="姓名" width="80"></el-table-column>
-                <el-table-column prop="DepartmentLv1" label="一级部门"></el-table-column>
+                <el-table-column prop="DepartmentLv1" label="一级部门" width="180"></el-table-column>
                 <el-table-column prop="DepartmentLv2" label="二级部门"></el-table-column>
                 <el-table-column prop="DepartmentLv3" label="三级部门"></el-table-column>
                 <el-table-column prop="Post" label="职务名称"></el-table-column>
                 <el-table-column prop="isEnd" label="是否结算" width="80"></el-table-column>
-                <el-table-column prop="BonusPoints" label="加分" width="80"></el-table-column>
-                <el-table-column prop="MinusPoints" label="减分" width="80"></el-table-column>
+                <el-table-column prop="BonusPoints" label="加分" width="60"></el-table-column>
+                <el-table-column prop="MinusPoints" label="减分" width="60"></el-table-column>
                 <el-table-column prop="Reason" label="加减分理由" width="180"></el-table-column>
-                <el-table-column prop="Proof" label="加减分依据" width="180"></el-table-column>
-                <el-table-column prop="ReasonType" label="理由分类" width="180"></el-table-column>
+                <el-table-column prop="Proof" label="加减分依据" width="100"></el-table-column>
+                <el-table-column prop="ReasonType" label="理由分类" width="100"></el-table-column>
                 <el-table-column prop="checkDate" label="考核日期" width="100"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="60">
                     <template slot-scope="scope">

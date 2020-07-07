@@ -21,7 +21,19 @@
 
         <el-button type="primary" size="mini" @click="getList">查询</el-button>
       </div>
-      <d2-crud ref="d2Crud" index-row :columns="columns" :data="data"/>
+        <el-table :data="data" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading">
+                <el-table-column type="index" width="55"></el-table-column>
+                <el-table-column prop="Name" label="姓名" width="80"></el-table-column>
+                <el-table-column prop="Post" label="职务名称"></el-table-column>
+                <el-table-column prop="isEnd" label="是否结算" width="80"></el-table-column>
+                <el-table-column prop="BonusPoints" label="加分" width="60"></el-table-column>
+                <el-table-column prop="MinusPoints" label="减分" width="60"></el-table-column>
+                <el-table-column prop="Reason" label="加减分理由" width="180"></el-table-column>
+                <el-table-column prop="Proof" label="加减分依据" width="180"></el-table-column>
+                <el-table-column prop="ReasonType" label="理由分类" width="120"></el-table-column>
+                <el-table-column prop="checkDate" label="考核日期" width="120"></el-table-column>
+            </el-table>
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[5, 10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
     </div>
 </template>
 
@@ -128,10 +140,10 @@ export default {
 <style scoped lang="scss">
 .search-wrapper{
   display: flex;
-  justify-content: space-between;
   align-items: center;
 
   .search-item{
+    margin-right: 20px;
     label{
       margin-right: 10px;
       font-size: 14px;

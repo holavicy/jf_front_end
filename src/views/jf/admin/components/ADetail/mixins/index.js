@@ -27,7 +27,7 @@ export default {
         ],
         loading: false,
         pagination: {
-          currentPage: 0,
+          currentPage: 1,
           pageSize: 10,
           total: 0
         },
@@ -42,7 +42,7 @@ export default {
         this.getList()
       },
       handleCurrentChange (val) {
-        this.pagination.currentPage = val-1;
+        this.pagination.currentPage = val;
         this.getList()
       }
     }
