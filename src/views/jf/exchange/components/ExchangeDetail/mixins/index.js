@@ -95,33 +95,23 @@ export default {
           name: '陈明姣'
       },
       {
+        RewardPointsdetailID: 4,
           jobid:100297,
           name: '陈明姣'
+      }],
+      goodsData: [{
+        goodsName: '小方巾',
+        price: '10',
+        num: '2',
+        total: '20'
       },
       {
-          jobid:100297,
-          name: '陈明姣'
-      },
-      {
-          jobid:100297,
-          name: '陈明姣'
-      },
-      {
-          jobid:100297,
-          name: '陈明姣'
-      },
-      {
-          jobid:100297,
-          name: '陈明姣'
-      },
-      {
-          jobid:100297,
-          name: '陈明姣'
-      },
-      {
-          jobid:100297,
-          name: '陈明姣'
-      }]
+        goodsName: '杯子',
+        price: '100',
+        num: '1',
+        total: '100'
+      }
+    ]
       }
     },
 

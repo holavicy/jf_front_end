@@ -2,7 +2,7 @@
     <div class="a-detail">
         <div class="search-wrapper">
             <div class="search-item">
-                <label>商品名称：</label><el-input placeholder="请输入商品名称" v-model="staffNo" size="mini"></el-input>
+                <label>商品名称：</label><el-input placeholder="请输入商品名称" v-model="goodsName" size="mini"></el-input>
             </div>
   
             <div class="search-item">
@@ -143,8 +143,7 @@ export default {
          */
         exportFile () {
             let data = {
-              name: this.name,
-              jobid: this.staffNo? Number(this.staffNo):'',
+              goodsName: this.goodsName,
               isBonus: this.addOrMin,
               isAccounted: this.isEnd,
               beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',

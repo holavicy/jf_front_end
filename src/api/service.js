@@ -85,7 +85,6 @@ function createService () {
 function createRequestFunction (service) {
   return function (config) {
     const token = util.cookies.get('token')
-    console.log(token)
     const configDefault = {
       headers: {
         Authorization: token,
@@ -95,9 +94,7 @@ function createRequestFunction (service) {
       baseURL: process.env.VUE_APP_API,
       data: {}
     }
-    console.log(config.data)
     config.data = formatObj(config.data)
-    console.log(config.data)
     return service(Object.assign(configDefault, config))
   }
 }

@@ -16,7 +16,10 @@
         </div>
 
         <div class="table-wrapper">
-            <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" expand-row-keys="1" row-key="RewardPointsdetailID">
+            <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" 
+            size="mini"
+            :expand-row-keys="expands" 
+            :row-key="getRowKeys">
                 <el-table-column prop="jobid" label="订单编号" width="100"></el-table-column>
                 <el-table-column prop="name" label="工号"></el-table-column>
                 <el-table-column prop="name" label="姓名"></el-table-column>
@@ -24,42 +27,48 @@
                 <el-table-column prop="DepartmentLv3" label="部门"></el-table-column>
                 <el-table-column prop="IsAccounted" label="总价"></el-table-column>
                 <el-table-column prop="BonusPoints" label="订单状态"></el-table-column>
-                <el-table-column fixed="right" label="操作">
+                <el-table-column fixed="right" label="操作" width="200">
                     <template slot-scope="scope">
                         <el-popconfirm title="确定通过此订单吗？" @onConfirm="deleteDetail(scope.row)">
                             <el-button type="text" size="mini" slot="reference">确定</el-button>
                         </el-popconfirm>
                         <el-popconfirm title="确定退回此订单吗？" @onConfirm="deleteDetail(scope.row)">
-                            <el-button type="text" size="mini" slot="reference">退回</el-button>
+                            <el-button type="text" size="mini" slot="reference" class="bt-error">退回</el-button>
                         </el-popconfirm>
-                        <el-button type="text" size="mini" slot="reference">查看详情</el-button>
+                        <el-button type="text" size="mini" slot="reference" @click="showDetail(scope.row)" class="show-detail">查看详情</el-button>
                     </template>
                 </el-table-column>
-                 <el-table-column type="expand"><template slot-scope="props">
-        <el-form label-position="left" inline class="demo-table-expand">
-          <el-form-item label="商品名称">
-            <span>{{ props.row.name }}</span>
-          </el-form-item>
-          <el-form-item label="所属店铺">
-            <span>{{ props.row.shop }}</span>
-          </el-form-item>
-          <el-form-item label="商品 ID">
-            <span>{{ props.row.id }}</span>
-          </el-form-item>
-          <el-form-item label="店铺 ID">
-            <span>{{ props.row.shopId }}</span>
-          </el-form-item>
-          <el-form-item label="商品分类">
-            <span>{{ props.row.category }}</span>
-          </el-form-item>
-          <el-form-item label="店铺地址">
-            <span>{{ props.row.address }}</span>
-          </el-form-item>
-          <el-form-item label="商品描述">
-            <span>{{ props.row.desc }}</span>
-          </el-form-item>
-        </el-form>
-      </template>
+                <el-table-column type="expand" width="1">
+                    <template>
+                       <div class="inner-table" style="width: 100%">
+                         
+                                <el-table
+                                    :data="goodsData" size="mini"
+                                    show-summary
+                                    :summary-method="getSummaries"
+                                    style="width: 100%">
+                                    <el-table-column
+                                  type="index">
+                                    </el-table-column>
+                                    <el-table-column
+                                    prop="goodsName"
+                                    label="商品名称">
+                                    </el-table-column>
+                                    <el-table-column
+                                    prop="price"
+                                    label="单价">
+                                    </el-table-column>
+                                    <el-table-column
+                                    prop="num"
+                                    label="数量">
+                                    </el-table-column>
+                                    <el-table-column
+                                    prop="total"
+                                    label="总价">
+                                    </el-table-column>
+                                </el-table>
+                       </div>
+                    </template>
     </el-table-column>
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
@@ -81,7 +90,11 @@ export default {
         return {
             orderStatusOptions,
             staffNo: '',
-            orderStatus: ''
+            orderStatus: '',
+            getRowKeys (row) {
+                return row.RewardPointsdetailID
+            },
+            expands: []
         }
     },
     mounted () {
@@ -138,6 +151,44 @@ export default {
             })
         },
 
+        showDetail (data) {
+            if (this.expands.length>0) {
+                this.expands = []
+            } else {
+                this.expands.push(data.RewardPointsdetailID)
+            }
+        },
+
+        getSummaries (param) {
+            const { columns, data } = param;
+            const sums = [];
+            columns.forEach((column, index) => {
+            if (index === 0) {
+                sums[index] = '';
+                return;
+            }
+            const values = data.map(item => Number(item[column.property]))
+            if (!values.every(value => isNaN(value))) {
+                sums[index] = values.reduce((prev, curr) => {
+                const value = Number(curr);
+                if (!isNaN(value)) {
+                    return prev + curr;
+                } else {
+                    return prev;
+                }
+                }, 0);
+            } else {
+                sums[index] = '';
+            }
+            })
+            sums[2]='合计'
+            console.log(sums)
+
+            return sums;
+
+
+        },
+
         /**
          * 导出
          */
@@ -167,7 +218,19 @@ export default {
 
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+.el-button--text.bt-error{
+    color: #E51C23;
+    margin-left: 20px;
+    &:hover{
+        color: #E51C23;
+        opacity: .8;
+    }
+}
+
+.el-button--text.show-detail{
+    margin-left: 20px;
+}
 .exchange-detail {
     .search-wrapper{
         display: flex;
@@ -191,5 +254,13 @@ export default {
         display: flex;
         align-items: center;
     }
+}
+.inner-table th, .inner-table td{
+    border-bottom: none !important;
+    font-size: 10px !important;
+}
+
+.inner-table th{
+    color: #101010 !important;
 }
 </style>
