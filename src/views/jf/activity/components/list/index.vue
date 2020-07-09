@@ -55,6 +55,7 @@ export default {
        */
       getList () {
           let data = {
+              title: this.title,
               page: this.pagination.currentPage,
               pageSize: this.pagination.pageSize,
           }
