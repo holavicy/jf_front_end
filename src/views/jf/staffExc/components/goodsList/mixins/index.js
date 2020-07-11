@@ -21,11 +21,19 @@ export default {
         },
 
         data: [{
+            GoodsID: 7,
             goodsName: '小方巾',
             price: '20',
             stock: 180,
             imgUrl: ''
-        }]
+        },
+        {
+          GoodsID: 10,
+          goodsName: '测试',
+          price: '10',
+          stock: 180,
+          imgUrl: ''
+      }]
       }
     },
 

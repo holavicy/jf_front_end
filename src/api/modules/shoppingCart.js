@@ -1,33 +1,33 @@
 
 export default ({ service, request, serviceForMock, requestForMock, mock, faker, tools }) => ({
-    GET_ACTIVITY_LIST (data) {
+    ADD_CART (data) {
       /*
-      *查询活动列表
+      *加入购物车
       */
       return request({
-        url: '/query_activity',
+        url: '/add_cart',
         method: 'post',
         data
       })
     },
   
         /*
-      *新增活动
+      *获取购物车列表
       */
-     ADD_ACTIVITY (data) {
+     GET_CART_LIST (data) {
       return request({
-        url: '/add_activity',
+        url: '/query_cart',
         method: 'post',
         data
       })
     },
 
     /**
-     * 编辑活动
+     * 修改购物车数量
      */
-    EDIT_ACTIVITY (data) {
+    EDIT_CART_NUM (data) {
       return request({
-        url: '/edit_activity',
+        url: '/edit_cart_num',
         method: 'post',
         data
       })
@@ -39,7 +39,7 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
       */
     DELETE_ACTIVITY_RECORD (data) {
       return request({
-        url: '/delete_activity',
+        url: 'delete_activity',
         method: 'post',
         data
       })

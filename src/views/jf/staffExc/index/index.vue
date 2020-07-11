@@ -1,11 +1,11 @@
 <template>
     <d2-container class="page">
-        <el-tabs v-model="activeTab">
+        <el-tabs v-model="activeTab" @tab-click="tabClick">
             <el-tab-pane label="兑换商品" name="goods-list">
                 <goods-list/>
             </el-tab-pane>
             <el-tab-pane label="购物车" name="shopping-cart">
-                <shopping-cart/>
+                <shopping-cart ref="cart"/>
             </el-tab-pane>
             <el-tab-pane label="兑换记录" name="ex-records">
                 <ex-records/>
@@ -27,6 +27,14 @@ export default {
   data () {
       return {
           activeTab: 'goods-list'
+      }
+  },
+
+  methods: {
+      tabClick (e) {
+          if (e.name == "shopping-cart") {
+              this.$refs.cart.getList()
+          }
       }
   }
 }

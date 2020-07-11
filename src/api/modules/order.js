@@ -14,9 +14,9 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
       /*
       *导出积分明细
       */
-    EXPORT_DETAIL_LIST (data) {
+    CREATE_PAY (data) {
       return request({
-        url: '/export_rewardPoint',
+        url: '/create_order',
         method: 'post',
         data
       })

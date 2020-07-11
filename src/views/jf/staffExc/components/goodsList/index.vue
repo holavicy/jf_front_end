@@ -11,11 +11,11 @@
         </div>
 
         <div class="table-wrapper">
-            <el-table :data="data" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading" @selection-change="handleSelectionChange">
+            <el-table :data="data" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading">
                 <el-table-column type="index" width="55"></el-table-column>
                 <el-table-column prop="JobId" label="商品图片">
                     <template slot-scope="scope">
-                        <el-upload class="avatar-uploader" action="default" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+                        <el-upload class="avatar-uploader" action="default" :show-file-list="false">
                             <img v-if="scope.row.imageUrl" :src="scope.row.imageUrl" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
@@ -88,27 +88,26 @@ export default {
         this.pagination.currentPage = currentPage
         this.getList()
       },
-
-          /**
-         * 删除
-         */
-        deleteDetail (val) {
-            console.log(val);
-            let data = {
-                RewardPointsdetailID: val.RewardPointsdetailID
-            }
-
-            this.$api.DELETE_DETAIL_RECORD(data).then(res => {
-                if (res.code === 0) {
-                    this.$message.success('删除成功')
-                    this.getList()
-                } else {
-                    this.$message.error(res.msg || '删除失败')
-                }
-            }).catch(err => {
-                console.log(err)
-            })
-        }
+      /**
+       *加入购物车
+       */
+       addToCart (row) {
+           console.log(row)
+           let data = {
+               GoodsID: row.GoodsID,
+               num: 1,
+               Operator: '100297'
+           }
+           this.$api.ADD_CART(data).then((res) => {
+               if (res.code == 0) {
+                   this.$message.success('成功加入购物车')
+               } else {
+                   this.$message.error(res.msg || '加入购物车失败，请刷新后再试')
+               }
+           }).catch((err) => {
+               console.log(err)
+           })
+       }
     }
 }
 
