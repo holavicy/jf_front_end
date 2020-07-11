@@ -10,7 +10,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="Name" label="商品名称"></el-table-column>
-                <el-table-column prop="Price" label="单价"></el-table-column>
+                <el-table-column prop="PointCost" label="单价"></el-table-column>
                 <!-- <el-table-column prop="GoodsAmount" label="数量"></el-table-column> -->
                 <el-table-column fixed="right" label="数量" width="180">
                     <template slot-scope="scope">
@@ -46,7 +46,7 @@ export default {
       totalPrice: function () {
         let totalPrice = 0;
         this.data.map( (item) => {
-          totalPrice = totalPrice+(item.GoodsAmount * item.Price)
+          totalPrice = totalPrice+(item.GoodsAmount * item.PointCost)
         })
         return totalPrice
       }
