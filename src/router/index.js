@@ -36,7 +36,6 @@ const router = new VueRouter({
  * 权限验证
  */
 router.beforeEach(async (to, from, next) => {
-  console.log("????")
   // 确认已经加载多标签页数据 https://github.com/d2-projects/d2-admin/issues/201
   await store.dispatch('d2admin/page/isLoaded')
   // 确认已经加载组件尺寸设置 https://github.com/d2-projects/d2-admin/issues/198
@@ -51,10 +50,8 @@ router.beforeEach(async (to, from, next) => {
     // 请根据自身业务需要修改
     const token = util.cookies.get('token')
     if (token && token !== 'undefined') {
-      console.log(token)
       next()
     } else {
-      console.log("..............................................")
       // 没有登录的时候跳转到登录界面
       // 携带上登陆成功之后需要跳转的页面完整路径
       // 判断是否是钉钉，若是钉钉，免登存cookie
@@ -62,26 +59,17 @@ router.beforeEach(async (to, from, next) => {
       const isDD = dd.env.platform !== 'notInDingTalk'
       const corpId = 'dingcd0f5a2514db343b35c2f4657eb6378f'
       if (isDD) {
-        console.log("DD")
-        // next({
-        //   name: 'login',
-        //   query: {
-        //     redirect: to.fullPath
-        //   }
-        // })
         dd.ready(function () {
           dd.runtime.permission.requestAuthCode({
             corpId: corpId, // 企业id
             onSuccess: (info) => {
               const code = info.code // 通过该免登授权码可以获取用户身份
-              console.log(code)
               let data = {
                 code: code,
                 corpId: corpId
               }
               api.DING_LOGIN(data)
                 .then(async (res) => {
-                  console.log(res)
                   util.cookies.set('uuid', res.data.jobnumber)
                   util.cookies.set('token', res.data.token)
                   let roles = []

@@ -51,6 +51,7 @@
 <script>
 import axios from 'axios'
 import dayjs from 'dayjs'
+import util from '@/libs/util.js'
 export default {
     name: 'info',
     props: {
@@ -62,6 +63,7 @@ export default {
         return {
             dayjs,
             file: null,
+            operator: util.cookies.get('uuid'),
             tempRuleForm:  {
                 Title: '',
                 Slogan: '',
@@ -102,7 +104,7 @@ export default {
             if (valid) {
                 this.ruleForm.BeginDateTime = dayjs(this.ruleForm.BeginDateTime).format('YYYY-M-D HH:mm:ss')
                 this.ruleForm.EndDateTime = dayjs(this.ruleForm.EndDateTime).format('YYYY-M-D HH:mm:ss')
-                this.ruleForm.CreatedBy="100297"
+                this.ruleForm.CreatedBy=this.operator
                 console.log(this.id)
                 if (this.id) {
                     this.editActivity(this.ruleForm)
@@ -176,7 +178,7 @@ export default {
         _this.source = axios.CancelToken.source();
         let fileData = new FormData();
         fileData.append('file', _this.file)
-        fileData.append('Operator', '100297')
+        fileData.append('Operator', this.operator)
         let url = '/api/upload';
         this.uploadFile(url, fileData, _this.source.token, (res) => {
             let loaded = res.loaded

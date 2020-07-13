@@ -76,6 +76,7 @@
 import axios from 'axios'
 import js from './mixins/index'
 import dayjs from 'dayjs'
+import util from '@/libs/util.js'
 export default {
     name: 'a-detail',
     mixins: [
@@ -89,7 +90,8 @@ export default {
             addOrMin: '',
             isEnd: '',
             checkDate: null,
-            file: null
+            file: null,
+            operator: util.cookies.get('uuid'),
         }
     },
     mounted () {
@@ -181,7 +183,7 @@ export default {
               beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
               endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
               rewardPointsType: 'A分',
-              Operator: 100297
+              Operator: this.operator
           }
           this.$api.EXPORT_DETAIL_LIST(data).then(res => {
               if (res.code === 0) {
@@ -223,7 +225,7 @@ export default {
         _this.source = axios.CancelToken.source();
         let fileData = new FormData();
         fileData.append('file', _this.file)
-        fileData.append('Operator', '100297')
+        fileData.append('Operator', this.operator)
         let url = '/api/import_rewardPoint';
         this.uploadFile(url, fileData, _this.source.token, (res) => {
             let loaded = res.loaded

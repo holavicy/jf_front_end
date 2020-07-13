@@ -15,8 +15,8 @@
             <el-table :data="data" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading">
                 <el-table-column type="index" width="55"></el-table-column>
                 <el-table-column prop="Title" label="活动名称"></el-table-column>
-                <el-table-column prop="BeginDate" label="活动开始时间"></el-table-column>
-                <el-table-column prop="EndDate" label="活动结束时间"></el-table-column>
+                <el-table-column prop="BeginDateTime" label="活动开始时间"></el-table-column>
+                <el-table-column prop="EndDateTime" label="活动结束时间"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="100">
                     <template slot-scope="scope">
                         <el-button type="text" size="mini" slot="reference" @click="editActivity(scope.row)">编辑</el-button>
@@ -62,10 +62,6 @@ export default {
           this.loading = true;
           this.$api.GET_ACTIVITY_LIST(data).then(res => {
               this.loading = false
-            res.data.detail.map((item) => {
-                  item.BeginDate = dayjs(item.BeginDateTime).format('YYYY-M-D')
-                  item.EndDate = dayjs(item.EndDateTime).format('YYYY-M-D')
-              })
               this.data = res.data.detail
               this.pagination.total = res.data.totalLength
           }).catch(err => {

@@ -44,6 +44,7 @@
 
 <script>
 import js from './mixins/index'
+import util from '@/libs/util.js'
 export default {
     mixins: [
         js
@@ -51,7 +52,8 @@ export default {
     data () {
         return {
             staffNo: '',
-            name: ''
+            name: '',
+            operator: util.cookies.get('uuid')
         }
     },
 
@@ -89,7 +91,7 @@ export default {
             let data = {
               name: this.name,
               jobid: this.staffNo? Number(this.staffNo):'',
-              Operator: 100297
+              Operator: this.operator
           }
           this.$api.EXPORT_SUMMARY_LIST(data).then(res => {
               if (res.code === 0) {

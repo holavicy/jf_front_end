@@ -49,6 +49,7 @@
 <script>
 import js from './mixins/index'
 import dayjs from 'dayjs'
+import util from '@/libs/util.js'
 export default {
     name: 'b-fixed',
     mixins: [
@@ -57,7 +58,8 @@ export default {
     data () {
         return {
             staffNo: '',
-            name: ''
+            name: '',
+            operator: util.cookies.get('uuid')
         }
     },
     mounted () {
@@ -99,7 +101,7 @@ export default {
               name: this.name,
               jobid: Number(this.staffNo),
               rewardPointsType: '固定积分',
-              Operator: 100297
+              Operator: this.operator
           }
           this.$api.EXPORT_DETAIL_LIST(data).then(res => {
               if (res.code === 0) {

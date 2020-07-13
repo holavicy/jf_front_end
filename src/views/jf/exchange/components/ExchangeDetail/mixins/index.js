@@ -25,93 +25,14 @@ export default {
             value: 0
           }
         ],
-        columns: [
-          {
-            title: '工号',
-            key: 'jobid'
-          },
-          {
-            title: '姓名',
-            key: 'name'
-          },
-          {
-            title: '业务单元',
-            key: 'admin'
-          },
-          {
-            title: '部门',
-            key: 'dateTimeCreat'
-          },
-          {
-            title: '是否结算',
-            key: 'isAccounted'
-          },
-          {
-            title: '加分',
-            key: 'plus'
-          },
-          {
-            title: '减分',
-            key: 'minus'
-          },
-          {
-            title: '加减分理由',
-            key: 'reason'
-          },
-          {
-            title: '考核日期',
-            key: 'date'
-          }
-        ],
-        rowHandle: {
-          custom: [
-            {
-              text: '删除',
-              type: 'text',
-              size: 'mini',
-              emit: 'custom-emit-1'
-            }
-          ]
-        },
-        // data: [],
         loading: false,
         pagination: {
           currentPage: 0,
           pageSize: 10,
           total: 0
         },
-
-        data: [{
-          RewardPointsdetailID: 1,
-          jobid:100297,
-          name: '陈明姣'
-      }, {
-          RewardPointsdetailID: 2,
-          jobid:100297,
-          name: '陈明姣'
-      }, {
-          RewardPointsdetailID: 3,
-          jobid:100297,
-          name: '陈明姣'
-      },
-      {
-        RewardPointsdetailID: 4,
-          jobid:100297,
-          name: '陈明姣'
-      }],
-      goodsData: [{
-        goodsName: '小方巾',
-        price: '10',
-        num: '2',
-        total: '20'
-      },
-      {
-        goodsName: '杯子',
-        price: '100',
-        num: '1',
-        total: '100'
-      }
-    ]
+        data: [],
+        goodsData: []
       }
     },
 

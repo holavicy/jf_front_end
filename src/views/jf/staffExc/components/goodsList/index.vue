@@ -42,6 +42,7 @@
 <script>
 import axios from 'axios'
 import js from './mixins/index'
+import util from '@/libs/util.js'
 export default {
     name: 'a-detail',
     mixins: [
@@ -49,7 +50,8 @@ export default {
     ],
     data () {
         return {
-            goodsName: ''
+            goodsName: '',
+            operator: util.cookies.get('uuid')
         }
     },
     mounted () {
@@ -92,11 +94,10 @@ export default {
        *加入购物车
        */
        addToCart (row) {
-           console.log(row)
            let data = {
                GoodsID: row.GoodsID,
                num: 1,
-               Operator: '100297'
+               Operator: this.operator
            }
            this.$api.ADD_CART(data).then((res) => {
                if (res.code == 0) {

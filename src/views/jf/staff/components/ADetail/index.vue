@@ -41,6 +41,7 @@
 import {isEndOptions} from '@/dataDic.js' 
 import {ADetailStaff} from '@/mockData.js'
 import dayjs from 'dayjs'
+import util from '@/libs/util.js'
 export default {
   name: 'a-detail',
   props: {
@@ -56,39 +57,9 @@ export default {
       isEnd: this.isEndVal,
       isEndOptions,
       checkDate: '',
-      columns: [
-        {
-          title: '积分类别',
-          key: 'RewardPointsType',
-          width: '100'
-        },
-        {
-          title: '加分',
-          key: 'BonusPoints',
-          width: '100'
-        },
-        {
-          title: '减分',
-          key: 'MinusPoints',
-          width: '100'
-        },
-        {
-          title: '加减分理由',
-          key: 'Reason',
-          width: '280'
-        },
-        {
-          title: '是否结算',
-          key: 'isEnd',
-          width: '100'
-        },
-        {
-          title: '考核日期',
-          key: 'checkDate',
-          width: '120'
-        }
-      ],
       data: [],
+      operator: util.cookies.get('uuid'),
+      name: util.cookies.get('name'),
       pagination: {
         currentPage: 0,
         pageSize: 10,
@@ -111,8 +82,8 @@ export default {
   methods: {
     getList (isEndVal) {
       let data = {
-            name: '陈明姣',
-            jobid: 100297,
+            name: this.name,
+            jobid: Number(this.operator),
             isAccounted: isEndVal === '是'?1: isEndVal === ''?'':this.isEnd===''?'': Number(this.isEnd),
             beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
             endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('day').format('YYYY-M-D HH:mm:ss') :'',

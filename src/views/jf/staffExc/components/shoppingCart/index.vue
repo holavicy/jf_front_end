@@ -30,11 +30,17 @@
 
 <script>
 import js from './mixins/index'
+import util from '@/libs/util.js'
 export default {
     name: 'a-detail',
     mixins: [
         js
     ],
+    data(){
+        return {
+            operator: util.cookies.get('uuid')
+        }
+    },
     computed: {
       totalNum: function () {
         let totalNum = 0;
@@ -58,7 +64,7 @@ export default {
        */
       getList () {
           let data = {
-              Operator: "100297"
+              Operator: this.operator
           }
           this.loading = true;
           this.$api.GET_CART_LIST(data).then(res => {
@@ -117,7 +123,7 @@ export default {
           let data = {
               ShoppingCartIDs: ShoppingCartIDList.join(','),
               GoodsIDs: GoodsIDList.join(','),
-              Operator: '100297'
+              Operator: this.operator
           }
           this.$api.CREATE_PAY(data).then(res => {
               console.log(res)
