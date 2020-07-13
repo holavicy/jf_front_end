@@ -1,12 +1,9 @@
 export default ({ request }) => ({
-  DING_LOGIN (code, corpId) {
+  DING_LOGIN (data) {
     return request({
-      url: '/user/getUserInfo',
-      method: 'get',
-      params: {
-        code,
-        corpId
-      }
+      url: '/getUserInfo',
+      method: 'post',
+      data
     })
   }
 })

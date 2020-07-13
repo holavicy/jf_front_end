@@ -30,22 +30,26 @@ export const menuAside = supplementPath([
   {
     path: '/jf/JFSummary',
     title: '积分汇总',
-    icon: 'file-text-o'
+    icon: 'file-text-o',
+    roles: ['admin']
   },
   {
     path: '/jf/JFExchangeConfig',
     title: '兑换中心',
-    icon: 'gear'
+    icon: 'gear',
+    roles: ['admin']
   },
   {
     path: '/jf/activity',
     title: '积分活动',
-    icon: 'audio-description'
+    icon: 'audio-description',
+    roles: ['admin']
   },
   {
     path: '/jf/charts',
     title: '统计看板',
-    icon: 'pie-chart'
+    icon: 'pie-chart',
+    roles: ['leader', 'admin']
   }
 ])
 

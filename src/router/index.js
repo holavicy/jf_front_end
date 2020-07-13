@@ -36,6 +36,7 @@ const router = new VueRouter({
  * 权限验证
  */
 router.beforeEach(async (to, from, next) => {
+  console.log("????")
   // 确认已经加载多标签页数据 https://github.com/d2-projects/d2-admin/issues/201
   await store.dispatch('d2admin/page/isLoaded')
   // 确认已经加载组件尺寸设置 https://github.com/d2-projects/d2-admin/issues/198
@@ -50,8 +51,10 @@ router.beforeEach(async (to, from, next) => {
     // 请根据自身业务需要修改
     const token = util.cookies.get('token')
     if (token && token !== 'undefined') {
+      console.log(token)
       next()
     } else {
+      console.log("..............................................")
       // 没有登录的时候跳转到登录界面
       // 携带上登陆成功之后需要跳转的页面完整路径
       // 判断是否是钉钉，若是钉钉，免登存cookie
@@ -59,34 +62,52 @@ router.beforeEach(async (to, from, next) => {
       const isDD = dd.env.platform !== 'notInDingTalk'
       const corpId = 'dingcd0f5a2514db343b35c2f4657eb6378f'
       if (isDD) {
-        next({
-          name: 'login',
-          query: {
-            redirect: to.fullPath
-          }
-        })
-        // dd.ready(function () {
-        //   dd.runtime.permission.requestAuthCode({
-        //     corpId: corpId, // 企业id
-        //     onSuccess: (info) => {
-        //       const code = info.code // 通过该免登授权码可以获取用户身份
-        //       api.DING_LOGIN(code, corpId)
-        //         .then(async (res) => {
-        //           util.cookies.set('uuid', res.userId)
-        //           util.cookies.set('token', res.token)
-        //           // // 设置 vuex 用户信息
-        //           await store.dispatch('d2admin/user/set', { name: res.name }, { root: true })
-        //           // 用户登录后从持久化数据加载一系列的设置
-        //           await store.dispatch('load')
-        //           next()
-        //         })
-        //         .catch(err => {
-        //           console.log('err', err)
-        //         })
-        //     }
-        //   })
+        console.log("DD")
+        // next({
+        //   name: 'login',
+        //   query: {
+        //     redirect: to.fullPath
+        //   }
         // })
+        dd.ready(function () {
+          dd.runtime.permission.requestAuthCode({
+            corpId: corpId, // 企业id
+            onSuccess: (info) => {
+              const code = info.code // 通过该免登授权码可以获取用户身份
+              console.log(code)
+              let data = {
+                code: code,
+                corpId: corpId
+              }
+              api.DING_LOGIN(data)
+                .then(async (res) => {
+                  console.log(res)
+                  util.cookies.set('uuid', res.data.jobnumber)
+                  util.cookies.set('token', res.data.token)
+                  let roles = []
+                  res.data.roles.map((item) => {
+                    if (item.id === 560770034) {
+                      roles.push('admin')
+                    }
+
+                    if (item.id === 560651801 || item.id === 560623775 || item.id === 560604944) {
+                      roles.push('leader')
+                    }
+                  })
+                  // // 设置 vuex 用户信息
+                  await store.dispatch('d2admin/user/set', { name: res.data.name, roles: roles }, { root: true })
+                  // 用户登录后从持久化数据加载一系列的设置
+                  await store.dispatch('load') 
+                  next()
+                })
+                .catch(err => {
+                  console.log('err', err)
+                })
+            }
+          })
+        })
       } else {
+        console.log("NoDD")
         next({
           name: 'login',
           query: {
