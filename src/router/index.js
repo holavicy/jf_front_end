@@ -86,11 +86,11 @@ router.beforeEach(async (to, from, next) => {
                   util.cookies.set('token', res.data.token)
                   let roles = []
                   res.data.roles.map((item) => {
-                    if (item.id === 560770034) {
+                    if (item.id === 1505687807) {
                       roles.push('admin')
                     }
 
-                    if (item.id === 560651801 || item.id === 560623775 || item.id === 560604944) {
+                    if (item.id === 1505828740) {
                       roles.push('leader')
                     }
                   })

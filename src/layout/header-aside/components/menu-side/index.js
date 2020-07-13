@@ -83,10 +83,14 @@ export default {
         if (!item.roles){
           actualAside.push(item)
         } else if (item.roles.length>0 && roles.length>0){
+          let flag = true
           item.roles.map((role) => {
+            
             roles.map((userRole) => {
-              if (role === userRole) {
+              if ( flag && role === userRole) {
                 actualAside.push(item)
+                flag = false
+                return
               }
             })
           })
