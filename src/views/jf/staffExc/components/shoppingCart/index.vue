@@ -14,7 +14,7 @@
                 <!-- <el-table-column prop="GoodsAmount" label="数量"></el-table-column> -->
                 <el-table-column fixed="right" label="数量" width="180">
                     <template slot-scope="scope">
-                        <el-input-number v-model="scope.row.GoodsAmount" @change="handleChange(scope.row)" :min="0" :max="scope.row.stock" label="描述文字" size="mini"></el-input-number>
+                        <el-input-number v-model="scope.row.GoodsAmount" @change="handleChange(scope.row)" :min="0" :max="scope.row.TotalIn-scope.row.TotalOut" label="描述文字" size="mini"></el-input-number>
                     </template>
                 </el-table-column>
             </el-table>
@@ -127,6 +127,12 @@ export default {
           }
           this.$api.CREATE_PAY(data).then(res => {
               console.log(res)
+              if (res.code == 0){
+                  this.$message.success("订单提交成功，等待管理员确认中")
+                  this.getList()
+              } else {
+                  this.$message.error(res.msg || '提交订单失败，请刷新后再试')
+              }
           })
       }
     }
