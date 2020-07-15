@@ -1,18 +1,18 @@
 
 export default ({ service, request, serviceForMock, requestForMock, mock, faker, tools }) => ({
-    GET_ORDER_DETAIL_LIST (data) {
       /*
       *查询订单记录
       */
+    GET_ORDER_LIST (data) {
       return request({
-        url: '/query_rewardPoint',
+        url: '/query_order',
         method: 'post',
         data
       })
     },
   
       /*
-      *导出积分明细
+      *创建订单
       */
     CREATE_PAY (data) {
       return request({
@@ -23,11 +23,11 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
     },
   
         /*
-      *结算积分明细
+      *确定订单
       */
-     ACCOUNT_DETAIL_LIST (data) {
+     CONFIRM_ORDER (data) {
       return request({
-        url: '/account_rewardPoint',
+        url: '/confirm_order',
         method: 'post',
         data
       })
@@ -35,11 +35,22 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
   
   
       /*
-      *删除积分明细
+      *退回订单
       */
-    DELETE_DETAIL_RECORD (data) {
+    REJECT_ORDER (data) {
       return request({
-        url: 'delete_rewardPoint',
+        url: 'reject_order',
+        method: 'post',
+        data
+      })
+    },
+
+    /*
+      *确认收货
+      */
+     FINISH_ORDER (data) {
+      return request({
+        url: 'finish_order',
         method: 'post',
         data
       })

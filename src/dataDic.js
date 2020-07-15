@@ -32,4 +32,13 @@ const orderStatusOptions = [{
     value: 4
   }]
 
-export { isEndOptions, orderStatusOptions }
+  const orderStatusDic = {
+
+    0: "交易完成",
+    1: "待确定",
+    2: "可领取",
+    3: "已退回",
+    4: "已取消"
+  }
+
+export { isEndOptions, orderStatusOptions, orderStatusDic }

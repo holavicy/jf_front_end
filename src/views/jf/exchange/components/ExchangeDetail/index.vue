@@ -20,20 +20,19 @@
             size="mini"
             :expand-row-keys="expands" 
             :row-key="getRowKeys">
-                <el-table-column prop="jobid" label="订单编号" width="100"></el-table-column>
+                <el-table-column prop="PointOrderID" label="订单编号" width="100"></el-table-column>
                 <el-table-column prop="name" label="工号"></el-table-column>
                 <el-table-column prop="name" label="姓名"></el-table-column>
-                <el-table-column prop="DepartmentLv1" label="业务单元"></el-table-column>
-                <el-table-column prop="DepartmentLv3" label="部门"></el-table-column>
-                <el-table-column prop="IsAccounted" label="总价"></el-table-column>
-                <el-table-column prop="BonusPoints" label="订单状态"></el-table-column>
+                <el-table-column prop="TotalPrice" label="总价"></el-table-column>
+                <el-table-column prop="orderStatusTxt" label="订单状态"></el-table-column>
+                <el-table-column prop="CreationDate" label="兑换日期"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="200">
                     <template slot-scope="scope">
-                        <el-popconfirm title="确定通过此订单吗？" @onConfirm="deleteDetail(scope.row)">
-                            <el-button type="text" size="mini" slot="reference">确定</el-button>
+                        <el-popconfirm title="确定通过此订单吗？" @onConfirm="confirmOrder(scope.row)">
+                            <el-button type="text" size="mini" slot="reference" v-if="scope.row.OrderStatus == 1">确定</el-button>
                         </el-popconfirm>
-                        <el-popconfirm title="确定退回此订单吗？" @onConfirm="deleteDetail(scope.row)">
-                            <el-button type="text" size="mini" slot="reference" class="bt-error">退回</el-button>
+                        <el-popconfirm title="确定退回此订单吗？" @onConfirm="rejectOrder(scope.row)">
+                            <el-button type="text" size="mini" slot="reference" class="bt-error" v-if="scope.row.OrderStatus == 1">退回</el-button>
                         </el-popconfirm>
                         <el-button type="text" size="mini" slot="reference" @click="showDetail(scope.row)" class="show-detail">查看详情</el-button>
                     </template>
@@ -69,7 +68,7 @@
                                 </el-table>
                        </div>
                     </template>
-    </el-table-column>
+                </el-table-column>
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
         </div>
@@ -80,7 +79,7 @@
 <script>
 import js from './mixins/index'
 import dayjs from 'dayjs'
-import { orderStatusOptions } from '@/dataDic.js' 
+import { orderStatusOptions, orderStatusDic } from '@/dataDic.js' 
 export default {
     name: 'exchange-detail',
     mixins: [
@@ -89,10 +88,11 @@ export default {
     data () {
         return {
             orderStatusOptions,
+            orderStatusDic,
             staffNo: '',
             orderStatus: '',
             getRowKeys (row) {
-                return row.RewardPointsdetailID
+                return row.PointOrderID
             },
             expands: []
         }
@@ -106,16 +106,19 @@ export default {
        */
       getList () {
           let data = {
-              jobid: Number(this.staffNo),
-              orderStatus: this.orderStatus,
+              Operator: Number(this.staffNo),
+              OrderStatus: this.orderStatus,
               page: this.pagination.currentPage,
               pageSize: this.pagination.pageSize
           }
           this.loading = true;
-          this.$api.GET_ORDER_DETAIL_LIST(data).then(res => {
+          this.$api.GET_ORDER_LIST(data).then(res => {
               this.loading = false
-              this.data = res.detail
-              this.pagination.total = res.total
+              res.data.list.map((item)=>{
+                  item.orderStatusTxt = this.orderStatusDic[item.OrderStatus]
+              })
+              this.data = res.data.list
+              this.pagination.total = res.data.totalLength
           }).catch(err => {
               console.log('err', err);
               this.loading = false
@@ -155,7 +158,7 @@ export default {
             if (this.expands.length>0) {
                 this.expands = []
             } else {
-                this.expands.push(data.RewardPointsdetailID)
+                this.expands.push(data.PointOrderID)
             }
         },
 
@@ -187,6 +190,35 @@ export default {
             return sums;
 
 
+        },
+
+        confirmOrder (param) {
+            console.log(param)
+            let data = {
+                PointOrderID: param.PointOrderID
+            }
+            this.$api.CONFIRM_ORDER(data).then(res=>{
+                console.log(res)
+                if(res.code == 0){
+                    this.$message.success("确定成功")
+                    this.getList()
+                }
+            })
+        },
+
+        rejectOrder (param) {
+            let data = {
+                PointOrderID: param.PointOrderID
+            }
+
+            this.$api.REJECT_ORDER(data).then(res => {
+                if (res.code == 0){
+                    this.$message.success("退回成功")
+                    this.getList()
+                } else {
+                    this.$message.error(res.msg || '退回失败，请联系管理员')
+                }
+            })
         },
 
         /**

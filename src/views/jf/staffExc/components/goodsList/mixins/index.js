@@ -28,7 +28,7 @@ export default {
             imgUrl: ''
         },
         {
-          GoodsID: 10,
+          GoodsID: 13,
           goodsName: '测试',
           price: '10',
           stock: 180,

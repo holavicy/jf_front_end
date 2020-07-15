@@ -1,30 +1,6 @@
 export default {
     data () {
       return {
-        addOrMinOptions: [
-          {
-            label: '全部',
-            value: ''
-          }, {
-            label: '加分',
-            value: 0 
-          }, {
-            label: '减分',
-            value: 1
-          }
-        ],
-        isEndOptions: [
-          {
-            label: '全部',
-            value: ''
-          }, {
-            label: '是',
-            value: 1 
-          }, {
-            label: '否',
-            value: 0
-          }
-        ],
         loading: false,
         pagination: {
           currentPage: 0,
@@ -37,10 +13,6 @@ export default {
     },
 
     methods: {
-      handleCustomEvent ({ index, row }) {
-        console.log(index)
-        console.log(row)
-      },
       handleSizeChange (val) {
         console.log(`每页 ${val} 条`);
         this.pagination.pageSize = val;
