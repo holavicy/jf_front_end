@@ -85,14 +85,12 @@ function createService () {
  */
 function createRequestFunction (service) {
   return function (config) {
-    const token = util.cookies.get('token')
     const configDefault = {
       headers: {
-        Authorization: token,
         'Content-Type': get(config, 'headers.Content-Type', 'application/json')
       },
       timeout: 5000,
-      baseURL: process.env.VUE_APP_API,
+      baseURL: 'http://192.168.40.161:8080/Interface',
       data: {}
     }
     config.data = formatObj(config.data)
