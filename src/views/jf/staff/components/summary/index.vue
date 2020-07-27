@@ -118,7 +118,8 @@ export default {
 
     linkTo () {
       let activeIndex = this.$refs.carousel.activeIndex;
-      this.$emit('activityTab',activeIndex)
+      let activity = this.activityList[activeIndex];
+      this.$emit('activityTab',activity.ActivitiesID)
     },
 
     changeTab (i, type) {

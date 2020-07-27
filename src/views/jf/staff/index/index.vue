@@ -25,7 +25,7 @@
                <summary-index ref="summary" @changeTab="changeTab" @activityTab="activityTab"/>
             </el-tab-pane>
             <el-tab-pane label="积分活动" name="activity">
-                <activity-index ref="activity" :defaultIndex="activeIndex"/>
+                <activity-index ref="activity"/>
             </el-tab-pane>
         </el-tabs>
     
@@ -105,7 +105,9 @@ export default {
       activityTab (i) {
            this.showTab = 2
            this.activeTab = 'activity'
-           this.activeIndex = i;
+        //    this.activeIndex = i;
+           this.$refs.activity.getInfo(i)
+           console.log(i)
       },
 
       tabClick (e) {
