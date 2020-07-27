@@ -91,6 +91,7 @@ function createRequestFunction (service) {
       },
       timeout: 5000,
       baseURL: 'http://192.168.40.161:8080/Interface',
+      // baseURL: process.env.VUE_APP_API,
       data: {}
     }
     config.data = formatObj(config.data)

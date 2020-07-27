@@ -11,7 +11,7 @@
                             <p class="title">{{item.title}}</p>
                         </div>
                     </div>
-                    <p class="info">{{item.info}}</p>
+                    <p class="info-text">{{item.info}}</p>
                 </div>
             </div>
             <div class="center">
@@ -24,7 +24,7 @@
                             <p class="title">{{item.title}}</p>
                         </div>
                     </div>
-                    <p class="info">{{item.info}}</p>
+                    <p class="info-text">{{item.info}}</p>
                 </div>
             </div>
             <div class="bottom">
@@ -40,21 +40,14 @@
               </div>
             </el-carousel-item>
           </el-carousel>
-            <!-- <input type="file" ref="file"  @change="importFile">
-            <button @click="importFile">上传</button> -->
-            <!-- <progress-bar class="progress-bar" :uploadPercent="uploadPercent" @cancelRequest="cancelRequest"></progress-bar> -->
         </div>
     </div>
 </template>
 
 <script>
-// import ProgressBar from '@/components/ProgressBar.vue'
 import axios from 'axios'
 export default {
   name: 'summary-index',
-  // components: {
-  //   ProgressBar
-  // },
   data () {
     return {
       sumItemSmall: [
@@ -127,6 +120,10 @@ export default {
     }
   },
 
+  created(){
+    this.getSummary();
+    this.getActivityList();
+  },
   methods: {
 
     linkTo () {
@@ -141,45 +138,26 @@ export default {
       }
       this.$emit('changeTab',data)
     },
-    fileUpload (event) {
-      const file = event.target.files
-      const formData = new FormData()
-      formData.append('fileType', '.xlsx')
-      formData.append('file', file[0])
-      console.log(formData)
 
-      this.$api.UPLOAD_TEST(formData)
+    getSummary(){
+      let data = {
+        jobid: 100297
+      }
+      this.$api.GET_SUMMARY_LIST(data).then((res)=>{
+        console.log(res);
+      })
     },
 
-    importFile () {
-      const _this = this;
-      _this.source = axios.CancelToken.source();
-
-      if (!_this.$refs.file.files[0]) {
-        alert('请选择文件');
-        return
+    getActivityList() {
+      let data = {
+        title: '',
+        page: 1,
+        pageSize: 100
       }
-      let fileData = new FormData();
-      fileData.append('file', _this.$refs.file.files[0])
-      let url = '/api/testfile';
-      this.uploadFile(url, fileData, _this.source.token, (res) => {
-          let loaded = res.loaded
-          let total = res.total
-          _this.$nextTick(() => {
-              _this.uploadPercent = Math.floor(loaded/total*100)>1? Math.floor(loaded/total*100):1;
-              })
-              }).then((res) => {
-                  if (res.data.code === 0) {
-                      alert('上传成功');
-                      _this.uploadPercent = 0;
-                  }
-              }, (rej) => {
-                  if (rej === -2) {
-                      alert('取消上传成功')
-                  } else {
-                      alert('上传失败')
-                  }
-              })
+      this.$api.GET_ACTIVITY_LIST(data).then((res) => {
+        console.log(res);
+        this.activityList = res.data.detail;
+      })
     }
   }
 }
@@ -223,7 +201,7 @@ export default {
               color: #101010;
             }
         }
-        .info{
+        .info-text{
             font-size: 10px;
             color: #929292;
         }
@@ -267,7 +245,7 @@ export default {
           color: #101010;
         }
       }
-      .info{
+      .info-text{
           font-size: 12px;
           color: #929292;
           white-space: pre-wrap;

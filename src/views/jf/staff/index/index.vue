@@ -62,7 +62,6 @@ export default {
 
   methods: {
       changeTab (data) {
-          console.log(data)
           this.showTab = data.type
           if(data.type == 1) {
             switch(data.index) {
@@ -102,7 +101,6 @@ export default {
       activityTab (i) {
            this.activeTab = 'activity'
            this.activeIndex = i;
-           console.log(this.activeIndex)
       }
   }
 }
