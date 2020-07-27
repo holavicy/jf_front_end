@@ -57,12 +57,29 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
     })
   },
 
+  // 获取固定积分详情
+  GET_FIX_DETAIL (data) {
+    return request({
+      url: '/query_B_RewardPoint',
+      method: 'post',
+      data
+    })
+  },
   /**
    * 导出汇总
    */
   EXPORT_SUMMARY_LIST (data) {
     return request({
       url: '/export_RewardPointSummary',
+      method: 'post',
+      data
+    })
+  },
+
+  // 查询固定积分汇总
+  FIX_TOTAL(data){
+    return request({
+      url: '/query_FixedPoints',
       method: 'post',
       data
     })

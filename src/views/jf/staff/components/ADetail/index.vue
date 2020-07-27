@@ -33,13 +33,12 @@
                 <el-table-column prop="ReasonType" label="理由分类" width="120"></el-table-column>
                 <el-table-column prop="checkDate" label="考核日期" width="120"></el-table-column>
             </el-table>
-            <!-- <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[5, 10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination> -->
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[1, 5, 10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
     </div>
 </template>
 
 <script>
 import {isEndOptions} from '@/dataDic.js' 
-import {ADetailStaff} from '@/mockData.js'
 import dayjs from 'dayjs'
 import util from '@/libs/util.js'
 export default {
@@ -53,7 +52,6 @@ export default {
 
   data () {
     return {
-      ADetailStaff,
       isEnd: this.isEndVal,
       isEndOptions,
       checkDate: '',
@@ -61,9 +59,9 @@ export default {
       operator: util.cookies.get('uuid'),
       name: util.cookies.get('name'),
       pagination: {
-        currentPage: 0,
+        currentPage: 1,
         pageSize: 10,
-        total: 4
+        total: 0
       }
     }
   },
@@ -75,27 +73,28 @@ export default {
     }
   },
 
-  mounted () {
-      this.getList()
-  },
+  // mounted () {
+  //     this.getList()
+  // },
 
   methods: {
     getList (isEndVal) {
       let data = {
             name: this.name,
             jobid: Number(this.operator),
-            isAccounted: isEndVal === '是'?1: isEndVal === ''?'':this.isEnd===''?'': Number(this.isEnd),
+            isAccounted: isEndVal === '否'?0: isEndVal === ''?'':this.isEnd===''?'': Number(this.isEnd),
             beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
             endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('day').format('YYYY-M-D HH:mm:ss') :'',
             page: this.pagination.currentPage,
-            pageSize: this.pagination.pageSize
+            pageSize: this.pagination.pageSize,
+            rewardPointsType: "A分"
           }
           this.loading = true;
           this.$api.GET_DETAIL_LIST(data).then(res => {
               this.loading = false
               res.data.detail.map((item) => {
                 item.checkDate = dayjs(item.AssessmentDate).format('YYYY-M-D')
-                item.isEnd = item.isAccounted === 0? '否': '是'
+                item.isEnd = item.IsAccounted === 0? '否': '是'
               })
               this.data = res.data.detail
               this.pagination.total = res.data.totalLength
@@ -103,7 +102,16 @@ export default {
               console.log('err', err);
               this.loading = false
           })
-    }
+    },
+
+    handleSizeChange (val) {
+        this.pagination.pageSize = val;
+        this.getList()
+      },
+      handleCurrentChange (val) {
+        this.pagination.currentPage = val;
+        this.getList()
+      }
   }
 }
 </script>

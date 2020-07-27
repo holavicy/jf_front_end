@@ -17,11 +17,13 @@
 </template>
 
 <script>
+import util from '@/libs/util.js'
 export default {
     name: 'year-total-summary',
 
     data () {
         return {
+            operator: util.cookies.get('uuid'),
             showTable: 1,
             chartSettings: {
                 selectedMode: 'single',
@@ -62,7 +64,7 @@ export default {
                 type: '职务积分',
                 num: 0
             }, {
-                type: '职位积分',
+                type: '职称积分',
                 num: 0
             },{
                 type: '学历积分',
@@ -113,6 +115,19 @@ export default {
                     return sums
                 }
             }
+        }
+    },
+
+    methods: {
+        getFixTotal(){
+            let data = {
+                jobid: this.operator,
+                page: 1,
+                pageSize: 100
+            }
+            this.$api.FIX_TOTAL(data).then((res) => {
+                console.log(res);
+            })
         }
     }
 }
