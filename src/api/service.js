@@ -42,10 +42,11 @@ function createService () {
         switch (code) {
           case 0:
             // [ 示例 ] code === 0 代表没有错误
-            return dataAxios.data
+            return dataAxios
+            break
           case -1:
             // [ 示例 ] 其它和后台约定的 code
-            errorCreate(`[ code: -1 ] ${dataAxios.msg}: ${response.config.url}`)
+            return dataAxios
             break
           default:
             // 不是正确的 code
@@ -84,20 +85,16 @@ function createService () {
  */
 function createRequestFunction (service) {
   return function (config) {
-    const token = util.cookies.get('token')
-    console.log(token)
     const configDefault = {
       headers: {
-        Authorization: token,
         'Content-Type': get(config, 'headers.Content-Type', 'application/json')
       },
       timeout: 5000,
-      baseURL: process.env.VUE_APP_API,
+      baseURL: 'http://192.168.40.161:8080/Interface',
+      // baseURL: process.env.VUE_APP_API,
       data: {}
     }
-    console.log(config.data)
     config.data = formatObj(config.data)
-    console.log(config.data)
     return service(Object.assign(configDefault, config))
   }
 }

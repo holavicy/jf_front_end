@@ -21,7 +21,19 @@
 
         <el-button type="primary" size="mini" @click="getList">查询</el-button>
       </div>
-      <d2-crud ref="d2Crud" index-row :columns="columns" :data="data"/>
+        <el-table :data="data" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading">
+                <el-table-column type="index" width="55"></el-table-column>
+                <el-table-column prop="Name" label="姓名" width="80"></el-table-column>
+                <el-table-column prop="Post" label="职务名称"></el-table-column>
+                <el-table-column prop="isEnd" label="是否结算" width="80"></el-table-column>
+                <el-table-column prop="BonusPoints" label="加分" width="60"></el-table-column>
+                <el-table-column prop="MinusPoints" label="减分" width="60"></el-table-column>
+                <el-table-column prop="Reason" label="加减分理由" width="180"></el-table-column>
+                <el-table-column prop="Proof" label="加减分依据" width="180"></el-table-column>
+                <el-table-column prop="ReasonType" label="理由分类" width="120"></el-table-column>
+                <el-table-column prop="checkDate" label="考核日期" width="120"></el-table-column>
+            </el-table>
+            <!-- <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[5, 10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination> -->
     </div>
 </template>
 
@@ -29,6 +41,7 @@
 import {isEndOptions} from '@/dataDic.js' 
 import {ADetailStaff} from '@/mockData.js'
 import dayjs from 'dayjs'
+import util from '@/libs/util.js'
 export default {
   name: 'a-detail',
   props: {
@@ -44,39 +57,9 @@ export default {
       isEnd: this.isEndVal,
       isEndOptions,
       checkDate: '',
-      columns: [
-        {
-          title: '积分类别',
-          key: 'RewardPointsType',
-          width: '100'
-        },
-        {
-          title: '加分',
-          key: 'BonusPoints',
-          width: '100'
-        },
-        {
-          title: '减分',
-          key: 'MinusPoints',
-          width: '100'
-        },
-        {
-          title: '加减分理由',
-          key: 'Reason',
-          width: '280'
-        },
-        {
-          title: '是否结算',
-          key: 'isEnd',
-          width: '100'
-        },
-        {
-          title: '考核日期',
-          key: 'checkDate',
-          width: '120'
-        }
-      ],
       data: [],
+      operator: util.cookies.get('uuid'),
+      name: util.cookies.get('name'),
       pagination: {
         currentPage: 0,
         pageSize: 10,
@@ -99,8 +82,8 @@ export default {
   methods: {
     getList (isEndVal) {
       let data = {
-            name: '陈明姣',
-            jobid: 100297,
+            name: this.name,
+            jobid: Number(this.operator),
             isAccounted: isEndVal === '是'?1: isEndVal === ''?'':this.isEnd===''?'': Number(this.isEnd),
             beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
             endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('day').format('YYYY-M-D HH:mm:ss') :'',
@@ -110,12 +93,12 @@ export default {
           this.loading = true;
           this.$api.GET_DETAIL_LIST(data).then(res => {
               this.loading = false
-              res.detail.map((item) => {
+              res.data.detail.map((item) => {
                 item.checkDate = dayjs(item.AssessmentDate).format('YYYY-M-D')
                 item.isEnd = item.isAccounted === 0? '否': '是'
               })
-              this.data = res.detail
-              this.pagination.total = res.total.totalLength
+              this.data = res.data.detail
+              this.pagination.total = res.data.totalLength
           }).catch(err => {
               console.log('err', err);
               this.loading = false
@@ -128,10 +111,10 @@ export default {
 <style scoped lang="scss">
 .search-wrapper{
   display: flex;
-  justify-content: space-between;
   align-items: center;
 
   .search-item{
+    margin-right: 20px;
     label{
       margin-right: 10px;
       font-size: 14px;

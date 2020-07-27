@@ -64,14 +64,28 @@ router.beforeEach(async (to, from, next) => {
             corpId: corpId, // 企业id
             onSuccess: (info) => {
               const code = info.code // 通过该免登授权码可以获取用户身份
-              api.DING_LOGIN(code, corpId)
+              let data = {
+                code: code,
+                corpId: corpId
+              }
+              api.DING_LOGIN(data)
                 .then(async (res) => {
-                  util.cookies.set('uuid', res.userId)
-                  util.cookies.set('token', res.token)
+                  util.cookies.set('uuid', res.data.jobnumber)
+                  util.cookies.set('token', res.data.token)
+                  let roles = []
+                  res.data.roles.map((item) => {
+                    if (item.id === 1505687807) {
+                      roles.push('admin')
+                    }
+
+                    if (item.id === 1505828740) {
+                      roles.push('leader')
+                    }
+                  })
                   // // 设置 vuex 用户信息
-                  await store.dispatch('d2admin/user/set', { name: res.name }, { root: true })
+                  await store.dispatch('d2admin/user/set', { name: res.data.name, roles: roles }, { root: true })
                   // 用户登录后从持久化数据加载一系列的设置
-                  await store.dispatch('load')
+                  await store.dispatch('load') 
                   next()
                 })
                 .catch(err => {
@@ -81,6 +95,7 @@ router.beforeEach(async (to, from, next) => {
           })
         })
       } else {
+        console.log("NoDD")
         next({
           name: 'login',
           query: {

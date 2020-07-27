@@ -1,42 +1,57 @@
 <template>
   <d2-container class="page">
-   nnn
+    <div
+      class="page-login--layer page-login--layer-time"
+      flex="main:center cross:center">
+      {{time}}
+    </div>
+    <div class="text">————爱人思贤&nbsp;&nbsp;&nbsp;&nbsp;至诚笃信————</div>
   </d2-container>
 </template>
 
 <script>
-// import D2Badge from './components/d2-badge'
-// import D2Help from './components/d2-help'
-// import D2PageCover from './components/d2-page-cover'
+import dayjs from 'dayjs'
 export default {
-  // components: {
-  //   D2Badge,
-  //   D2Help,
-  //   D2PageCover
-  // }
+  data(){
+    return{
+      timeInterval: null,
+      time: dayjs().format('HH:mm:ss'),
+    }
+  },
+  mounted () {
+    this.timeInterval = setInterval(() => {
+      this.refreshTime()
+    }, 1000)
+  },
+  beforeDestroy () {
+    clearInterval(this.timeInterval)
+  },
+  methods: {
+    refreshTime () {
+      this.time = dayjs().format('HH:mm:ss')
+    },
+  }
 }
 </script>
 
 <style lang="scss" scoped>
 .page {
-  .logo {
-    width: 120px;
+
+  // 时间
+  .page-login--layer-time {
+    margin-top: 20px;
+    font-size: 12em;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.09);
+    overflow: hidden;
   }
-  .btn-group {
-    color: $color-text-placehoder;
-    font-size: 12px;
-    line-height: 12px;
-    margin-top: 0px;
-    margin-bottom: 20px;
-    .btn-group__btn {
-      color: $color-text-sub;
-      &:hover {
-        color: $color-text-main;
-      }
-      &.btn-group__btn--link {
-        color: $color-primary;
-      }
-    }
+
+  .text{
+    margin-top: 30px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 2rem;
+    color: rgba(0, 0, 0, 0.3);
   }
 }
 </style>

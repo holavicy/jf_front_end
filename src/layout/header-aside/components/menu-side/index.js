@@ -34,6 +34,9 @@ export default {
       'aside',
       'asideCollapse',
       'asideTransition'
+    ]),
+    ...mapState('d2admin/user', [
+      'info'
     ])
   },
   watch: {
@@ -47,6 +50,7 @@ export default {
   },
   mounted () {
     this.scrollInit()
+    this.setAsideByRole()
   },
   beforeDestroy () {
     this.scrollDestroy()
@@ -71,6 +75,29 @@ export default {
         delete this.BS
         this.BS = null
       }
+    },
+    setAsideByRole () {
+      let roles = this.info ?this.info.roles:[]
+      let actualAside = []
+      this.aside.map((item) => {
+        if (!item.roles){
+          actualAside.push(item)
+        } else if (item.roles.length>0 && roles.length>0){
+          let flag = true
+          item.roles.map((role) => {
+            
+            roles.map((userRole) => {
+              if ( flag && role === userRole) {
+                actualAside.push(item)
+                flag = false
+                return
+              }
+            })
+          })
+        }
+        this.$store.commit('d2admin/menu/asideSet', actualAside)
+        this.actualAside = actualAside
+      })
     }
   }
 }

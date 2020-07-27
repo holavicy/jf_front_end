@@ -43,17 +43,21 @@
             <el-button type="primary" plain size="mini" @click="settleAccounts">结算</el-button>
         </el-row>
         <div class="table-wrapper">
-            <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" @selection-change="handleSelectionChange">
+            <el-table :data="data" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55"></el-table-column>
-                <el-table-column prop="jobid" label="工号" width="70"></el-table-column>
-                <el-table-column prop="name" label="姓名"></el-table-column>
-                <el-table-column prop="DepartmentLv1" label="业务单元"></el-table-column>
-                <el-table-column prop="DepartmentLv3" label="部门"></el-table-column>
-                <el-table-column prop="IsAccounted" label="是否结算"></el-table-column>
-                <el-table-column prop="BonusPoints" label="加分"></el-table-column>
-                <el-table-column prop="MinusPoints" label="减分"></el-table-column>
+                <el-table-column prop="JobId" label="工号" width="70"></el-table-column>
+                <el-table-column prop="Name" label="姓名" width="80"></el-table-column>
+                <el-table-column prop="DepartmentLv1" label="一级部门" width="180"></el-table-column>
+                <el-table-column prop="DepartmentLv2" label="二级部门"></el-table-column>
+                <el-table-column prop="DepartmentLv3" label="三级部门"></el-table-column>
+                <el-table-column prop="Post" label="职务名称"></el-table-column>
+                <el-table-column prop="isEnd" label="是否结算" width="80"></el-table-column>
+                <el-table-column prop="BonusPoints" label="加分" width="60"></el-table-column>
+                <el-table-column prop="MinusPoints" label="减分" width="60"></el-table-column>
                 <el-table-column prop="Reason" label="加减分理由" width="180"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="考核日期" width="100"></el-table-column>
+                <el-table-column prop="Proof" label="加减分依据" width="100"></el-table-column>
+                <el-table-column prop="ReasonType" label="理由分类" width="100"></el-table-column>
+                <el-table-column prop="checkDate" label="考核日期" width="100"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="60">
                     <template slot-scope="scope">
                         <el-popconfirm title="确定删除此条记录吗？" @onConfirm="deleteDetail(scope.row)">
@@ -62,7 +66,7 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[5, 10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
         </div>
     </div>
 </template>
@@ -72,6 +76,7 @@
 import axios from 'axios'
 import js from './mixins/index'
 import dayjs from 'dayjs'
+import util from '@/libs/util.js'
 export default {
     name: 'a-detail',
     mixins: [
@@ -79,12 +84,14 @@ export default {
     ],
     data () {
         return {
+            dayjs,
             staffNo: '',
             name: '',
             addOrMin: '',
             isEnd: '',
             checkDate: null,
-            file: null
+            file: null,
+            operator: util.cookies.get('uuid'),
         }
     },
     mounted () {
@@ -97,20 +104,24 @@ export default {
       getList () {
           let data = {
               name: this.name,
-              jobid: this.staffNo,
+              jobid: this.staffNo? Number(this.staffNo):'',
               isBonus: this.addOrMin,
               isAccounted: this.isEnd,
               beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
               endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
               page: this.pagination.currentPage,
               pageSize: this.pagination.pageSize,
-              rewardPointsType: 'A'
+              rewardPointsType: 'A分'
           }
           this.loading = true;
           this.$api.GET_DETAIL_LIST(data).then(res => {
               this.loading = false
-              this.data = res.detail
-              this.pagination.total = res.total
+              res.data.detail.map((item) => {
+                  item.checkDate = dayjs(item.AssessmentDate).format('YYYY-M-D')
+                  item.isEnd = item.IsAccounted == 0?'否':'是'
+              })
+              this.data = res.data.detail
+              this.pagination.total = res.data.totalLength
           }).catch(err => {
               console.log('err', err);
               this.loading = false
@@ -118,15 +129,12 @@ export default {
       },
 
     handleSelectionChange (selection) {
-        console.log(selection);
-        let selectedJobIds = [];
+
         let selectedRewards = [];
         selection.map((item) => {
-            selectedJobIds.push(item.jobid)
             selectedRewards.push(item.RewardPointsdetailID)
         })
 
-        this.jobids = selectedJobIds.join(',')
         this.rewards = selectedRewards.join(',')
       },
 
@@ -169,19 +177,21 @@ export default {
         exportFile () {
             let data = {
               name: this.name,
-              jobid: this.staffNo,
+              jobid: this.staffNo? Number(this.staffNo):'',
               isBonus: this.addOrMin,
               isAccounted: this.isEnd,
               beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
               endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
-              rewardPointsType: 'A'
+              rewardPointsType: 'A分',
+              Operator: this.operator
           }
           this.$api.EXPORT_DETAIL_LIST(data).then(res => {
               if (res.code === 0) {
-                  this.$message.success('导出成功')
+                  window.location.href = res.data
               } else {
                   this.$message.error(res.msg || '导出失败，请联系管理员')
               }
+              
           }).catch(err => {
               console.log('err', err)
           })
@@ -191,12 +201,11 @@ export default {
          * 结算
          */
         settleAccounts () {
-            if (!this.jobids) {
+            if (!this.rewards) {
                 this.$message.warning('请选择要结算的记录')
                 return
             }
             let data = {
-              jobid: this.jobids,
               RewardPointsdetailID: this.rewards
           }
           this.$api.ACCOUNT_DETAIL_LIST(data).then(res => {
@@ -216,7 +225,7 @@ export default {
         _this.source = axios.CancelToken.source();
         let fileData = new FormData();
         fileData.append('file', _this.file)
-        fileData.append('Operator', '100297')
+        fileData.append('Operator', this.operator)
         let url = '/api/import_rewardPoint';
         this.uploadFile(url, fileData, _this.source.token, (res) => {
             let loaded = res.loaded
@@ -230,7 +239,8 @@ export default {
                         _this.uploadPercent = 0
                         _this.getList()
                     } else {
-                        _this.$message.error(res.msg || '导入失败，请联系管理员')
+                        console.log(res)
+                        _this.$message.error(res.data.msg || '导入失败，请联系管理员')
                     }
                 }, (rej) => {
                     if (rej === -2) {
