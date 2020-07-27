@@ -9,29 +9,24 @@
     <template slot="title">
       <div class="line-item"><span class="title">职务积分</span><span class="num">{{fixDetail["totalZW"]}}</span></div>
     </template>
-    <div class="rule-item" :class="{'active': zwLevel == item.id}" v-for="(item, index) in zwRules" :key="index">
-      <span class="title"><i class="header-icon el-icon-wind-power" v-if="zwLevel == item.id"></i>{{item.title}}</span><span class="num">{{item.num}}</span>
+    <div class="rule-item" v-for="(item, index) in fixDetail['职务积分']" :key="index">
+      <span class="title">{{item.begindate}}-{{item.enddate}}————{{item.jobname}}({{item.jobrank}})</span><span class="num">{{item.jobrankpoint}}</span>
     </div>
   </el-collapse-item>
   <el-collapse-item>
     <template slot="title">
       <div class="line-item"><span class="title">职称积分</span><span class="num">{{fixDetail["职称积分"]["tittleRankPoint"]}}</span></div>
     </template>
-    <p>国家职业资格职称</p>
-    <div class="rule-item" :class="{'active': titleCountryLevel == item.id}" v-for="(item, index) in titleCountryLevels" :key="index">
-      <span class="title"><i class="header-icon el-icon-wind-power" v-if="titleCountryLevel == item.id"></i>{{item.title}}</span><span class="num">{{item.num}}</span>
-    </div>
-     <p>公司内部职称</p>
-     <div class="rule-item" :class="{'active': titleCompanyLevel == item.id}" v-for="(item, index) in titleCompanyLevels" :key="index">
-      <span class="title"><i class="header-icon el-icon-wind-power" v-if="titleCompanyLevel == item.id"></i>{{item.title}}</span><span class="num">{{item.num}}</span>
+    <div class="rule-item">
+      <span class="title"></span><span class="num">{{fixDetail["职称积分"].tittleRankPoint}}</span>
     </div>
   </el-collapse-item>
   <el-collapse-item>
     <template slot="title">
       <div class="line-item"><span class="title">学历积分</span><span class="num">{{fixDetail["学历积分"]["schoolPoints"]}}</span></div>
     </template>
-    <div class="rule-item" :class="{'active': educationLevel == item.id}" v-for="(item, index) in educationLevels" :key="index">
-      <span class="title"><i class="header-icon el-icon-wind-power" v-if="educationLevel == item.id"></i>{{item.title}}</span><span class="num">{{item.num}}</span>
+    <div class="rule-item">
+      <span class="title">{{fixDetail["学历积分"].education}}{{fixDetail["学历积分"].education == '本科'?(fixDetail["学历积分"].is985211?'（985/211）':'（普通）'):''}}</span><span class="num">{{fixDetail["学历积分"]["schoolPoints"]}}</span>
     </div>
   </el-collapse-item>
   <el-collapse-item>
@@ -59,10 +54,7 @@ export default {
       return {
         operator: util.cookies.get('uuid'),
         activeNames: ['1'],
-        zwLevel: 1,
-        titleCountryLevel: 1,
-        titleCompanyLevel: 1,
-        educationLevel: 3,
+        educationLevel: 0,
         fixDetail: null
       }
     },
