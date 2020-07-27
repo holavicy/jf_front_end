@@ -52,6 +52,7 @@ export default {
 
   data () {
     return {
+      loading: false,
       isEnd: this.isEndVal,
       isEndOptions,
       checkDate: '',

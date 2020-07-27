@@ -20,7 +20,7 @@
             <el-table :data="data" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading"
             :expand-row-keys="expands" 
             :row-key="getRowKeys">
-                <el-table-column type="index" width="55"></el-table-column>
+                <!-- <el-table-column type="index" width="55"></el-table-column> -->
                 <el-table-column prop="PointOrderID" label="订单编号"></el-table-column>
                 <el-table-column prop="TotalPrice" label="总价"></el-table-column>
                 <el-table-column prop="orderStatusTxt" label="订单状态"></el-table-column>
@@ -101,17 +101,19 @@ export default {
        */
       getList () {
           let data = {
-              OrderStatus: this.status,
-              Operator: this.operator
+              OrderStatus: String(this.status),
+              Operator: this.operator,
+              page: this.pagination.currentPage,
+              pageSize: this.pagination.pageSize
           }
           this.loading = true;
           this.$api.GET_ORDER_LIST(data).then(res => {
               console.log(res)
               this.loading = false
-              res.data.list.map((item)=>{
+              res.data.detail.map((item)=>{
                 item.orderStatusTxt = this.orderStatusDic[item.OrderStatus]
               })
-              this.data = res.data.list
+              this.data = res.data.detail
           }).catch(err => {
               console.log('err', err);
               this.loading = false
@@ -119,10 +121,18 @@ export default {
       },
 
        showDetail (data) {
+           console.log(data.PointOrderID)
             if (this.expands.length>0) {
                 this.expands = []
             } else {
-                this.expands.push(data.PointOrderID)
+                this.expands.push(data.PointOrderID);
+                console.log(data)
+                let id = data.PointOrderID;
+                let d = {
+                    PointOrderID: String(id)
+                }
+                this.$api.GET_ORDER_GOODS_LIST(d).then((res) => {
+                    console.log(res)})
             }
         },
 

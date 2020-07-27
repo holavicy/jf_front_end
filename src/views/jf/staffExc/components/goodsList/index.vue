@@ -11,20 +11,16 @@
         </div>
 
         <div class="table-wrapper">
-            <el-table :data="data" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading">
+            <el-table :data="list" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading">
                 <el-table-column type="index" width="55"></el-table-column>
                 <el-table-column prop="JobId" label="商品图片">
                     <template slot-scope="scope">
-                        <el-upload class="avatar-uploader" action="default" :show-file-list="false">
-                            <img v-if="scope.row.imageUrl" :src="scope.row.imageUrl" class="avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                        <!-- <el-image style="width: 100px; height: 100px" :src="scope.row.imageUrl" :fit="fit"></el-image> -->
+                        <el-image style="width: 100px; height: 100px" :src="scope.row.PictureUrl" :fit="fit"></el-image>
                     </template>
                 </el-table-column>
-                <el-table-column prop="goodsName" label="商品名称"></el-table-column>
-                <el-table-column prop="price" label="单价"></el-table-column>
-                <el-table-column prop="stock" label="商品库存"></el-table-column>
+                <el-table-column prop="Name" label="商品名称"></el-table-column>
+                <el-table-column prop="PointCost" label="单价"></el-table-column>
+                <el-table-column prop="TotalIn-TotalOut" label="商品库存"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="100">
                     <template slot-scope="scope">
    
@@ -63,20 +59,15 @@ export default {
        */
       getList () {
           let data = {
-              Name: this.name,
+              Name: this.goodsName,
               page: this.pagination.currentPage,
               pageSize: this.pagination.pageSize,
           }
           this.loading = true;
           this.$api.GET_GOODS_LIST(data).then(res => {
               this.loading = false
-              res.data.detail.map((item) => {
-                  item.checkDate = dayjs(item.AssessmentDate).format('YYYY-M-D')
-                  console.log(item.checkDate)
-                  item.isEnd = item.IsAccounted == 0?'否':'是'
-              })
-              this.data = res.data.detail
-              this.pagination.total = res.data.totalLength
+              this.list = res.data.detail
+              this.pagination.total = res.data.total
           }).catch(err => {
               console.log('err', err);
               this.loading = false

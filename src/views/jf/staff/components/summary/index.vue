@@ -152,12 +152,10 @@ export default {
         pageSize: 100
       }
       this.$api.GET_ACTIVITY_LIST(data).then((res) => {
-        console.log(res);
         let result = res.data.detail;
         let list = [];
         //过滤出结束时间小于当前时间的活动
         result.map((item) => {
-          console.log(dayjs().isBefore(item.EndDateTime))
 
           if(dayjs().isBefore(item.EndDateTime)){
             list.push(item)

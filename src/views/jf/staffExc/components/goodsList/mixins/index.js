@@ -15,25 +15,12 @@ export default {
         ],
         loading: false,
         pagination: {
-          currentPage: 0,
+          currentPage: 1,
           pageSize: 10,
           total: 0
         },
 
-        data: [{
-            GoodsID: 7,
-            goodsName: '小方巾',
-            price: '20',
-            stock: 180,
-            imgUrl: ''
-        },
-        {
-          GoodsID: 13,
-          goodsName: '测试',
-          price: '10',
-          stock: 180,
-          imgUrl: ''
-      }]
+        list: []
       }
     },
 
@@ -43,7 +30,7 @@ export default {
         this.getList()
       },
       handleCurrentChange (val) {
-        this.pagination.currentPage = val-1;
+        this.pagination.currentPage = val;
         this.getList()
       }
     }

@@ -68,7 +68,6 @@ export default {
     },
     methods: {
       getSummary(){
-        console.log()
         let data = {
           jobid: Number(this.operator)
         }
@@ -79,12 +78,10 @@ export default {
       },
 
       getDetail(){
-        console.log()
         let data = {
           jobid: String(this.operator)
         }
         this.$api.GET_FIX_DETAIL(data).then((res)=>{
-          console.log(res);
           let totalZW = 0;
           let zwList = res.data["职务积分"];
           zwList.map((item) => {

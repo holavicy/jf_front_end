@@ -39,7 +39,7 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
       */
     REJECT_ORDER (data) {
       return request({
-        url: 'reject_order',
+        url: '/reject_order',
         method: 'post',
         data
       })
@@ -50,7 +50,15 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
       */
      FINISH_ORDER (data) {
       return request({
-        url: 'finish_order',
+        url: '/finish_order',
+        method: 'post',
+        data
+      })
+    },
+
+    GET_ORDER_GOODS_LIST(data){
+      return request({
+        url: '/query_orderDetail',
         method: 'post',
         data
       })
