@@ -13,14 +13,14 @@
         <div class="table-wrapper">
             <el-table :data="list" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading">
                 <el-table-column type="index" width="55"></el-table-column>
-                <el-table-column prop="JobId" label="商品图片">
+                <el-table-column prop="JobId" label="商品图片" width="100">
                     <template slot-scope="scope">
-                        <el-image style="width: 100px; height: 100px" :src="scope.row.PictureUrl" :fit="fit"></el-image>
+                        <el-image style="width: 60px; height: 60px" :src="scope.row.PictureUrl"></el-image>
                     </template>
                 </el-table-column>
                 <el-table-column prop="Name" label="商品名称"></el-table-column>
-                <el-table-column prop="PointCost" label="单价"></el-table-column>
-                <el-table-column prop="TotalIn-TotalOut" label="商品库存"></el-table-column>
+                <el-table-column prop="PointCost" label="单价" width="100"></el-table-column>
+                <el-table-column prop="stock" label="商品库存" width="100"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="100">
                     <template slot-scope="scope">
    
@@ -66,6 +66,9 @@ export default {
           this.loading = true;
           this.$api.GET_GOODS_LIST(data).then(res => {
               this.loading = false
+              res.data.detail.map((item) => {
+                  item.stock = item.TotalIn - item.TotalOut
+              })
               this.list = res.data.detail
               this.pagination.total = res.data.total
           }).catch(err => {
