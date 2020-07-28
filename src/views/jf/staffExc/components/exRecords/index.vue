@@ -38,7 +38,7 @@
                                 <el-table
                                     :data="goodsData" size="mini"
                                     show-summary
-                                    :summary-method="getSummaries"
+                                   
                                     style="width: 100%">
                                     <el-table-column
                                   type="index">

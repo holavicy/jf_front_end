@@ -6,12 +6,11 @@
                 <el-table-column type="index" width="55"></el-table-column>
                 <el-table-column prop="JobId" label="商品图片">
                     <template slot-scope="scope">
-                        <el-image style="width: 100px; height: 100px" :src="scope.row.PictureUrl"></el-image>
+                        <el-image style="width: 60px; height: 60px" :src="scope.row.PictureUrl"></el-image>
                     </template>
                 </el-table-column>
                 <el-table-column prop="Name" label="商品名称"></el-table-column>
                 <el-table-column prop="PointCost" label="单价"></el-table-column>
-                <!-- <el-table-column prop="GoodsAmount" label="数量"></el-table-column> -->
                 <el-table-column fixed="right" label="数量" width="180">
                     <template slot-scope="scope">
                         <el-input-number v-model="scope.row.GoodsAmount" @change="handleChange(scope.row)" :min="0" :max="scope.row.TotalIn-scope.row.TotalOut" label="描述文字" size="mini"></el-input-number>
@@ -113,7 +112,24 @@ export default {
        * 创建订单
        */
       createPay () {
-          console.log(this.data)
+
+          if(this.data.length<=0){
+              return
+          }
+
+          this.getTotalBAmount().then((res) => {
+              if(res>=this.totalPrice){
+                  this.createPayFc
+              } else {
+                  this.$message.error('当前可兑换积分不足')
+              }
+          })
+
+          
+      },
+
+      createPayFc(){
+          //获取用户当前可兑换积分，若小于购物车总金额，则提示积分不足
           let ShoppingCartIDList = []
           let GoodsIDList = []
           this.data.map((item) => {
@@ -133,6 +149,20 @@ export default {
               } else {
                   this.$message.error(res.msg || '提交订单失败，请刷新后再试')
               }
+          })
+      },
+
+        //获取当前可兑换积分
+      getTotalBAmount(){
+          return new Promise((resolve, reject) => {
+            let data = {
+                jobid: Number(this.operator)
+            }
+            this.$api.GET_SUMMARY_LIST(data).then((res)=>{
+                let result = res.data.detail[0]
+                console.log(result["现有管理积分"])
+                resolve(result["现有管理积分"])
+            })
           })
       }
     }
