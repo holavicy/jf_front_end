@@ -74,6 +74,16 @@ export default {
           this.loading = true;
           this.$api.GET_SUMMARY_LIST(data).then(res => {
               this.loading = false
+              res.data.detail.map((item) => {
+                  item["现有A分"]=item["现有A分"] || 0
+                  item["现有管理积分"]=item["现有管理积分"] || 0
+                  item["固定积分"]=item["固定积分"] || 0
+                  item["年度管理积分"]=item["年度管理积分"] || 0
+                  item["年度累计积分"]=item["年度累计积分"] || 0
+                  item["总获得A分"]=item["总获得A分"] || 0
+                  item["总获得管理积分"]=item["总获得管理积分"] || 0
+                  item["总累计积分"]=item["总累计积分"] || 0
+              })
               this.data = res.data.detail
               this.pagination.total = res.data.totalLength
           }).catch(err => {

@@ -12,12 +12,8 @@
             </div>
             <el-row class="button-wrapper">
                 <el-button type="primary" plain size="mini" @click="getList">查询</el-button>
-                <el-upload action="default" :before-upload="beforeUpload" :http-request="importFile" :show-file-list="false" style="margin: 0 10px">
-                    <el-button type="primary" plain size="mini">导入</el-button>
-                </el-upload>
-
-                <!-- <el-button type="primary" size="mini" @click="exportFile">导出</el-button>
-                <el-button type="primary" plain size="mini" @click="settleAccounts">结算</el-button> -->
+                <el-button type="primary" size="mini" @click="exportFile">导出</el-button>
+                <!-- <el-button type="primary" plain size="mini" @click="settleAccounts">结算</el-button> -->
             </el-row>
         </div>
 
@@ -103,31 +99,6 @@ export default {
         this.getList()
       },
 
-      beforeUpload (file) {
-        this.file = file;
-      },
-
-          /**
-         * 删除
-         */
-        deleteDetail (val) {
-            console.log(val);
-            let data = {
-                RewardPointsdetailID: val.RewardPointsdetailID
-            }
-
-            this.$api.DELETE_DETAIL_RECORD(data).then(res => {
-                if (res.code === 0) {
-                    this.$message.success('删除成功')
-                    this.getList()
-                } else {
-                    this.$message.error(res.msg || '删除失败')
-                }
-            }).catch(err => {
-                console.log(err)
-            })
-        },
-
         /**
          * 导出
          */
@@ -151,60 +122,7 @@ export default {
           }).catch(err => {
               console.log('err', err)
           })
-        },
-
-        /**
-         * 结算
-         */
-        settleAccounts () {
-            if (!this.jobids) {
-                this.$message.warning('请选择要结算的记录')
-                return
-            }
-            let data = {
-              RewardPointsdetailID: this.rewards
-          }
-          this.$api.ACCOUNT_DETAIL_LIST(data).then(res => {
-              if (res.code === 0) {
-                  this.$message.success('结算成功');
-                  this.getList()
-              } else {
-                  this.$message.error(res.msg || '结算失败，请联系管理员')
-              }
-          }).catch(err => {
-              console.log('err', err)
-          })
-        },
-
-      importFile () {
-        const _this = this;
-        _this.source = axios.CancelToken.source();
-        let fileData = new FormData();
-        fileData.append('file', _this.file)
-        fileData.append('Operator', this.operator)
-        let url = '/api/import_goods';
-        this.uploadFile(url, fileData, _this.source.token, (res) => {
-            let loaded = res.loaded
-            let total = res.total
-            _this.$nextTick(() => {
-                _this.uploadPercent = Math.floor(loaded/total*100)>1? Math.floor(loaded/total*100):1;
-                })
-                }).then((res) => {
-                    if (res.data.code === 0) {
-                        _this.$message.success('导入成功')
-                        _this.uploadPercent = 0
-                        _this.getList()
-                    } else {
-                        _this.$message.error(res.msg || '导入失败，请联系管理员')
-                    }
-                }, (rej) => {
-                    if (rej === -2) {
-                        _this.$message.info('取消上传成功')
-                    } else {
-                        _this.$message.error('上传失败')
-                    }
-                })
-            }
+        }
         }
       }
 

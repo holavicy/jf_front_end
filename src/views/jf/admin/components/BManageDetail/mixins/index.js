@@ -16,7 +16,7 @@ export default {
         data: [],
         loading: false,
         pagination: {
-          currentPage: 0,
+          currentPage: 1,
           pageSize: 10,
           total: 0
         }

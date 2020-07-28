@@ -50,15 +50,15 @@
                                   type="index">
                                     </el-table-column>
                                     <el-table-column
-                                    prop="goodsName"
+                                    prop="Name"
                                     label="商品名称">
                                     </el-table-column>
                                     <el-table-column
-                                    prop="price"
+                                    prop="PointCost"
                                     label="单价">
                                     </el-table-column>
                                     <el-table-column
-                                    prop="num"
+                                    prop="OrderGoodsAmount"
                                     label="数量">
                                     </el-table-column>
                                     <el-table-column
@@ -155,10 +155,23 @@ export default {
         },
 
         showDetail (data) {
+           console.log(data.PointOrderID)
             if (this.expands.length>0) {
                 this.expands = []
             } else {
-                this.expands.push(data.PointOrderID)
+                console.log(data)
+                let id = data.PointOrderID;
+                let d = {
+                    PointOrderID: String(id)
+                }
+                this.$api.GET_ORDER_GOODS_LIST(d).then((res) => {
+                    console.log(res)
+                    res.data.map((item) => {
+                        item.total = item.PointCost * item.OrderGoodsAmount
+                    })
+                    this.goodsData = res.data
+                    this.expands.push(data.PointOrderID);
+                });
             }
         },
 

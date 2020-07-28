@@ -37,7 +37,7 @@
                 <el-table-column prop="职称积分" label="职称积分" width="80"></el-table-column>
                 <el-table-column prop="学历积分" label="学历积分" width="80"></el-table-column>
                 <el-table-column prop="工龄积分" label="工龄积分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="合计" fixed="right"></el-table-column>
+                <el-table-column prop="totalFix" label="合计" fixed="right"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
 
@@ -78,8 +78,10 @@ export default {
           }
           this.loading = true;
           this.$api.FIX_TOTAL(data).then(res => {
-              console.log(res)
               this.loading = false
+              res.data.detail.map(item => {
+                  item.totalFix = item["职务积分"]+item["职称积分"]+item["学历积分"]+item["工龄积分"]
+              })
               this.data = res.data.detail
               this.pagination.total = res.data.totalLength
           }).catch(err => {

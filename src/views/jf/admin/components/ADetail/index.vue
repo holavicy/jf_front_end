@@ -57,6 +57,7 @@
                 <el-table-column prop="Reason" label="加减分理由" width="180"></el-table-column>
                 <el-table-column prop="Proof" label="加减分依据" width="100"></el-table-column>
                 <el-table-column prop="ReasonType" label="理由分类" width="100"></el-table-column>
+                <el-table-column prop="FunctionalDepartment" label="职能部门/所在部门" width="180"></el-table-column>
                 <el-table-column prop="checkDate" label="考核日期" width="100"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="60">
                     <template slot-scope="scope">
