@@ -90,7 +90,7 @@ export default {
             let data = {
               name: this.name,
               jobid: this.staffNo? Number(this.staffNo):'',
-              Operator: this.operator
+              Operator: Number(this.operator)
           }
           this.$api.EXPORT_SUMMARY_LIST(data).then(res => {
               if (res.code === 0) {

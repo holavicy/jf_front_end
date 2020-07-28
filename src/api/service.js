@@ -89,7 +89,7 @@ function createRequestFunction (service) {
       headers: {
         'Content-Type': get(config, 'headers.Content-Type', 'application/json')
       },
-      timeout: 5000,
+      timeout: 10000,
       baseURL: 'http://192.168.40.161:8080/Interface',
       // baseURL: process.env.VUE_APP_API,
       data: {}

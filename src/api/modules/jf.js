@@ -83,5 +83,14 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
       method: 'post',
       data
     })
+  },
+
+  // 导出固定积分汇总 /export_FixedPoints
+  EXPORT_FIX_TOTAL(data){
+    return request({
+      url: '/export_FixedPoints',
+      method: 'post',
+      data
+    })
   }
 })

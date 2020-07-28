@@ -21,8 +21,8 @@
             :expand-row-keys="expands" 
             :row-key="getRowKeys">
                 <el-table-column prop="PointOrderID" label="订单编号" width="100"></el-table-column>
-                <el-table-column prop="name" label="工号"></el-table-column>
-                <el-table-column prop="name" label="姓名"></el-table-column>
+                <el-table-column prop="JobId" label="工号"></el-table-column>
+                <el-table-column prop="NAME" label="姓名"></el-table-column>
                 <el-table-column prop="TotalPrice" label="总价"></el-table-column>
                 <el-table-column prop="orderStatusTxt" label="订单状态"></el-table-column>
                 <el-table-column prop="CreationDate" label="兑换日期"></el-table-column>
@@ -106,18 +106,18 @@ export default {
        */
       getList () {
           let data = {
-              Operator: Number(this.staffNo),
-              OrderStatus: this.orderStatus,
+              Operator: String(this.staffNo),
+              OrderStatus: String(this.orderStatus),
               page: this.pagination.currentPage,
               pageSize: this.pagination.pageSize
           }
           this.loading = true;
           this.$api.GET_ORDER_LIST(data).then(res => {
               this.loading = false
-              res.data.list.map((item)=>{
+              res.data.detail.map((item)=>{
                   item.orderStatusTxt = this.orderStatusDic[item.OrderStatus]
               })
-              this.data = res.data.list
+              this.data = res.data.detail
               this.pagination.total = res.data.totalLength
           }).catch(err => {
               console.log('err', err);

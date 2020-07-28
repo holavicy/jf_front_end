@@ -30,11 +30,11 @@
                             <img v-if="imageUrl" :src="imageUrl" class="avatar">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        <el-image style="width: 100px; height: 100px" :src="scope.row.imageUrl" :fit="fit"></el-image>
+                        <!-- <el-image style="width: 60px; height: 60px" :src="scope.row.imageUrl"></el-image> -->
                     </template>
                 </el-table-column>
-                <el-table-column prop="Name" label="商品名称" width="80"></el-table-column>
-                <el-table-column prop="DepartmentLv1" label="单价"></el-table-column>
+                <el-table-column prop="Name" label="商品名称"></el-table-column>
+                <el-table-column prop="DepartmentLv1" label="单价" width="100"></el-table-column>
                 <el-table-column prop="DepartmentLv3" label="商品状态" width="100"></el-table-column>
                 <el-table-column prop="isEnd" label="商品库存" width="80"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="60">
@@ -84,12 +84,8 @@ export default {
           this.loading = true;
           this.$api.GET_GOODS_LIST(data).then(res => {
               this.loading = false
-              res.data.detail.map((item) => {
-                  item.checkDate = dayjs(item.AssessmentDate).format('YYYY-M-D')
-                  item.isEnd = item.IsAccounted == 0?'否':'是'
-              })
               this.data = res.data.detail
-              this.pagination.total = res.data.totalLength
+              this.pagination.total = res.data.total
           }).catch(err => {
               console.log('err', err);
               this.loading = false

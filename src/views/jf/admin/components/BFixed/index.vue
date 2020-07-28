@@ -99,11 +99,10 @@ export default {
       exportFile () {
             let data = {
               name: this.name,
-              jobid: Number(this.staffNo),
-              rewardPointsType: '固定积分',
-              Operator: this.operator
+              jobid: this.staffNo?Number(this.staffNo):'',
+              Operator: Number(this.operator)
           }
-          this.$api.EXPORT_DETAIL_LIST(data).then(res => {
+          this.$api.EXPORT_FIX_TOTAL(data).then(res => {
               if (res.code === 0) {
                   this.$message.success('导出成功')
               } else {
