@@ -198,11 +198,7 @@ export default {
             }
             })
             sums[2]='合计'
-            console.log(sums)
-
             return sums;
-
-
         },
 
         confirmOrder (param) {
