@@ -183,7 +183,7 @@ export default {
               beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
               endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
               rewardPointsType: 'A分',
-              Operator: this.operator
+              Operator: Number(this.operator)
           }
           this.$api.EXPORT_DETAIL_LIST(data).then(res => {
               if (res.code === 0) {
@@ -226,7 +226,7 @@ export default {
         let fileData = new FormData();
         fileData.append('file', _this.file)
         fileData.append('Operator', this.operator)
-        let url = '/api/import_rewardPoint';
+        let url = '/import_rewardPoint';
         this.uploadFile(url, fileData, _this.source.token, (res) => {
             let loaded = res.loaded
             let total = res.total

@@ -4,7 +4,7 @@ export default {
         data: [],
         loading: false,
         pagination: {
-          currentPage: 0,
+          currentPage: 1,
           pageSize: 10,
           total: 0
         }
@@ -18,6 +18,7 @@ export default {
        */
       handleSizeChange (val) {
         this.pagination.pageSize = val;
+        this.getList();
       },
       
       /**
@@ -25,7 +26,8 @@ export default {
        * @param {*} val 
        */
       handleCurrentChange (val) {
-        this.pagination.currentPage = val-1;
+        this.pagination.currentPage = val;
+        this.getList();
       }
     }
   }

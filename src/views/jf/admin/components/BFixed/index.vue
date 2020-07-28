@@ -25,19 +25,19 @@
         
         <div class="table-wrapper">
             <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" size="mini">
-                <el-table-column prop="jobid" label="工号" width="70" fixed></el-table-column>
-                <el-table-column prop="name" label="姓名" fixed></el-table-column>
-                <el-table-column prop="DepartmentLv1" label="业务单元"></el-table-column>
-                <el-table-column prop="DepartmentLv3" label="部门"></el-table-column>
-                <el-table-column prop="BonusPoints" label="职务"></el-table-column>
+                <el-table-column prop="工号" label="工号" width="70" fixed></el-table-column>
+                <el-table-column prop="姓名" label="姓名" width="70" fixed></el-table-column>
+                <el-table-column prop="组织" label="业务单元" width="200"></el-table-column>
+                <el-table-column prop="部门" label="部门" width="140"></el-table-column>
+                <el-table-column prop="职务" label="职务" width="120"></el-table-column>
                 <el-table-column prop="MinusPoints" label="职称"></el-table-column>
                 <el-table-column prop="Reason" label="学历"></el-table-column>
                 <el-table-column prop="AssessmentDate" label="入职时间" width="180"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="职务积分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="职称积分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="学历积分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="工龄积分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="合计" width="100" fixed="right"></el-table-column>
+                <el-table-column prop="职务积分" label="职务积分" width="80"></el-table-column>
+                <el-table-column prop="职称积分" label="职称积分" width="80"></el-table-column>
+                <el-table-column prop="学历积分" label="学历积分" width="80"></el-table-column>
+                <el-table-column prop="工龄积分" label="工龄积分" width="80"></el-table-column>
+                <el-table-column prop="AssessmentDate" label="合计" fixed="right"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
 
@@ -72,13 +72,13 @@ export default {
       getList () {
           let data = {
               name: this.name,
-              jobid: Number(this.staffNo),
+              jobid: this.staffNo?Number(this.staffNo):'',
               page: this.pagination.currentPage,
               pageSize: this.pagination.pageSize,
-              rewardPointsType: '固定积分'
           }
           this.loading = true;
-          this.$api.GET_DETAIL_LIST(data).then(res => {
+          this.$api.FIX_TOTAL(data).then(res => {
+              console.log(res)
               this.loading = false
               this.data = res.data.detail
               this.pagination.total = res.data.totalLength

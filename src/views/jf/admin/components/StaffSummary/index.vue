@@ -24,18 +24,18 @@
 
         <div class="table-wrapper">
              <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" size="mini">
-                <el-table-column prop="jobid" label="工号" width="70" fixed></el-table-column>
-                <el-table-column prop="name" label="姓名" fixed></el-table-column>
+                <el-table-column prop="工号" label="工号" width="70" fixed></el-table-column>
+                <el-table-column prop="姓名" label="姓名" fixed></el-table-column>
                 <el-table-column prop="DepartmentLv1" label="业务单元"></el-table-column>
                 <el-table-column prop="DepartmentLv3" label="部门"></el-table-column>
-                <el-table-column prop="BonusPoints" label="现有A分"></el-table-column>
-                <el-table-column prop="MinusPoints" label="现有B管理积分" width="120"></el-table-column>
-                <el-table-column prop="Reason" label="固定积分"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="年度管理积分" width="120"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="年度累计积分" width="120"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="总获得A分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="总获得B管理积分" width="120"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="总累计积分" width="80"></el-table-column>
+                <el-table-column prop="现有A分" label="现有A分"></el-table-column>
+                <el-table-column prop="现有管理积分" label="现有B管理积分" width="120"></el-table-column>
+                <el-table-column prop="固定积分" label="固定积分"></el-table-column>
+                <el-table-column prop="年度管理积分" label="年度管理积分" width="120"></el-table-column>
+                <el-table-column prop="年度累计积分" label="年度累计积分" width="120"></el-table-column>
+                <el-table-column prop="总获得A分" label="总获得A分" width="80"></el-table-column>
+                <el-table-column prop="总获得管理积分" label="总获得B管理积分" width="120"></el-table-column>
+                <el-table-column prop="总累计积分" label="总累计积分" width="80"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
         </div>
@@ -56,6 +56,9 @@ export default {
             operator: util.cookies.get('uuid')
         }
     },
+    created(){
+        this.getList();
+    },
 
     methods: {
         /**
@@ -71,10 +74,6 @@ export default {
           this.loading = true;
           this.$api.GET_SUMMARY_LIST(data).then(res => {
               this.loading = false
-              res.data.detail.map((item) => {
-                  item.checkDate = dayjs(item.AssessmentDate).format('YYYY-M-D')
-                  item.isEnd = item.IsAccounted == 0?'否':'是'
-              })
               this.data = res.data.detail
               this.pagination.total = res.data.totalLength
           }).catch(err => {

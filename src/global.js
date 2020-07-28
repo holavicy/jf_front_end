@@ -4,6 +4,7 @@ import axios from 'axios'
 function uploadFile (url,payload,cancelToken,callback1) {
     return new Promise(function(resolve,reject){
         axios({
+            baseURL: 'http://192.168.40.161:8080/Interface',
             url:url,
             method:'post',
             data:payload,

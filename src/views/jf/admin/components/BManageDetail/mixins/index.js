@@ -24,20 +24,13 @@ export default {
     },
 
     methods: {
-      handleSelectionChange (selection) {
-        console.log(selection);
-      },
-      handleCustomEvent ({ index, row }) {
-        console.log(index)
-        console.log(row)
-      },
       handleSizeChange (val) {
-        console.log(`每页 ${val} 条`);
         this.pagination.pageSize = val;
+        this.getList()
       },
       handleCurrentChange (val) {
-        console.log(`当前页: ${val}`);
-        this.pagination.currentPage = val-1;
+        this.pagination.currentPage = val;
+        this.getList()
       }
     }
   }
