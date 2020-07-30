@@ -41,4 +41,10 @@ const orderStatusOptions = [{
     4: "已取消"
   }
 
-export { isEndOptions, orderStatusOptions, orderStatusDic }
+  const goodsStatusDic = {
+
+    0: "已上架",
+    1: "已下架"
+  }
+
+export { isEndOptions, orderStatusOptions, orderStatusDic, goodsStatusDic }

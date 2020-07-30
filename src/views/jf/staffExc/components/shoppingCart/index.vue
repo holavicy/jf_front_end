@@ -84,10 +84,11 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
                 }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '移除成功!'
-                });
+                    let data = {
+                        ShoppingCartID: e.ShoppingCartID
+                    }
+                    this.deleteCartFc(data);
+                
                 }).catch(() => {
                     e.GoodsAmount = 1         
                 });
@@ -106,6 +107,23 @@ export default {
                   }
               })
           }
+      },
+
+      deleteCartFc(data){
+          this.$api.DELETE_CART(data).then((res) => {
+              if (res.code == 0){
+                  this.getList();
+                  this.$message({
+                    type: 'success',
+                    message: '移除成功!'
+                });
+              } else {
+                  this.$message({
+                    type: 'error',
+                    message: res.msg || '操作失败'
+                });
+              }
+          })
       },
 
       /**

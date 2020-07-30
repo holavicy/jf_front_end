@@ -18,7 +18,9 @@
       <div class="line-item"><span class="title">职称积分</span><span class="num">{{fixDetail["职称积分"]["tittleRankPoint"]}}</span></div>
     </template>
     <div class="rule-item">
-      <span class="title"></span><span class="num">{{fixDetail["职称积分"].tittleRankPoint}}</span>
+      <span class="title" v-if="fixDetail['职称积分'].tectittle">{{fixDetail["职称积分"].tectittle}}（{{fixDetail["职称积分"].tittleRank}}）</span>
+      <span class="title" v-else>暂无职称</span>
+      <span class="num">{{fixDetail["职称积分"].tittleRankPoint}}</span>
     </div>
   </el-collapse-item>
   <el-collapse-item>

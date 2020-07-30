@@ -28,7 +28,11 @@
                 <el-table-column fixed="right" label="操作" width="180">
                     <template slot-scope="scope">
                         <el-button type="text" size="mini" slot="reference"  @click="showDetail(scope.row)">查看详情</el-button>
-                        <el-button type="text" size="mini" slot="reference" @click="finishOrder(scope.row)" v-if="scope.row.OrderStatus == 2">确认领取</el-button>
+                        <!-- <el-button type="text" size="mini" slot="reference" @click="finishOrder(scope.row)" v-if="scope.row.OrderStatus == 2">确认领取</el-button> -->
+
+                        <el-popconfirm title="确定已领取？" @onConfirm="finishOrder(scope.row)">
+                            <el-button type="text" size="mini" slot="reference" v-if="scope.row.OrderStatus == 2">确认领取</el-button>
+                        </el-popconfirm>
                     </template>
                 </el-table-column>
                 <el-table-column type="expand" width="1">
@@ -64,6 +68,7 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
         </div>
     </div>
 </template>
@@ -115,6 +120,7 @@ export default {
                 item.orderStatusTxt = this.orderStatusDic[item.OrderStatus]
               })
               this.data = res.data.detail
+              this.pagination.total = res.data.totalLength
           }).catch(err => {
               console.log('err', err);
               this.loading = false

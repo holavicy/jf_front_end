@@ -12,36 +12,32 @@
             </div>
             <el-row class="button-wrapper">
                 <el-button type="primary" plain size="mini" @click="getList">查询</el-button>
-                <el-upload action="default" :before-upload="beforeUpload" :http-request="importFile" :show-file-list="false" style="margin: 0 10px">
+                <el-upload action="default" :before-upload="beforeUploadGoods" :http-request="importFileGoods" :show-file-list="false" style="margin: 0 10px">
                     <el-button type="primary" plain size="mini">导入</el-button>
                 </el-upload>
-
-                <!-- <el-button type="primary" size="mini" @click="exportFile">导出</el-button>
-                <el-button type="primary" plain size="mini" @click="settleAccounts">结算</el-button> -->
             </el-row>
         </div>
 
         <div class="table-wrapper">
-            <el-table :data="data" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading" @selection-change="handleSelectionChange">
+            <el-table :data="data" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading">
                 <el-table-column type="index" width="55"></el-table-column>
                 <el-table-column prop="JobId" label="商品图片" width="70">
                     <template slot-scope="scope">
-                        <el-upload class="avatar-uploader" action="default" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+
+                        <el-upload class="avatar-uploader" :before-upload="beforeUpload" :http-request="importFile" :show-file-list="false" action="default" @click.native="setID(scope.row)">
+                            <img v-if="scope.row.PictureUrl" :src="scope.row.PictureUrl" class="avatar" style="width:60px; height:60px">
                             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                         </el-upload>
-                        <!-- <el-image style="width: 60px; height: 60px" :src="scope.row.imageUrl"></el-image> -->
+                        
                     </template>
                 </el-table-column>
                 <el-table-column prop="Name" label="商品名称"></el-table-column>
-                <el-table-column prop="DepartmentLv1" label="单价" width="100"></el-table-column>
-                <el-table-column prop="DepartmentLv3" label="商品状态" width="100"></el-table-column>
-                <el-table-column prop="isEnd" label="商品库存" width="80"></el-table-column>
-                <el-table-column fixed="right" label="操作" width="60">
+                <el-table-column prop="PointCost" label="单价" width="120"></el-table-column>
+                <el-table-column prop="goodsStatus" label="商品状态" width="120"></el-table-column>
+                <el-table-column prop="stock" label="商品库存" width="100"></el-table-column>
+                <el-table-column fixed="right" label="操作" width="80">
                     <template slot-scope="scope">
-                        <el-popconfirm title="确定删除此条记录吗？" @onConfirm="deleteDetail(scope.row)">
-                            <el-button type="text" size="mini" slot="reference">下架</el-button>
-                        </el-popconfirm>
+                        <el-button type="text" size="mini" slot="reference" @click="changeGoodsStatus(scope.row)">{{scope.row.Status == 0?'下架':'上架'}}</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -55,6 +51,7 @@
 import axios from 'axios'
 import js from './mixins/index'
 import util from '@/libs/util.js'
+import { goodsStatusDic } from '@/dataDic.js' 
 export default {
     name: 'a-detail',
     mixins: [
@@ -62,10 +59,13 @@ export default {
     ],
     data () {
         return {
+            changeGoodsCode: '',
+            goodsStatusDic,
             goodsName: '',
             goodsStatus: '',
             file: null,
-             operator: util.cookies.get('uuid')
+            goodsFile: null,
+            operator: util.cookies.get('uuid')
         }
     },
     mounted () {
@@ -77,29 +77,24 @@ export default {
        */
       getList () {
           let data = {
-              Name: this.name,
+              Name: this.goodsName,
+              Status: this.goodsStatus,
               page: this.pagination.currentPage,
               pageSize: this.pagination.pageSize,
           }
           this.loading = true;
           this.$api.GET_GOODS_LIST(data).then(res => {
               this.loading = false
+              res.data.detail.map((item) => {
+                  item.goodsStatus = goodsStatusDic[item.Status]
+                  item.stock = item.TotalIn - item.TotalOut - item.TotalLock
+              })
               this.data = res.data.detail
               this.pagination.total = res.data.total
           }).catch(err => {
               console.log('err', err);
               this.loading = false
           })
-      },
-
-    handleSelectionChange (selection) {
-
-        let selectedRewards = [];
-        selection.map((item) => {
-            selectedRewards.push(item.RewardPointsdetailID)
-        })
-
-        this.rewards = selectedRewards.join(',')
       },
 
       /**
@@ -114,26 +109,13 @@ export default {
         this.file = file;
       },
 
-          /**
-         * 删除
-         */
-        deleteDetail (val) {
-            console.log(val);
-            let data = {
-                RewardPointsdetailID: val.RewardPointsdetailID
-            }
+      beforeUploadGoods (file) {
+        this.goodsFile = file;
+      },
 
-            this.$api.DELETE_DETAIL_RECORD(data).then(res => {
-                if (res.code === 0) {
-                    this.$message.success('删除成功')
-                    this.getList()
-                } else {
-                    this.$message.error(res.msg || '删除失败')
-                }
-            }).catch(err => {
-                console.log(err)
-            })
-        },
+      setID(data){
+          this.changeGoodsCode = data.GoodsCode
+      },
 
         /**
          * 导出
@@ -160,36 +142,14 @@ export default {
           })
         },
 
-        /**
-         * 结算
-         */
-        settleAccounts () {
-            if (!this.jobids) {
-                this.$message.warning('请选择要结算的记录')
-                return
-            }
-            let data = {
-              RewardPointsdetailID: this.rewards
-          }
-          this.$api.ACCOUNT_DETAIL_LIST(data).then(res => {
-              if (res.code === 0) {
-                  this.$message.success('结算成功');
-                  this.getList()
-              } else {
-                  this.$message.error(res.msg || '结算失败，请联系管理员')
-              }
-          }).catch(err => {
-              console.log('err', err)
-          })
-        },
-
       importFile () {
         const _this = this;
         _this.source = axios.CancelToken.source();
         let fileData = new FormData();
         fileData.append('file', _this.file)
         fileData.append('Operator', this.operator)
-        let url = '/api/import_goods';
+        fileData.append('GoodsCode', this.changeGoodsCode)
+        let url = '/upload_goodsImage';
         this.uploadFile(url, fileData, _this.source.token, (res) => {
             let loaded = res.loaded
             let total = res.total
@@ -198,20 +158,64 @@ export default {
                 })
                 }).then((res) => {
                     if (res.data.code === 0) {
-                        _this.$message.success('导入成功')
-                        _this.uploadPercent = 0
-                        _this.getList()
+                        _this.uploadPercent = 0;
+                        _this.getList();
+                       
                     } else {
-                        _this.$message.error(res.msg || '导入失败，请联系管理员')
+                        console.log(res)
                     }
                 }, (rej) => {
                     if (rej === -2) {
                         _this.$message.info('取消上传成功')
+                    }
+                })
+            },
+
+      importFileGoods () {
+        const _this = this;
+        _this.source = axios.CancelToken.source();
+        let fileData = new FormData();
+        fileData.append('file', _this.goodsFile)
+        fileData.append('Operator', Number(this.operator))
+
+        let url = '/import_goods';
+        this.uploadFile(url, fileData, _this.source.token, (res) => {
+            let loaded = res.loaded
+            let total = res.total
+            _this.$nextTick(() => {
+                _this.uploadPercent = Math.floor(loaded/total*100)>1? Math.floor(loaded/total*100):1;
+                })
+                }).then((res) => {
+                    if (res.data.code === 0) {
+                        _this.uploadPercent = 0;
+                        _this.getList();
+                       
                     } else {
-                        _this.$message.error('上传失败')
+                        console.log(res)
+                    }
+                }, (rej) => {
+                    if (rej === -2) {
+                        _this.$message.info('取消上传成功')
+                    }
+                })
+            },
+
+            // 商品上下架
+            changeGoodsStatus(row){
+                console.log(row)
+                let data = {
+                    GoodsCode: String(row.GoodsCode),
+                    Status: row.Status == 0?1:0
+                }
+                this.$api.CHANGE_GOODS_STATUS(data).then((res) => {
+                    console.log(res)
+
+                    if(res.code == 0){
+                        this.getList()
                     }
                 })
             }
+
         }
       }
 

@@ -18,21 +18,21 @@
         </div>
 
         <div class="table-wrapper">
-            <el-table :data="data" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading" @selection-change="handleSelectionChange">
-                <el-table-column type="index" width="55"></el-table-column>
+            <el-table :data="data" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading">
+                 <el-table-column type="index" width="55"></el-table-column>
                 <el-table-column prop="JobId" label="商品图片" width="70">
                     <template slot-scope="scope">
-                        <el-upload class="avatar-uploader" action="default" :show-file-list="false" :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
-                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                        </el-upload>
-                        <!-- <el-image style="width: 60px; height: 60px" :src="scope.row.imageUrl"></el-image> -->
+                        <el-image :src="scope.row.PictureUrl" class="avatar" style="width:60px; height:60px"/>
                     </template>
                 </el-table-column>
                 <el-table-column prop="Name" label="商品名称"></el-table-column>
-                <el-table-column prop="DepartmentLv1" label="单价" width="100"></el-table-column>
-                <el-table-column prop="DepartmentLv3" label="商品状态" width="100"></el-table-column>
-                <el-table-column prop="isEnd" label="商品库存" width="80"></el-table-column>
+                <el-table-column prop="PointCost" label="单价" width="120"></el-table-column>
+                <el-table-column prop="goodsStatus" label="商品状态" width="120"></el-table-column>
+                <el-table-column prop="TotalIn" label="总入库" width="100"></el-table-column>
+                <el-table-column prop="TotalOut" label="总出库" width="100"></el-table-column>
+                <el-table-column prop="TotalLock" label="已锁定" width="100"></el-table-column>
+                <el-table-column prop="stock" label="商品库存" width="100"></el-table-column>
+                
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[5, 10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
         </div>
@@ -44,6 +44,7 @@
 import axios from 'axios'
 import js from './mixins/index'
 import util from '@/libs/util.js'
+import { goodsStatusDic } from '@/dataDic.js' 
 export default {
     name: 'a-detail',
     mixins: [
@@ -67,28 +68,23 @@ export default {
       getList () {
           let data = {
               Name: this.name,
+              Status: this.goodsStatus,
               page: this.pagination.currentPage,
               pageSize: this.pagination.pageSize,
           }
           this.loading = true;
           this.$api.GET_GOODS_LIST(data).then(res => {
               this.loading = false
+               res.data.detail.map((item) => {
+                  item.goodsStatus = goodsStatusDic[item.Status]
+                  item.stock = item.TotalIn - item.TotalOut - item.TotalLock
+              })
               this.data = res.data.detail
               this.pagination.total = res.data.total
           }).catch(err => {
               console.log('err', err);
               this.loading = false
           })
-      },
-
-    handleSelectionChange (selection) {
-
-        let selectedRewards = [];
-        selection.map((item) => {
-            selectedRewards.push(item.RewardPointsdetailID)
-        })
-
-        this.rewards = selectedRewards.join(',')
       },
 
       /**
@@ -104,16 +100,13 @@ export default {
          */
         exportFile () {
             let data = {
-              goodsName: this.goodsName,
-              isBonus: this.addOrMin,
-              isAccounted: this.isEnd,
-              beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
-              endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
-              rewardPointsType: 'A分',
-              Operator: this.operator
+              Name: this.name,
+              Status: this.goodsStatus,
+              Operator: Number(this.operator)
           }
-          this.$api.EXPORT_DETAIL_LIST(data).then(res => {
+          this.$api.EXPORT_GOODS(data).then(res => {
               if (res.code === 0) {
+                  this.$message.success('导出成功')
                   window.location.href = res.data
               } else {
                   this.$message.error(res.msg || '导出失败，请联系管理员')

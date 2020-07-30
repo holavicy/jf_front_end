@@ -129,7 +129,7 @@ export default {
           })
       },
 
-    handleSelectionChange (selection) {
+      handleSelectionChange (selection) {
 
         let selectedRewards = [];
         selection.map((item) => {
@@ -188,6 +188,7 @@ export default {
           }
           this.$api.EXPORT_DETAIL_LIST(data).then(res => {
               if (res.code === 0) {
+                  this.$message.success('导出成功')
                   window.location.href = res.data
               } else {
                   this.$message.error(res.msg || '导出失败，请联系管理员')

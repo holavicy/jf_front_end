@@ -31,7 +31,7 @@
                 <div class="sum-item-large"></div>
             </div>
         </div>
-        <div class="activities-box">
+        <div class="activities-box" v-if="activityList.length>0">
 
           <el-carousel ref="carousel" height="150px" @click.native="linkTo">
             <el-carousel-item v-for="(item, index) in activityList" :key="index">

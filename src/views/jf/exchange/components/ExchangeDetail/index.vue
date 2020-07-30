@@ -11,7 +11,7 @@
             </div>
             <el-row class="button-wrapper">
                 <el-button type="primary" plain size="mini" @click="getList">查询</el-button>
-                <el-button type="primary" size="mini" @click="exportFile">导出</el-button>
+                <!-- <el-button type="primary" size="mini" @click="exportFile">导出</el-button> -->
             </el-row>
         </div>
 
