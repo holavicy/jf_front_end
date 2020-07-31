@@ -40,7 +40,7 @@
                 <el-table-column prop="JobId" label="工号" width="70"></el-table-column>
                 <el-table-column prop="Name" label="姓名"></el-table-column>
                 <el-table-column prop="DepartmentLv1" label="业务单元"></el-table-column>
-                <el-table-column prop="DepartmentLv3" label="部门"></el-table-column>
+                <el-table-column prop="DepartmentLv2" label="部门"></el-table-column>
                 <el-table-column prop="BonusPoints" label="加分"></el-table-column>
                 <el-table-column prop="MinusPoints" label="减分"></el-table-column>
                 <el-table-column prop="Reason" label="加减分理由" width="180"></el-table-column>
@@ -104,6 +104,9 @@ export default {
           this.$api.GET_DETAIL_LIST(data).then(res => {
               this.loading = false
               this.data = res.data.detail
+              res.data.detail.map((item) => {
+                item.checkDate = dayjs(item.AssessmentDate).format('YYYY-M-D')
+              })
               this.pagination.total = res.data.totalLength
           }).catch(err => {
               console.log('err', err);

@@ -74,8 +74,6 @@ export default {
                   this.isEnd = ''
                   break
               case 2:
-                  this.isEnd = '否'
-                  this.activeTab = 'b-manage-detail'
                   break
               case 3:
                   this.activeTab = 'b-manage-detail'

@@ -13,11 +13,11 @@
           </el-date-picker>
         </div>
 
-        <div class="search-item">
+        <!-- <div class="search-item">
             <label>是否兑换：</label><el-select v-model="isEnd" placeholder="请选择" size="mini">
                 <el-option v-for="item in isEndOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
             </el-select>
-        </div>
+        </div> -->
 
         <el-button type="primary" size="mini" @click="getList">查询</el-button>
       </div>
@@ -25,7 +25,7 @@
                 <el-table-column type="index" width="55"></el-table-column>
                 <el-table-column prop="Name" label="姓名" width="80"></el-table-column>
                 <el-table-column prop="Post" label="职务名称"></el-table-column>
-                <el-table-column prop="isEnd" label="是否兑换" width="80"></el-table-column>
+                <!-- <el-table-column prop="isEnd" label="是否兑换" width="80"></el-table-column> -->
                 <el-table-column prop="BonusPoints" label="加分" width="60"></el-table-column>
                 <el-table-column prop="MinusPoints" label="减分" width="60"></el-table-column>
                 <el-table-column prop="Reason" label="加减分理由" width="180"></el-table-column>
@@ -84,7 +84,6 @@ export default {
       let data = {
             name: this.name,
             jobid: Number(this.operator),
-            isAccounted: isEndVal === '否'?0: isEndVal === ''?'':this.isEnd===''?'': Number(this.isEnd),
             beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
             endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('day').format('YYYY-M-D HH:mm:ss') :'',
             page: this.pagination.currentPage,
@@ -96,7 +95,6 @@ export default {
               this.loading = false
               res.data.detail.map((item) => {
                 item.checkDate = dayjs(item.AssessmentDate).format('YYYY-M-D')
-                item.isEnd = item.IsAccounted === 0? '否': '是'
               })
               this.data = res.data.detail
               this.pagination.total = res.data.totalLength
