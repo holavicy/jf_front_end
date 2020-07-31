@@ -35,7 +35,7 @@
 
           <el-carousel ref="carousel" height="150px" @click.native="linkTo">
             <el-carousel-item v-for="(item, index) in activityList" :key="index">
-              <div class="activity-item-box" :style="{backgroundImage: 'url(' + item.PictureUrl + ')', backgroundSize:'cover', backgroundRepeat:'no-repeat'}">
+              <div class="activity-item-box" :style="{backgroundImage: 'url(' + item.PictureUrl + ')', backgroundSize:'100% 150px', backgroundRepeat:'no-repeat'}">
                 <p>{{item.Slogan}}</p>
               </div>
             </el-carousel-item>

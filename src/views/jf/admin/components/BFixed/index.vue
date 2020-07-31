@@ -30,9 +30,9 @@
                 <el-table-column prop="组织" label="业务单元" width="200"></el-table-column>
                 <el-table-column prop="部门" label="部门" width="140"></el-table-column>
                 <el-table-column prop="职务" label="职务" width="120"></el-table-column>
-                <el-table-column prop="职称" label="职称"></el-table-column>
+                <el-table-column prop="职称" label="职称" width="180"></el-table-column>
                 <el-table-column prop="学历" label="学历"></el-table-column>
-                <el-table-column prop="入职时间" label="入职时间" width="180"></el-table-column>
+                <el-table-column prop="入职时间" label="入职时间" width="100"></el-table-column>
                 <el-table-column prop="职务积分" label="职务积分" width="80"></el-table-column>
                 <el-table-column prop="职称积分" label="职称积分" width="80"></el-table-column>
                 <el-table-column prop="学历积分" label="学历积分" width="80"></el-table-column>

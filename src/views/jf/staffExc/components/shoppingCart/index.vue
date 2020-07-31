@@ -10,10 +10,10 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="Name" label="商品名称"></el-table-column>
-                <el-table-column prop="PointCost" label="单价"></el-table-column>
+                <el-table-column prop="PointCost" label="所需积分"></el-table-column>
                 <el-table-column fixed="right" label="数量" width="180">
                     <template slot-scope="scope">
-                        <el-input-number v-model="scope.row.GoodsAmount" @change="handleChange(scope.row)" :min="0" :max="scope.row.TotalIn-scope.row.TotalOut" label="描述文字" size="mini"></el-input-number>
+                        <el-input-number v-model="scope.row.GoodsAmount" @change="handleChange(scope.row)" :min="0" :max="scope.row.TotalIn-scope.row.TotalOut-scope.row.TotalLock||0" label="描述文字" size="mini"></el-input-number>
                     </template>
                 </el-table-column>
             </el-table>
@@ -70,6 +70,8 @@ export default {
               this.loading = false
               res.data.map((item) => {
                   item.PictureUrl = 'http://'+this.HOST+item.PictureUrl
+                  item.TotalLock = item.TotalLock || 0
+                  item.stock = item.TotalIn - item.TotalOut - item.TotalLock
               })
               this.data = res.data
           }).catch(err => {

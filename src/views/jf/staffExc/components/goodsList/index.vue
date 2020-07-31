@@ -19,8 +19,8 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="Name" label="商品名称"></el-table-column>
-                <el-table-column prop="PointCost" label="单价" width="100"></el-table-column>
-                <el-table-column prop="stock" label="商品库存" width="100"></el-table-column>
+                <el-table-column prop="PointCost" label="所需积分" width="120"></el-table-column>
+                <el-table-column prop="stock" label="商品库存" width="120"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="100">
                     <template slot-scope="scope">
    

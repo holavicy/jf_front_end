@@ -53,7 +53,7 @@
                                     </el-table-column>
                                     <el-table-column
                                     prop="PointCost"
-                                    label="单价">
+                                    label="所需积分">
                                     </el-table-column>
                                     <el-table-column
                                     prop="OrderGoodsAmount"

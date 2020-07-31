@@ -67,7 +67,7 @@ export default {
             tempRuleForm:  {
                 Title: '',
                 Slogan: '',
-                PictureUrl: 'http://192.168.40.161:8080/load/uploadImgs/1002971595991878.416621.png',
+                PictureUrl: '',
                 BeginDateTime: '',
                 date2: '',
                 ActivityContent: '',

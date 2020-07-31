@@ -26,7 +26,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="Name" label="商品名称"></el-table-column>
-                <el-table-column prop="PointCost" label="单价" width="120"></el-table-column>
+                <el-table-column prop="PointCost" label="所需积分" width="120"></el-table-column>
                 <el-table-column prop="goodsStatus" label="商品状态" width="120"></el-table-column>
                 <el-table-column prop="TotalIn" label="总入库" width="100"></el-table-column>
                 <el-table-column prop="TotalOut" label="总出库" width="100"></el-table-column>
