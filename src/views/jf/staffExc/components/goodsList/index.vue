@@ -13,7 +13,7 @@
         <div class="table-wrapper">
             <el-table :data="list" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading">
                 <el-table-column type="index" width="55"></el-table-column>
-                <el-table-column prop="JobId" label="商品图片" width="100">
+                <el-table-column prop="PictureUrl" label="商品图片" width="100">
                     <template slot-scope="scope">
                         <el-image style="width: 60px; height: 60px" :src="scope.row.PictureUrl"></el-image>
                     </template>
@@ -69,6 +69,7 @@ export default {
               this.loading = false
               res.data.detail.map((item) => {
                   item.stock = item.TotalIn - item.TotalOut
+                  item.PictureUrl = 'http://'+this.HOST+item.PictureUrl
               })
               this.list = res.data.detail
               this.pagination.total = res.data.total

@@ -68,7 +68,9 @@ export default {
           this.loading = true;
           this.$api.GET_CART_LIST(data).then(res => {
               this.loading = false
-
+              res.data.map((item) => {
+                  item.PictureUrl = 'http://'+this.HOST+item.PictureUrl
+              })
               this.data = res.data
           }).catch(err => {
               console.log('err', err);

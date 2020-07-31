@@ -54,5 +54,6 @@ export default{
         Vue.prototype.uploadFile = (url,payload,cancelToken,callback1) => uploadFile (url,payload,cancelToken,callback1);
         Vue.prototype.getAllCategory = () => getAllCategory ();
         Vue.prototype.isNull = () => isNull();
+        Vue.prototype.HOST = '222.186.81.37:5000'
     }
 };

@@ -78,6 +78,7 @@ export default {
                res.data.detail.map((item) => {
                   item.goodsStatus = goodsStatusDic[item.Status]
                   item.stock = item.TotalIn - item.TotalOut - item.TotalLock
+                  item.PictureUrl = 'http://'+this.HOST+item.PictureUrl
               })
               this.data = res.data.detail
               this.pagination.total = res.data.total
