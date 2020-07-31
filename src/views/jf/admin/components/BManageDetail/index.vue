@@ -37,8 +37,8 @@
         </el-row>
         <div class="table-wrapper">
             <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" size="mini">
-                <el-table-column prop="jobid" label="工号" width="70"></el-table-column>
-                <el-table-column prop="name" label="姓名"></el-table-column>
+                <el-table-column prop="JobId" label="工号" width="70"></el-table-column>
+                <el-table-column prop="Name" label="姓名"></el-table-column>
                 <el-table-column prop="DepartmentLv1" label="业务单元"></el-table-column>
                 <el-table-column prop="DepartmentLv3" label="部门"></el-table-column>
                 <el-table-column prop="BonusPoints" label="加分"></el-table-column>

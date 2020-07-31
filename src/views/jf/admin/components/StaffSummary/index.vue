@@ -26,8 +26,8 @@
              <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" size="mini">
                 <el-table-column prop="工号" label="工号" width="70" fixed></el-table-column>
                 <el-table-column prop="姓名" label="姓名" fixed></el-table-column>
-                <el-table-column prop="DepartmentLv1" label="业务单元"></el-table-column>
-                <el-table-column prop="DepartmentLv3" label="部门"></el-table-column>
+                <el-table-column prop="组织" label="业务单元"></el-table-column>
+                <el-table-column prop="部门" label="部门"></el-table-column>
                 <el-table-column prop="现有A分" label="现有A分"></el-table-column>
                 <el-table-column prop="现有管理积分" label="现有B管理积分" width="120"></el-table-column>
                 <el-table-column prop="固定积分" label="固定积分"></el-table-column>
