@@ -164,6 +164,7 @@ export default {
                        
                     } else {
                         console.log(res)
+                        _this.$message.error(res.msg || '操作失败，请联系管理员')
                     }
                 }, (rej) => {
                     if (rej === -2) {
@@ -193,6 +194,7 @@ export default {
                        
                     } else {
                         console.log(res)
+                        _this.$message.error(res.msg || '操作失败，请联系管理员')
                     }
                 }, (rej) => {
                     if (rej === -2) {
