@@ -141,7 +141,7 @@ export default {
 
           this.getTotalBAmount().then((res) => {
               if(res>=this.totalPrice){
-                  this.createPayFc
+                  this.createPayFc()
               } else {
                   this.$message.error('当前可兑换积分不足')
               }

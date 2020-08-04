@@ -41,7 +41,7 @@ module.exports = {
   // disableHostCheck: process.env.NODE_ENV === 'development' ,// 关闭 host check，方便使用 ngrok 之类的内网转发工具
     proxy: {
       '/api': {
-          target: 'http://172.18.1.46:8080/Interface',
+          target: 'http://10.5.1.190:8080/Interface',
           // target: 'http://192.168.40.229:8080/Interface',
           ws: true,
           changeOrigin: true,

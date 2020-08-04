@@ -3,6 +3,7 @@ export default ({ request }) => ({
     return request({
       url: '/getUserInfo',
       method: 'post',
+      baseUrl:'http://222.186.81.37:5000',
       data
     })
   }
