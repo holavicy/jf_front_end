@@ -34,12 +34,12 @@
         </div>
 
         <el-row class="button-wrapper">
-            <el-button type="primary" plain size="mini" @click="getList">查询</el-button>
+            <el-button type="primary" plain size="mini" @click="getList(1)">查询</el-button>
             <el-upload action="default" :before-upload="beforeUpload" :http-request="importFile" :show-file-list="false" style="margin: 0 10px">
                 <el-button type="primary" plain size="mini">导入</el-button>
             </el-upload>
 
-            <el-button type="primary" size="mini" @click="exportFile">导出</el-button>
+            <el-button type="primary" size="mini" @click="exportFile" v-loading.fullscreen.lock="fullscreenLoading">导出</el-button>
             <el-button type="primary" plain size="mini" @click="settleAccounts">结算</el-button>
         </el-row>
         <div class="table-wrapper">
@@ -78,6 +78,7 @@ import axios from 'axios'
 import js from './mixins/index'
 import dayjs from 'dayjs'
 import util from '@/libs/util.js'
+import { domain } from '@/dataDic.js' 
 export default {
     name: 'a-detail',
     mixins: [
@@ -85,6 +86,8 @@ export default {
     ],
     data () {
         return {
+            fullscreenLoading:false,
+            domain,
             dayjs,
             staffNo: '',
             name: '',
@@ -102,7 +105,10 @@ export default {
       /**
        * 获取列表数据
        */
-      getList () {
+      getList (page) {
+          if(page){
+              this.pagination.currentPage = page
+          }
           let data = {
               name: this.name,
               jobid: this.staffNo? Number(this.staffNo):'',
@@ -184,17 +190,21 @@ export default {
               beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
               endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
               rewardPointsType: 'A分',
-              Operator: Number(this.operator)
+              Operator: String(this.operator)
           }
+          this.fullscreenLoading = true;
           this.$api.EXPORT_DETAIL_LIST(data).then(res => {
+              this.fullscreenLoading = false;
               if (res.code === 0) {
-                  this.$message.success('导出成功')
-                  window.location.href = res.data
+                 
+                  window.location.href = this.domain + res.data;
+                   this.$message.success('导出成功')
               } else {
                   this.$message.error(res.msg || '导出失败，请联系管理员')
               }
               
           }).catch(err => {
+              this.fullscreenLoading = false;
               console.log('err', err)
           })
         },

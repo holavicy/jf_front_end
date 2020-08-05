@@ -11,7 +11,7 @@
                 </el-select>
             </div>
             <el-row class="button-wrapper">
-                <el-button type="primary" plain size="mini" @click="getList">查询</el-button>
+                <el-button type="primary" plain size="mini" @click="getList(1)">查询</el-button>
                 <el-button type="primary" size="mini" @click="exportFile">导出</el-button>
                 <!-- <el-button type="primary" plain size="mini" @click="settleAccounts">结算</el-button> -->
             </el-row>
@@ -65,7 +65,10 @@ export default {
       /**
        * 获取列表数据
        */
-      getList () {
+      getList (page) {
+          if(page){
+            this.pagination.currentPage = page
+          }
           let data = {
               Name: this.name,
               Status: this.goodsStatus,

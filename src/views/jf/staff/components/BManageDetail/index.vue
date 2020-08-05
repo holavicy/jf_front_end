@@ -19,7 +19,7 @@
             </el-select>
         </div> -->
 
-        <el-button type="primary" size="mini" @click="getList">查询</el-button>
+        <el-button type="primary" size="mini" @click="searchList">查询</el-button>
       </div>
         <el-table :data="data" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading">
                 <el-table-column type="index" width="55"></el-table-column>
@@ -34,7 +34,7 @@
                 <el-table-column prop="FunctionalDepartment" label="职能部门/所在部门" width="180"></el-table-column>
                 <el-table-column prop="checkDate" label="考核日期" width="120"></el-table-column>
             </el-table>
-            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[1, 5, 10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
+            <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
     </div>
 </template>
 
@@ -103,6 +103,11 @@ export default {
               this.loading = false
           })
     },
+
+    searchList(){
+        this.pagination.currentPage = 1;
+        this.getList()
+      },
 
     handleSizeChange (val) {
         this.pagination.pageSize = val;

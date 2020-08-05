@@ -11,7 +11,7 @@
                 </el-select>
             </div>
             <el-row class="button-wrapper">
-                <el-button type="primary" plain size="mini" @click="getList">查询</el-button>
+                <el-button type="primary" plain size="mini" @click="getList(1)">查询</el-button>
                 <el-upload action="default" :before-upload="beforeUploadGoods" :http-request="importFileGoods" :show-file-list="false" style="margin: 0 10px">
                     <el-button type="primary" plain size="mini">导入</el-button>
                 </el-upload>
@@ -75,7 +75,10 @@ export default {
       /**
        * 获取列表数据
        */
-      getList () {
+      getList (page) {
+          if(page){
+            this.pagination.currentPage = page
+          }
           let data = {
               Name: this.goodsName,
               Status: this.goodsStatus,

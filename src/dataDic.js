@@ -47,4 +47,6 @@ const orderStatusOptions = [{
     1: "已下架"
   }
 
-export { isEndOptions, orderStatusOptions, orderStatusDic, goodsStatusDic }
+  const domain = 'http://222.186.81.37:5000'
+
+export { isEndOptions, orderStatusOptions, orderStatusDic, goodsStatusDic, domain }

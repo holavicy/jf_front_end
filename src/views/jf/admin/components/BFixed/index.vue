@@ -17,8 +17,8 @@
                 <label>姓名：</label><el-input placeholder="请输入姓名" v-model="name" size="mini"></el-input>
             </div>
             <el-row class="button-wrapper">
-                <el-button type="primary" plain size="mini" @click="getList">查询</el-button>
-                <el-button type="primary" size="mini" @click="exportFile">导出</el-button>
+                <el-button type="primary" plain size="mini" @click="getList(1)">查询</el-button>
+                <el-button type="primary" size="mini" @click="exportFile" v-loading.fullscreen.lock="fullscreenLoading">导出</el-button>
             </el-row>
         </div>
 
@@ -50,6 +50,7 @@
 import js from './mixins/index'
 import dayjs from 'dayjs'
 import util from '@/libs/util.js'
+import { domain } from '@/dataDic.js' 
 export default {
     name: 'b-fixed',
     mixins: [
@@ -57,6 +58,8 @@ export default {
     ],
     data () {
         return {
+            fullscreenLoading:false,
+            domain,
             staffNo: '',
             name: '',
             operator: util.cookies.get('uuid')
@@ -69,7 +72,10 @@ export default {
       /**
        * 获取列表数据
        */
-      getList () {
+      getList (page) {
+          if(page){
+            this.pagination.currentPage = page
+          }
           let data = {
               name: this.name,
               jobid: this.staffNo?Number(this.staffNo):'',
@@ -102,16 +108,19 @@ export default {
             let data = {
               name: this.name,
               jobid: this.staffNo?Number(this.staffNo):'',
-              Operator: Number(this.operator)
+              Operator: String(this.operator)
           }
+          this.fullscreenLoading = true;
           this.$api.EXPORT_FIX_TOTAL(data).then(res => {
+              this.fullscreenLoading = false;
               if (res.code === 0) {
+                  window.location.href = this.domain + res.data;
                   this.$message.success('导出成功')
-                  window.location.href = res.data
               } else {
                   this.$message.error(res.msg || '导出失败，请联系管理员')
               }
           }).catch(err => {
+              this.fullscreenLoading = false;
               console.log('err', err)
           })
         },
