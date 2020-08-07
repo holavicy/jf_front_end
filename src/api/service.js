@@ -3,6 +3,8 @@ import Adapter from 'axios-mock-adapter'
 import { get } from 'lodash'
 import util from '@/libs/util'
 import { errorLog, errorCreate } from './tools'
+import * as dd from 'dingtalk-jsapi'
+import api from '@/api'
 
 function formatObj (obj) {
   Object.keys(obj).forEach(item=>{
@@ -47,6 +49,29 @@ function createService () {
           case -1:
             // [ 示例 ] 其它和后台约定的 code
             return dataAxios
+            break
+          case 9997:
+            const corpId = 'dingcd0f5a2514db343b35c2f4657eb6378f'
+            dd.ready(function () {
+              dd.runtime.permission.requestAuthCode({
+                corpId: corpId, // 企业id
+                onSuccess: (info) => {
+                  const code = info.code // 通过该免登授权码可以获取用户身份
+                  let data = {
+                    code: code,
+                    corpId: corpId
+                  }
+                  api.DING_LOGIN(data)
+                    .then(async (res) => {
+                      util.cookies.set('uuid', res.data.jobnumber)
+                      util.cookies.set('token', res.token)
+                    })
+                    .catch(err => {
+                      console.log('err', err)
+                    })
+                }
+              })
+            })
             break
           default:
             // 不是正确的 code

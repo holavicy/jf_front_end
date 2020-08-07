@@ -71,7 +71,7 @@ export default {
           this.$api.GET_GOODS_LIST(data).then(res => {
               this.loading = false
               res.data.detail.map((item) => {
-                  item.stock = item.TotalIn - item.TotalOut
+                  item.stock = item.TotalIn - item.TotalOut-item.TotalLock
                   item.PictureUrl = 'http://'+this.HOST+item.PictureUrl
               })
               this.list = res.data.detail
