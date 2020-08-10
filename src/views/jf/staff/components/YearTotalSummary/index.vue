@@ -98,7 +98,7 @@ export default {
     methods: {
         getFixTotal(){
             let data = {
-                jobid: Number(this.operator),
+                jobid: String(this.operator),
                 page: 1,
                 pageSize: 100
             }
@@ -114,7 +114,7 @@ export default {
 
         getManageList(){
           let data = {
-            jobid: Number(this.operator),
+            jobid: String(this.operator),
             isAccounted: '',
             beginDate: dayjs().startOf('year').format('YYYY-M-D HH:mm:ss'),
             endDate: dayjs().endOf('year').format('YYYY-M-D HH:mm:ss'),

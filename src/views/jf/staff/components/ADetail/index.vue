@@ -83,7 +83,7 @@ export default {
     getList (isEndVal) {
       let data = {
             name: this.name,
-            jobid: Number(this.operator),
+            jobid: String(this.operator),
             isAccounted: isEndVal === '否'?0: isEndVal === ''?'':this.isEnd===''?'': Number(this.isEnd),
             beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
             endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('day').format('YYYY-M-D HH:mm:ss') :'',

@@ -63,7 +63,7 @@ export default {
     methods: {
       getSummary(){
         let data = {
-          jobid: Number(this.operator)
+          jobid: String(this.operator)
         }
         this.$api.GET_SUMMARY_LIST(data).then((res)=>{
           let result = res.data.detail[0]
