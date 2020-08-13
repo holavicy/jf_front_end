@@ -80,6 +80,9 @@ export default {
               this.loading = false
                res.data.detail.map((item) => {
                   item.goodsStatus = goodsStatusDic[item.Status]
+                  item.TotalIn = item.TotalIn || 0
+                  item.TotalOut = item.TotalOut || 0
+                  item.TotalLock = item.TotalLock || 0
                   item.stock = item.TotalIn - item.TotalOut - item.TotalLock
                   item.PictureUrl = 'http://'+this.HOST+item.PictureUrl
               })

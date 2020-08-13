@@ -139,13 +139,23 @@ export default {
               return
           }
 
-          this.getTotalBAmount().then((res) => {
+          this.$confirm('确定提交订单?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+           this.getTotalBAmount().then((res) => {
               if(res>=this.totalPrice){
                   this.createPayFc()
               } else {
                   this.$message.error('当前可兑换积分不足')
               }
           })
+        }).catch(() => {
+                  
+        });
+
+         
 
           
       },
@@ -178,7 +188,7 @@ export default {
       getTotalBAmount(){
           return new Promise((resolve, reject) => {
             let data = {
-                jobid: Number(this.operator)
+                jobid: String(this.operator)
             }
             this.$api.GET_SUMMARY_LIST(data).then((res)=>{
                 let result = res.data.detail[0]

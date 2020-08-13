@@ -193,6 +193,7 @@ export default {
                 }).then((res) => {
                     if (res.data.code === 0) {
                         _this.uploadPercent = 0;
+                        _this.$message.success('导入成功')
                         _this.getList();
                        
                     } else {

@@ -5,7 +5,8 @@ const token = util.cookies.get('token')
 
 //上传文件并显示上传进度
 function uploadFile (url,payload,cancelToken,callback1) {
-    console.log(token)
+    let t = util.cookies.get('token')
+    console.log(t)
     return new Promise(function(resolve,reject){
         axios({
             baseURL: 'http://222.186.81.37:5000/Interface',
@@ -13,7 +14,7 @@ function uploadFile (url,payload,cancelToken,callback1) {
             method:'post',
             data:payload,
             headers: {
-                Authorization: token
+                Authorization: t
               },
             onUploadProgress:function(progressEvent){
                 if(progressEvent.lengthComputable){ callback1(progressEvent); }
