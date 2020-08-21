@@ -97,14 +97,15 @@ export default {
           }
           let data = {
               name: this.name,
-              jobid: this.staffNo? Number(this.staffNo):'',
+              jobid: this.staffNo? String(this.staffNo):'',
               isBonus: this.addOrMin,
               isAccounted: this.isEnd,
               beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
               endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
               page: this.pagination.currentPage,
               pageSize: this.pagination.pageSize,
-              rewardPointsType: '管理积分'
+              rewardPointsType: '管理积分',
+              onduty: 0
           }
           this.loading = true;
           this.$api.GET_DETAIL_LIST(data).then(res => {
@@ -144,7 +145,8 @@ export default {
               beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
               endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
               rewardPointsType: '管理积分',
-              Operator: String(this.operator)
+              Operator: String(this.operator),
+              onduty: 0
           }
           this.fullscreenLoading = true;
           this.$api.EXPORT_DETAIL_LIST(data).then(res => {

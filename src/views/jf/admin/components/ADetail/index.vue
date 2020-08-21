@@ -111,7 +111,7 @@ export default {
           }
           let data = {
               name: this.name,
-              jobid: this.staffNo? Number(this.staffNo):'',
+              jobid: this.staffNo? String(this.staffNo):'',
               isBonus: this.addOrMin,
               isAccounted: this.isEnd,
               beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',

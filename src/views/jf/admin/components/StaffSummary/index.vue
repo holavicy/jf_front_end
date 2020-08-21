@@ -29,7 +29,8 @@
                 <el-table-column prop="组织" label="业务单元" width="180"></el-table-column>
                 <el-table-column prop="部门" label="部门" width="120"></el-table-column>
                 <el-table-column prop="现有A分" label="现有A分"></el-table-column>
-                <el-table-column prop="现有管理积分" label="现有B管理积分" width="120"></el-table-column>
+                <el-table-column prop="现有管理积分" label="可兑换积分" width="120"></el-table-column>
+                <el-table-column prop="已兑换积分" label="已兑换积分" width="120"></el-table-column>
                 <el-table-column prop="固定积分" label="固定积分"></el-table-column>
                 <el-table-column prop="年度管理积分" label="年度管理积分" width="120"></el-table-column>
                 <el-table-column prop="年度累计积分" label="年度累计积分" width="120"></el-table-column>
@@ -73,9 +74,10 @@ export default {
           }
           let data = {
               name: this.name,
-              jobid: this.staffNo? Number(this.staffNo):'',
+              jobid: this.staffNo? String(this.staffNo):'',
               page: this.pagination.currentPage,
-              pageSize: this.pagination.pageSize
+              pageSize: this.pagination.pageSize,
+              onduty: 0
           }
           this.loading = true;
           this.$api.GET_SUMMARY_LIST(data).then(res => {
@@ -89,6 +91,7 @@ export default {
                   item["总获得A分"]=item["总获得A分"] || 0
                   item["总获得管理积分"]=item["总获得管理积分"] || 0
                   item["总累计积分"]=item["总累计积分"] || 0
+                  item["已兑换积分"]=item["已兑换积分"] || 0
               })
               this.data = res.data.detail
               this.pagination.total = res.data.totalLength
@@ -106,7 +109,8 @@ export default {
             let data = {
               name: this.name,
               jobid: this.staffNo? Number(this.staffNo):'',
-              Operator: String(this.operator)
+              Operator: String(this.operator),
+              onduty: 0
           }
           this.fullscreenLoading = true;
           this.$api.EXPORT_SUMMARY_LIST(data).then(res => {

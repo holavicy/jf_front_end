@@ -78,9 +78,10 @@ export default {
           }
           let data = {
               name: this.name,
-              jobid: this.staffNo?Number(this.staffNo):'',
+              jobid: this.staffNo?String(this.staffNo):'',
               page: this.pagination.currentPage,
               pageSize: this.pagination.pageSize,
+              onduty: 0
           }
           this.loading = true;
           this.$api.FIX_TOTAL(data).then(res => {
@@ -108,7 +109,8 @@ export default {
             let data = {
               name: this.name,
               jobid: this.staffNo?Number(this.staffNo):'',
-              Operator: String(this.operator)
+              Operator: String(this.operator),
+              onduty: 0
           }
           this.fullscreenLoading = true;
           this.$api.EXPORT_FIX_TOTAL(data).then(res => {
