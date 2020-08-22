@@ -151,7 +151,7 @@ export default {
         _this.source = axios.CancelToken.source();
         let fileData = new FormData();
         fileData.append('file', _this.file)
-        fileData.append('Operator', this.operator)
+        fileData.append('Operator', String(this.operator))
         fileData.append('GoodsCode', this.changeGoodsCode)
         let url = '/upload_goodsImage';
         this.uploadFile(url, fileData, _this.source.token, (res) => {
@@ -181,7 +181,7 @@ export default {
         _this.source = axios.CancelToken.source();
         let fileData = new FormData();
         fileData.append('file', _this.goodsFile)
-        fileData.append('Operator', Number(this.operator))
+        fileData.append('Operator', String(this.operator))
 
         let url = '/import_goods';
         this.uploadFile(url, fileData, _this.source.token, (res) => {

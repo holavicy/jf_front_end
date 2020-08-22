@@ -25,7 +25,7 @@
                 <el-table-column prop="NAME" label="姓名"></el-table-column>
                 <el-table-column prop="TotalPrice" label="总价"></el-table-column>
                 <el-table-column prop="orderStatusTxt" label="订单状态"></el-table-column>
-                <el-table-column prop="CreationDate" label="兑换日期"></el-table-column>
+                <el-table-column prop="CreationDate" label="兑换日期" width="180"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="200">
                     <template slot-scope="scope">
                         <el-popconfirm title="确定通过此订单吗？" @onConfirm="confirmOrder(scope.row)">
