@@ -42,6 +42,7 @@
                 <el-table-column prop="DepartmentLv1" label="一级部门" width="180"></el-table-column>
                 <el-table-column prop="DepartmentLv2" label="二级部门"></el-table-column>
                 <el-table-column prop="DepartmentLv3" label="三级部门"></el-table-column>
+                <el-table-column prop="Post" label="职务名称"></el-table-column>
                 <el-table-column prop="BonusPoints" label="加分" width="80"></el-table-column>
                 <el-table-column prop="MinusPoints" label="减分" width="80"></el-table-column>
                 <el-table-column prop="Reason" label="加减分理由" width="240"></el-table-column>
