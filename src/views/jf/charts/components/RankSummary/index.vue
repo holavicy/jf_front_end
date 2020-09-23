@@ -12,7 +12,7 @@
             </div>
             <el-row class="button-wrapper">
               <el-button type="primary" size="mini" @click="getData()">查询</el-button>
-              <el-button type="primary" plain size="mini" @click="exportTable()">导出</el-button>
+              <!-- <el-button type="primary" plain size="mini" @click="exportTable()">导出</el-button> -->
             </el-row>
         </div>
 

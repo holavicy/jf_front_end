@@ -86,6 +86,8 @@ export default {
       },
 
       tableData: [],
+      // [['A2', 'A6'],['A7','A20'],['A21','B21'],['A22','B22']]
+      mergeData:[],
       tableColumns: [
           { label: '管理职能', prop: 'FunctionalDepartment' },
           { label: '分类理由', prop: 'ReasonType' },
@@ -107,7 +109,6 @@ export default {
       this.$api.GET_TENDENCY_DATA(data).then(res => {
         this.lineData.rows = res.data
         this.dataEmpty = res.data && res.data.length>0?false:true
-        console.log(this.lineData)
         this.getTableData(data);
       }).catch(err => {
         console.log('err', err);
@@ -135,7 +136,6 @@ export default {
       
           // 统计每个分类的小计
           oriData.forEach((element, index) => {
-
             if(element.ReasonType == '企业文化'){
               culture = element;
               culture.FunctionalDepartment = '企业文化'
@@ -178,15 +178,18 @@ export default {
            
             
           });
-          console.log(formattedData);
           // 根据新数组标识可折叠的字段
           text = '';
           let totalSummaryBonous = 0
           let totalSummaryMinus = 0
           let totalSummaryScore = 0
+          let rowIndexArray = [];
+          this.mergeData = [];
+          
           formattedData.forEach((element, index) => {
             if (text != element.FunctionalDepartment) {
               rowIndex = index;
+              rowIndexArray.push(rowIndex);
               rowspanNum = 1;
               formattedData[rowIndex].rowspan = true;
               formattedData[rowIndex].rowspanNum = rowspanNum;
@@ -203,12 +206,14 @@ export default {
             }
 
           })
-          console.log(formattedData)
           
-          formattedData.push(culture);
-          totalSummaryBonous += culture.totalBonous;
-          totalSummaryMinus += culture.totalMinus;
-          totalSummaryScore += culture.totalScore;
+          if(culture != null){
+            formattedData.push(culture);
+            totalSummaryBonous += culture.totalBonous;
+            totalSummaryMinus += culture.totalMinus;
+            totalSummaryScore += culture.totalScore;
+          }
+
           let item = {
                   FunctionalDepartment:'合计',
                   totalSummary: true,
@@ -216,9 +221,33 @@ export default {
                   totalMinus: totalSummaryMinus,
                   totalScore: totalSummaryScore,
                 }
-                formattedData.push(item);
+          formattedData.push(item);
           this.tableData = formattedData;
           console.log(formattedData)
+
+          let length = formattedData.length;
+          let startItem = 'A'+Number(length+1);
+          let endItem = 'B'+Number(length+1);
+          this.mergeData.push([startItem,endItem]);
+          if(culture != null) {
+            startItem = 'A'+Number(length);
+            endItem = 'B'+Number(length);
+            this.mergeData.push([startItem,endItem]);
+            rowIndexArray.push(length-2)
+          } else {
+            rowIndexArray.push(length-1)
+          }
+
+          for(let i=0;i<rowIndexArray.length-1;i++){
+            if(i<=rowIndexArray.length-2){
+              startItem = 'A'+Number(rowIndexArray[i]+2);
+              endItem = 'A'+Number(rowIndexArray[i+1]+1);
+              this.mergeData.push([startItem,endItem]);
+            }
+          }
+
+          console.log(rowIndexArray)
+          console.log(this.mergeData)
         }
         }).catch(err => {
           console.log('err', err);
@@ -253,7 +282,8 @@ export default {
     exportTable(){
       this.$export.excel({
       columns: this.tableColumns,
-      data: this.tableData
+      data: this.tableData,
+      merges: this.mergeData
     })
       .then(() => {
         this.$message('导出表格成功')
