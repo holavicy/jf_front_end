@@ -22,16 +22,5 @@ export default {
 
         data: []
       }
-    },
-
-    methods: {
-    //   handleSizeChange (val) {
-    //     this.pagination.pageSize = val;
-    //     this.getList()
-    //   },
-    //   handleCurrentChange (val) {
-    //     this.pagination.currentPage = val;
-    //     this.getList()
-    //   }
     }
   }

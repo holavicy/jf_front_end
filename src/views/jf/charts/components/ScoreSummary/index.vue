@@ -7,12 +7,13 @@
             </div>
             <el-row class="button-wrapper">
               <el-button type="primary" size="mini" @click="getData()">查询</el-button>
-              <el-button type="primary" size="mini" @click="exportTable()">导出</el-button>
+              <el-button type="primary" plain size="mini" @click="exportTable()">导出</el-button>
+              <el-button type="primary" plain size="mini" @click="triggerShowNum()">{{this.histogramExtend.series.label.show?'隐藏':'显示'}}数据</el-button>
             </el-row>
         </div>
 
         <div v-if="!dataEmpty">
-          <ve-line :data="lineData"  :settings="lineSettings" :extend="histogramExtend"></ve-line>
+          <ve-line ref="veLine" :data="lineData"  :settings="lineSettings" :extend="histogramExtend"></ve-line>
           <el-table
           size="mini"
             :row-class-name="tableRowClassName"
@@ -68,6 +69,10 @@ export default {
         textAlign: 'center'
 
        },
+       series: {
+          label: { show: false, position: "top", barWidth: 100},
+          smooth: false
+        },
         xAxis: {
           axisLabel: {
              margin: 15,
@@ -298,6 +303,14 @@ export default {
           return 'success-row';
         }
         return '';
+      },
+
+      triggerShowNum(){
+  
+        let showNum = this.histogramExtend.series.label.show;
+        this.histogramExtend.series.label.show = !showNum;
+        this.getData()
+
       }
 
   }
