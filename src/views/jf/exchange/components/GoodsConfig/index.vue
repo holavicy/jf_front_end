@@ -21,6 +21,7 @@
         <div class="table-wrapper">
             <el-table :data="data" size="mini" stripe height="400" style="margin-top: 20px" v-loading="loading">
                 <el-table-column type="index" width="55"></el-table-column>
+                <el-table-column prop="GoodsCode" label="商品编码" width="80"></el-table-column>
                 <el-table-column prop="JobId" label="商品图片" width="70">
                     <template slot-scope="scope">
 

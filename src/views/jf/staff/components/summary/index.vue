@@ -112,7 +112,7 @@ export default {
 
   created(){
     this.getSummary();
-    this.getActivityList();
+    // this.getActivityList();
   },
   methods: {
 
