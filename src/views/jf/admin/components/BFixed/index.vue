@@ -17,27 +17,28 @@
                 <label>姓名：</label><el-input placeholder="请输入姓名" v-model="name" size="mini"></el-input>
             </div>
             <el-row class="button-wrapper">
-                <el-button type="primary" plain size="mini" @click="getList">查询</el-button>
-                <el-button type="primary" size="mini" @click="exportFile">导出</el-button>
+                <el-button type="primary" plain size="mini" @click="getList(1)">查询</el-button>
+                <el-button type="primary" size="mini" @click="exportFile" v-loading.fullscreen.lock="fullscreenLoading">导出</el-button>
             </el-row>
         </div>
 
         
         <div class="table-wrapper">
             <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" size="mini">
-                <el-table-column prop="jobid" label="工号" width="70" fixed></el-table-column>
-                <el-table-column prop="name" label="姓名" fixed></el-table-column>
-                <el-table-column prop="DepartmentLv1" label="业务单元"></el-table-column>
-                <el-table-column prop="DepartmentLv3" label="部门"></el-table-column>
-                <el-table-column prop="BonusPoints" label="职务"></el-table-column>
-                <el-table-column prop="MinusPoints" label="职称"></el-table-column>
-                <el-table-column prop="Reason" label="学历"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="入职时间" width="180"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="职务积分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="职称积分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="学历积分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="工龄积分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="合计" width="100" fixed="right"></el-table-column>
+                <el-table-column prop="工号" label="工号" width="70" fixed></el-table-column>
+                <el-table-column prop="姓名" label="姓名" width="70" fixed></el-table-column>
+                <el-table-column prop="组织" label="一级部门" width="200"></el-table-column>
+                <el-table-column prop="DEP1" label="二级部门" width="140"></el-table-column>
+                <el-table-column prop="DEP2" label="三级部门" width="140"></el-table-column>
+                <el-table-column prop="职务" label="职务" width="120"></el-table-column>
+                <el-table-column prop="职称" label="职称" width="180"></el-table-column>
+                <el-table-column prop="学历" label="学历"></el-table-column>
+                <el-table-column prop="入职时间" label="入职时间" width="100"></el-table-column>
+                <el-table-column prop="职务积分" label="职务积分" width="80"></el-table-column>
+                <el-table-column prop="职称积分" label="职称积分" width="80"></el-table-column>
+                <el-table-column prop="学历积分" label="学历积分" width="80"></el-table-column>
+                <el-table-column prop="工龄积分" label="工龄积分" width="80"></el-table-column>
+                <el-table-column prop="totalFix" label="合计" fixed="right"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
 
@@ -50,6 +51,7 @@
 import js from './mixins/index'
 import dayjs from 'dayjs'
 import util from '@/libs/util.js'
+import { domain } from '@/dataDic.js' 
 export default {
     name: 'b-fixed',
     mixins: [
@@ -57,6 +59,8 @@ export default {
     ],
     data () {
         return {
+            fullscreenLoading:false,
+            domain,
             staffNo: '',
             name: '',
             operator: util.cookies.get('uuid')
@@ -69,17 +73,23 @@ export default {
       /**
        * 获取列表数据
        */
-      getList () {
+      getList (page) {
+          if(page){
+            this.pagination.currentPage = page
+          }
           let data = {
               name: this.name,
-              jobid: Number(this.staffNo),
+              jobid: this.staffNo?String(this.staffNo):'',
               page: this.pagination.currentPage,
               pageSize: this.pagination.pageSize,
-              rewardPointsType: '固定积分'
+              onduty: 0
           }
           this.loading = true;
-          this.$api.GET_DETAIL_LIST(data).then(res => {
+          this.$api.FIX_TOTAL(data).then(res => {
               this.loading = false
+              res.data.detail.map(item => {
+                  item.totalFix = item["职务积分"]+item["职称积分"]+item["学历积分"]+item["工龄积分"]
+              })
               this.data = res.data.detail
               this.pagination.total = res.data.totalLength
           }).catch(err => {
@@ -99,17 +109,21 @@ export default {
       exportFile () {
             let data = {
               name: this.name,
-              jobid: Number(this.staffNo),
-              rewardPointsType: '固定积分',
-              Operator: this.operator
+              jobid: this.staffNo?Number(this.staffNo):'',
+              Operator: String(this.operator),
+              onduty: 0
           }
-          this.$api.EXPORT_DETAIL_LIST(data).then(res => {
+          this.fullscreenLoading = true;
+          this.$api.EXPORT_FIX_TOTAL(data).then(res => {
+              this.fullscreenLoading = false;
               if (res.code === 0) {
+                  window.location.href = this.domain + res.data;
                   this.$message.success('导出成功')
               } else {
                   this.$message.error(res.msg || '导出失败，请联系管理员')
               }
           }).catch(err => {
+              this.fullscreenLoading = false;
               console.log('err', err)
           })
         },

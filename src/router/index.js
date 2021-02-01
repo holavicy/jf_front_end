@@ -71,7 +71,7 @@ router.beforeEach(async (to, from, next) => {
               api.DING_LOGIN(data)
                 .then(async (res) => {
                   util.cookies.set('uuid', res.data.jobnumber)
-                  util.cookies.set('token', res.data.token)
+                  util.cookies.set('token', res.token)
                   let roles = []
                   res.data.roles.map((item) => {
                     if (item.id === 1505687807) {

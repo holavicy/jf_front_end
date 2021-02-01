@@ -12,34 +12,20 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
     },
   
       /*
-      *导出积分明细
+      *导出商品
       */
-    EXPORT_DETAIL_LIST (data) {
+    EXPORT_GOODS (data) {
       return request({
-        url: '/export_rewardPoint',
+        url: '/export_goods',
         method: 'post',
         data
       })
     },
-  
-        /*
-      *结算积分明细
-      */
-     ACCOUNT_DETAIL_LIST (data) {
+
+    // 商品上下架 /set_goods_status
+    CHANGE_GOODS_STATUS(data){
       return request({
-        url: '/account_rewardPoint',
-        method: 'post',
-        data
-      })
-    },
-  
-  
-      /*
-      *删除积分明细
-      */
-    DELETE_DETAIL_RECORD (data) {
-      return request({
-        url: 'delete_rewardPoint',
+        url: '/set_goods_status',
         method: 'post',
         data
       })

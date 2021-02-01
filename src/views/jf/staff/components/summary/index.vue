@@ -31,12 +31,12 @@
                 <div class="sum-item-large"></div>
             </div>
         </div>
-        <div class="activities-box">
+        <div class="activities-box" v-if="activityList.length>0">
 
           <el-carousel ref="carousel" height="150px" @click.native="linkTo">
             <el-carousel-item v-for="(item, index) in activityList" :key="index">
-              <div class="activity-item-box">
-                <p>{{item.title}}</p>
+              <div class="activity-item-box" :style="{backgroundImage: 'url(' + item.PictureUrl + ')', backgroundSize:'100% 150px', backgroundRepeat:'no-repeat'}">
+                <p>{{item.Slogan}}</p>
               </div>
             </el-carousel-item>
           </el-carousel>
@@ -45,44 +45,46 @@
 </template>
 
 <script>
-import axios from 'axios'
+import dayjs from 'dayjs'
+import util from '@/libs/util.js'
 export default {
   name: 'summary-index',
   data () {
     return {
+      operator: util.cookies.get('uuid'),
       sumItemSmall: [
         {
           title: '现有A分',
           info: '认真负责地完成每一项工作，你的付出一定会有回报！',
-          num: 20,
+          num: 0,
           color: '#F56C6C',
           opacity: 0.88
         },
         {
           title: '累计A分',
           info: '自入职以来，所获得的所有A分累加',
-          num: 40,
+          num: 0,
           color: '#F56C6C',
           opacity: 1
         },
         {
           title: '可兑换积分',
           info: '积极参加公司组织的各项活动，让你的工作变得更加丰富精彩！',
-          num: 20,
+          num: 0,
           color: '#F35897',
           opacity: 1
         },
         {
           title: '累计B管理积分',
           info: '自入职以来，所获得的所有B管理积分累加',
-          num: 120,
+          num: 0,
           color: '#F63F76',
           opacity: 1
         },
         {
           title: 'B固定积分',
           info: '固定积分=职务积分+职称积分+学历积分+工龄积分',
-          num: 2167,
+          num: 0,
           color: '#EB111D',
           opacity: 1
         }
@@ -91,32 +93,20 @@ export default {
         {
           title: '年度累计积分',
           info: '1. 年度累计积分=年度固定积分+年度管理积分\n2. 年度累计积分将作为年度评比、评级、评优等的参考依据\n3. 如果年度累计积分为零甚至为负值时，由人力资源部约谈，提出整改意见，并可与员工所在部门共同制定相应培训计划，促其改进。',
-          num: 2187,
+          num: 0,
           color: '#409EFF',
           opacity: 0.8
         },
         {
           title: '总累计积分',
           info: '1. 总累计积分=∑年度累计积分\n2. 用于积分排名，且当总积分达到5万分及不同数量的等级的积分时，可享受“员工积分特殊奖励”',
-          num: 2187,
+          num: 0,
           color: '#409EFF',
           opacity: 1
         }
       ],
-      fileName:'',
-      uploadPercent:0,
-      totalCount:0,
-      pagingPage:1,
-      source:axios.CancelToken.source(),
       list:[],
-      activityList: [{
-        title: '俱乐部活动',
-        slogon: '快来参加活动吧'
-      },
-      {
-        title: '资格考核',
-        slogon: '钉钉'
-      }]
+      activityList: []
     }
   },
 
@@ -128,7 +118,8 @@ export default {
 
     linkTo () {
       let activeIndex = this.$refs.carousel.activeIndex;
-      this.$emit('activityTab',activeIndex)
+      let activity = this.activityList[activeIndex];
+      this.$emit('activityTab',activity.ActivitiesID)
     },
 
     changeTab (i, type) {
@@ -141,10 +132,17 @@ export default {
 
     getSummary(){
       let data = {
-        jobid: 100297
+        jobid: String(this.operator)
       }
       this.$api.GET_SUMMARY_LIST(data).then((res)=>{
-        console.log(res);
+        let result = res.data.detail[0]
+        this.sumItemSmall[0].num = result["现有A分"]
+        this.sumItemSmall[1].num = result["总获得A分"]
+        this.sumItemSmall[2].num = result["现有管理积分"]
+        this.sumItemSmall[3].num = result["总获得管理积分"]
+        this.sumItemSmall[4].num = result["固定积分"]
+        this.sumItemBig[0].num = result["年度累计积分"]
+        this.sumItemBig[1].num = result["总累计积分"]
       })
     },
 
@@ -155,8 +153,17 @@ export default {
         pageSize: 100
       }
       this.$api.GET_ACTIVITY_LIST(data).then((res) => {
-        console.log(res);
-        this.activityList = res.data.detail;
+        let result = res.data.detail;
+        let list = [];
+        //过滤出结束时间小于当前时间的活动
+        result.map((item) => {
+
+          if(dayjs().isBefore(item.EndDateTime)){
+            list.push(item)
+          }
+          
+        })
+        this.activityList = list;
       })
     }
   }

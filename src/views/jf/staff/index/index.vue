@@ -1,32 +1,31 @@
 <template>
     <d2-container class="page">
-        <el-tabs v-model="activeTab" v-show="showTab == 1">
+        <el-tabs v-model="activeTab" v-show="showTab == 1" @tab-click="tabClick">
             <el-tab-pane label="积分看板" name="summary">
-               <summary-index @changeTab="changeTab" @activityTab="activityTab"/>
+               <summary-index ref="summary" @changeTab="changeTab" @activityTab="activityTab"/>
             </el-tab-pane>
             <el-tab-pane label="A分明细" name="a-detail">
-                <a-detail :isEndVal="isEnd"/>
+                <a-detail ref="aDetail" :isEndVal="isEnd"/>
             </el-tab-pane>
             <el-tab-pane label="B管理积分明细" name="b-manage-detail">
-                <b-manage-detail/>
+                <b-manage-detail ref="bManageDetail" :isEndVal="isEnd"/>
             </el-tab-pane>
             <el-tab-pane label="B固定积分" name="b-fixed">
-                <b-fixed/>
+                <b-fixed ref="bFixed"/>
             </el-tab-pane>
-            <el-tab-pane label="积分活动" name="activity">
-                <activity-index :defaultIndex="activeIndex"/>
+            
+            <el-tab-pane label="年度累计积分" name="year-total-summary">
+                <year-total-summary ref="yearTotalSummary"/>
             </el-tab-pane>
+
         </el-tabs>
 
-        <el-tabs v-model="activeTab" v-show="showTab == 2">
+        <el-tabs v-model="activeTab" v-show="showTab == 2" @tab-click="tabClick">
             <el-tab-pane label="积分看板" name="summary">
-               <summary-index @changeTab="changeTab"/>
+               <summary-index ref="summary" @changeTab="changeTab" @activityTab="activityTab"/>
             </el-tab-pane>
-            <el-tab-pane label="年度累计积分" name="year-total-summary">
-                <year-total-summary/>
-            </el-tab-pane>
-            <el-tab-pane label="总累计积分" name="total-summary">
-                <total-summary/>
+            <el-tab-pane label="积分活动" name="activity">
+                <activity-index ref="activity"/>
             </el-tab-pane>
         </el-tabs>
     
@@ -62,11 +61,12 @@ export default {
 
   methods: {
       changeTab (data) {
-          this.showTab = data.type
+          this.showTab = 1
+        //   this.showTab = data.type
           if(data.type == 1) {
             switch(data.index) {
               case 0:
-                  this.isEnd = '是'
+                  this.isEnd = '否'
                   this.activeTab = 'a-detail'
                   break
               case 1:
@@ -74,13 +74,15 @@ export default {
                   this.isEnd = ''
                   break
               case 2:
-                  this.activeTab = 'b-manage-detail'
                   break
               case 3:
                   this.activeTab = 'b-manage-detail'
+                  this.isEnd = ''
                   break
               case 4:
                   this.activeTab = 'b-fixed'
+                  this.$refs.bFixed.getSummary()
+                  this.$refs.bFixed.getDetail()
                   break
             }
           }
@@ -88,10 +90,10 @@ export default {
           if (data.type == 2) {
             switch(data.index) {
               case 0:
-                  this.activeTab = 'year-total-summary'
+                  this.activeTab = 'year-total-summary';
+                  this.$refs.yearTotalSummary.getFixTotal()
                   break
               case 1:
-                  this.activeTab = 'total-summary'
                   break
             }
           }
@@ -99,8 +101,24 @@ export default {
       },
 
       activityTab (i) {
+           this.showTab = 2
            this.activeTab = 'activity'
-           this.activeIndex = i;
+        //    this.activeIndex = i;
+           this.$refs.activity.getInfo(i)
+           console.log(i)
+      },
+
+      tabClick (e) {
+          if (e.name == "a-detail") {
+              this.$refs.aDetail.getList()
+          }
+          if (e.name == "b-manage-detail") {
+              this.$refs.bManageDetail.getList()
+          }
+          if (e.name == "b-fixed") {
+              this.$refs.bFixed.getSummary()
+              this.$refs.bFixed.getDetail()
+          }
       }
   }
 }

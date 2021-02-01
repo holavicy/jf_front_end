@@ -103,7 +103,7 @@ export default {
             this.$refs[formName].validate((valid) => {
             if (valid) {
                 this.ruleForm.BeginDateTime = dayjs(this.ruleForm.BeginDateTime).format('YYYY-M-D HH:mm:ss')
-                this.ruleForm.EndDateTime = dayjs(this.ruleForm.EndDateTime).format('YYYY-M-D HH:mm:ss')
+                this.ruleForm.EndDateTime = dayjs(this.ruleForm.EndDateTime).endOf('day').format('YYYY-M-D HH:mm:ss')
                 this.ruleForm.CreatedBy=this.operator
                 console.log(this.id)
                 if (this.id) {
@@ -179,7 +179,7 @@ export default {
         let fileData = new FormData();
         fileData.append('file', _this.file)
         fileData.append('Operator', this.operator)
-        let url = '/api/upload';
+        let url = '/upload';
         this.uploadFile(url, fileData, _this.source.token, (res) => {
             let loaded = res.loaded
             let total = res.total
@@ -190,6 +190,7 @@ export default {
                     if (res.data.code === 0) {
                         _this.uploadPercent = 0
                         _this.ruleForm.PictureUrl = res.data.data
+                        console.log(_this.ruleForm)
                     } else {
                         console.log(res)
                     }
@@ -204,8 +205,10 @@ export default {
     watch: {
         id: function(val) {
             if(val){
+                console.log(val)
                 this.getInfo(val)
             } else {
+                console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
                 this.ruleForm = {...this.tempRuleForm}
             }
             

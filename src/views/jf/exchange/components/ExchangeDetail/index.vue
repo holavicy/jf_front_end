@@ -10,8 +10,8 @@
                 </el-select>
             </div>
             <el-row class="button-wrapper">
-                <el-button type="primary" plain size="mini" @click="getList">查询</el-button>
-                <el-button type="primary" size="mini" @click="exportFile">导出</el-button>
+                <el-button type="primary" plain size="mini" @click="getList(1)">查询</el-button>
+                <!-- <el-button type="primary" size="mini" @click="exportFile">导出</el-button> -->
             </el-row>
         </div>
 
@@ -21,11 +21,11 @@
             :expand-row-keys="expands" 
             :row-key="getRowKeys">
                 <el-table-column prop="PointOrderID" label="订单编号" width="100"></el-table-column>
-                <el-table-column prop="name" label="工号"></el-table-column>
-                <el-table-column prop="name" label="姓名"></el-table-column>
+                <el-table-column prop="JobId" label="工号"></el-table-column>
+                <el-table-column prop="NAME" label="姓名"></el-table-column>
                 <el-table-column prop="TotalPrice" label="总价"></el-table-column>
                 <el-table-column prop="orderStatusTxt" label="订单状态"></el-table-column>
-                <el-table-column prop="CreationDate" label="兑换日期"></el-table-column>
+                <el-table-column prop="CreationDate" label="兑换日期" width="180"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="200">
                     <template slot-scope="scope">
                         <el-popconfirm title="确定通过此订单吗？" @onConfirm="confirmOrder(scope.row)">
@@ -50,15 +50,15 @@
                                   type="index">
                                     </el-table-column>
                                     <el-table-column
-                                    prop="goodsName"
+                                    prop="Name"
                                     label="商品名称">
                                     </el-table-column>
                                     <el-table-column
-                                    prop="price"
+                                    prop="PointCost"
                                     label="单价">
                                     </el-table-column>
                                     <el-table-column
-                                    prop="num"
+                                    prop="OrderGoodsAmount"
                                     label="数量">
                                     </el-table-column>
                                     <el-table-column
@@ -104,20 +104,23 @@ export default {
       /**
        * 获取列表数据
        */
-      getList () {
+      getList (page) {
+          if(page){
+            this.pagination.currentPage = page
+          }
           let data = {
-              Operator: Number(this.staffNo),
-              OrderStatus: this.orderStatus,
+              Operator: String(this.staffNo),
+              OrderStatus: String(this.orderStatus),
               page: this.pagination.currentPage,
               pageSize: this.pagination.pageSize
           }
           this.loading = true;
           this.$api.GET_ORDER_LIST(data).then(res => {
               this.loading = false
-              res.data.list.map((item)=>{
+              res.data.detail.map((item)=>{
                   item.orderStatusTxt = this.orderStatusDic[item.OrderStatus]
               })
-              this.data = res.data.list
+              this.data = res.data.detail
               this.pagination.total = res.data.totalLength
           }).catch(err => {
               console.log('err', err);
@@ -155,10 +158,23 @@ export default {
         },
 
         showDetail (data) {
+           console.log(data.PointOrderID)
             if (this.expands.length>0) {
                 this.expands = []
             } else {
-                this.expands.push(data.PointOrderID)
+                console.log(data)
+                let id = data.PointOrderID;
+                let d = {
+                    PointOrderID: String(id)
+                }
+                this.$api.GET_ORDER_GOODS_LIST(d).then((res) => {
+                    console.log(res)
+                    res.data.map((item) => {
+                        item.total = item.PointCost * item.OrderGoodsAmount
+                    })
+                    this.goodsData = res.data
+                    this.expands.push(data.PointOrderID);
+                });
             }
         },
 
@@ -185,11 +201,7 @@ export default {
             }
             })
             sums[2]='合计'
-            console.log(sums)
-
             return sums;
-
-
         },
 
         confirmOrder (param) {

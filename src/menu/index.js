@@ -49,7 +49,7 @@ export const menuAside = supplementPath([
     path: '/jf/charts',
     title: '统计看板',
     icon: 'pie-chart',
-    roles: ['leader', 'admin']
+    roles: ['leader']
   }
 ])
 

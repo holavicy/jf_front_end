@@ -17,25 +17,27 @@
                 <label>姓名：</label><el-input placeholder="请输入姓名" v-model="name" size="mini"></el-input>
             </div>
             <el-row class="button-wrapper">
-                <el-button type="primary" plain size="mini" @click="getList">查询</el-button>
-                <el-button type="primary" size="mini" @click="exportFile">导出</el-button>
+                <el-button type="primary" plain size="mini" @click="getList(1)">查询</el-button>
+                <el-button type="primary" size="mini" @click="exportFile" v-loading.fullscreen.lock="fullscreenLoading">导出</el-button>
             </el-row>
         </div>
 
         <div class="table-wrapper">
              <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" size="mini">
-                <el-table-column prop="jobid" label="工号" width="70" fixed></el-table-column>
-                <el-table-column prop="name" label="姓名" fixed></el-table-column>
-                <el-table-column prop="DepartmentLv1" label="业务单元"></el-table-column>
-                <el-table-column prop="DepartmentLv3" label="部门"></el-table-column>
-                <el-table-column prop="BonusPoints" label="现有A分"></el-table-column>
-                <el-table-column prop="MinusPoints" label="现有B管理积分" width="120"></el-table-column>
-                <el-table-column prop="Reason" label="固定积分"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="年度管理积分" width="120"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="年度累计积分" width="120"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="总获得A分" width="80"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="总获得B管理积分" width="120"></el-table-column>
-                <el-table-column prop="AssessmentDate" label="总累计积分" width="80"></el-table-column>
+                <el-table-column prop="工号" label="工号" width="70" fixed></el-table-column>
+                <el-table-column prop="姓名" label="姓名" fixed></el-table-column>
+                <el-table-column prop="组织" label="一级部门" width="180"></el-table-column>
+                <el-table-column prop="DEP1" label="二级部门" width="140"></el-table-column>
+                <el-table-column prop="DEP2" label="三级部门" width="140"></el-table-column>
+                <el-table-column prop="现有A分" label="现有A分"></el-table-column>
+                <el-table-column prop="现有管理积分" label="可兑换积分" width="120"></el-table-column>
+                <el-table-column prop="已兑换积分" label="已兑换积分" width="120"></el-table-column>
+                <el-table-column prop="固定积分" label="固定积分"></el-table-column>
+                <el-table-column prop="年度管理积分" label="年度管理积分" width="120"></el-table-column>
+                <el-table-column prop="年度累计积分" label="年度累计积分" width="120"></el-table-column>
+                <el-table-column prop="总获得A分" label="总获得A分" width="80"></el-table-column>
+                <el-table-column prop="总获得管理积分" label="总获得B管理积分" width="120"></el-table-column>
+                <el-table-column prop="总累计积分" label="总累计积分" width="80"></el-table-column>
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
         </div>
@@ -45,35 +47,52 @@
 <script>
 import js from './mixins/index'
 import util from '@/libs/util.js'
+import { domain } from '@/dataDic.js' 
 export default {
     mixins: [
         js
     ],
     data () {
         return {
+            fullscreenLoading:false,
+            domain,
             staffNo: '',
             name: '',
             operator: util.cookies.get('uuid')
         }
+    },
+    created(){
+        this.getList();
     },
 
     methods: {
         /**
        * 获取列表数据
        */
-      getList () {
+      getList (page) {
+          if(page){
+            this.pagination.currentPage = page
+          }
           let data = {
               name: this.name,
-              jobid: this.staffNo? Number(this.staffNo):'',
+              jobid: this.staffNo? String(this.staffNo):'',
               page: this.pagination.currentPage,
-              pageSize: this.pagination.pageSize
+              pageSize: this.pagination.pageSize,
+              onduty: 0
           }
           this.loading = true;
           this.$api.GET_SUMMARY_LIST(data).then(res => {
               this.loading = false
               res.data.detail.map((item) => {
-                  item.checkDate = dayjs(item.AssessmentDate).format('YYYY-M-D')
-                  item.isEnd = item.IsAccounted == 0?'否':'是'
+                  item["现有A分"]=item["现有A分"] || 0
+                  item["现有管理积分"]=item["现有管理积分"] || 0
+                  item["固定积分"]=item["固定积分"] || 0
+                  item["年度管理积分"]=item["年度管理积分"] || 0
+                  item["年度累计积分"]=item["年度累计积分"] || 0
+                  item["总获得A分"]=item["总获得A分"] || 0
+                  item["总获得管理积分"]=item["总获得管理积分"] || 0
+                  item["总累计积分"]=item["总累计积分"] || 0
+                  item["已兑换积分"]=item["已兑换积分"] || 0
               })
               this.data = res.data.detail
               this.pagination.total = res.data.totalLength
@@ -91,16 +110,21 @@ export default {
             let data = {
               name: this.name,
               jobid: this.staffNo? Number(this.staffNo):'',
-              Operator: this.operator
+              Operator: String(this.operator),
+              onduty: 0
           }
+          this.fullscreenLoading = true;
           this.$api.EXPORT_SUMMARY_LIST(data).then(res => {
+              this.fullscreenLoading = false;
               if (res.code === 0) {
-                  window.location.href = res.data
+                  window.location.href = this.domain + res.data;
+                  this.$message.success('导出成功')
               } else {
                   this.$message.error(res.msg || '导出失败，请联系管理员')
               }
               
           }).catch(err => {
+              this.fullscreenLoading = false;
               console.log('err', err)
           })
         },

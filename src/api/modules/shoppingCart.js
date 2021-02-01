@@ -32,28 +32,13 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
         data
       })
     },
-  
-  
-      /*
-      *删除活动
-      */
-    DELETE_ACTIVITY_RECORD (data) {
+    // 移除购物车
+    DELETE_CART(data){
       return request({
-        url: 'delete_activity',
+        url: '/delete_cart',
         method: 'post',
         data
       })
-    },
-
-    /**
-     * 查询单条活动详情
-     */
-    GET_ACTIVITY_INFO (data) {
-        return request({
-            url: 'get_activity_info',
-            method: 'post',
-            data
-          })
     }
   })
   

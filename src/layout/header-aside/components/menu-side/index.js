@@ -78,7 +78,9 @@ export default {
     },
     setAsideByRole () {
       let roles = this.info ?this.info.roles:[]
-      let actualAside = []
+      console.log(roles);
+      console.log(this.aside);
+      let actualAside = [];
       this.aside.map((item) => {
         if (!item.roles){
           actualAside.push(item)

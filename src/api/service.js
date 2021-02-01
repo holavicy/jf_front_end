@@ -3,6 +3,9 @@ import Adapter from 'axios-mock-adapter'
 import { get } from 'lodash'
 import util from '@/libs/util'
 import { errorLog, errorCreate } from './tools'
+import * as dd from 'dingtalk-jsapi'
+import api from '@/api'
+import { domain } from '@/dataDic.js' 
 
 function formatObj (obj) {
   Object.keys(obj).forEach(item=>{
@@ -48,6 +51,29 @@ function createService () {
             // [ 示例 ] 其它和后台约定的 code
             return dataAxios
             break
+          case 9997:
+            const corpId = 'dingcd0f5a2514db343b35c2f4657eb6378f'
+            dd.ready(function () {
+              dd.runtime.permission.requestAuthCode({
+                corpId: corpId, // 企业id
+                onSuccess: (info) => {
+                  const code = info.code // 通过该免登授权码可以获取用户身份
+                  let data = {
+                    code: code,
+                    corpId: corpId
+                  }
+                  api.DING_LOGIN(data)
+                    .then(async (res) => {
+                      util.cookies.set('uuid', res.data.jobnumber)
+                      util.cookies.set('token', res.token)
+                    })
+                    .catch(err => {
+                      console.log('err', err)
+                    })
+                }
+              })
+            })
+            break
           default:
             // 不是正确的 code
             errorCreate(`${dataAxios.msg}: ${response.config.url}`)
@@ -85,12 +111,15 @@ function createService () {
  */
 function createRequestFunction (service) {
   return function (config) {
+    let baseURL = config.baseUrl?config.baseUrl:domain+'/Interface'
+    const token = util.cookies.get('token')
     const configDefault = {
       headers: {
+        Authorization: token,
         'Content-Type': get(config, 'headers.Content-Type', 'application/json')
       },
-      timeout: 5000,
-      baseURL: 'http://192.168.40.161:8080/Interface',
+      timeout: 30000,
+      baseURL: baseURL,
       // baseURL: process.env.VUE_APP_API,
       data: {}
     }
