@@ -13,7 +13,7 @@ process.env.VUE_APP_VERSION = require('./package.json').version
 process.env.VUE_APP_BUILD_TIME = require('dayjs')().format('YYYY-M-D HH:mm:ss')
 
 // 基础路径 注意发布之前要先修改这里
-const publicPath = process.env.VUE_APP_PUBLIC_PATH || '/'
+const publicPath = process.env.VUE_APP_PUBLIC_PATH || '/jf'
 
 // 设置不参与构建的库
 const externals = {}
@@ -41,8 +41,9 @@ module.exports = {
   // disableHostCheck: process.env.NODE_ENV === 'development' ,// 关闭 host check，方便使用 ngrok 之类的内网转发工具
     proxy: {
       '/api': {
-          target: 'http://10.5.1.190:8080/Interface',
+          // target: 'http://10.5.1.190:8080/Interface',
           // target: 'http://192.168.40.229:8080/Interface',
+          target: 'http://127.0.0.1:5000/api',
           ws: true,
           changeOrigin: true,
           pathRewrite: {

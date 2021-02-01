@@ -111,7 +111,14 @@ function createService () {
  */
 function createRequestFunction (service) {
   return function (config) {
+
     let baseURL = config.baseUrl?config.baseUrl:domain+'/Interface'
+
+    // let baseURL = config.baseUrl?config.baseUrl:'http://192.168.40.161:5001/Interface'
+
+    // let baseURL = config.baseUrl?config.baseUrl:'http://222.186.81.37:5000/Interface'
+    // let baseURL = config.baseUrl?config.baseUrl:'http://127.0.0.1:5001/Interface'
+
     const token = util.cookies.get('token')
     const configDefault = {
       headers: {

@@ -44,7 +44,8 @@
 import axios from 'axios'
 import js from './mixins/index'
 import util from '@/libs/util.js'
-import { goodsStatusDic } from '@/dataDic.js' 
+import { goodsStatusDic } from '@/dataDic.js'
+import { domain } from '@/dataDic.js'  
 export default {
     name: 'a-detail',
     mixins: [
@@ -52,6 +53,7 @@ export default {
     ],
     data () {
         return {
+            domain,
             goodsName: '',
             goodsStatus: '',
             file: null,
@@ -70,7 +72,7 @@ export default {
             this.pagination.currentPage = page
           }
           let data = {
-              Name: this.name,
+              Name: this.goodsName,
               Status: this.goodsStatus,
               page: this.pagination.currentPage,
               pageSize: this.pagination.pageSize,
@@ -107,14 +109,16 @@ export default {
          */
         exportFile () {
             let data = {
-              Name: this.name,
+              Name: this.goodsName,
               Status: this.goodsStatus,
-              Operator: Number(this.operator)
+              Operator: String(this.operator)
           }
           this.$api.EXPORT_GOODS(data).then(res => {
               if (res.code === 0) {
-                  this.$message.success('导出成功')
-                  window.location.href = res.data
+                  console.log(res)
+                  window.location.href = this.domain + res.data;
+                //   this.$message.success('导出成功')
+                //   window.location.href = res.data
               } else {
                   this.$message.error(res.msg || '导出失败，请联系管理员')
               }
