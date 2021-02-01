@@ -5,6 +5,7 @@ import util from '@/libs/util'
 import { errorLog, errorCreate } from './tools'
 import * as dd from 'dingtalk-jsapi'
 import api from '@/api'
+import { domain } from '@/dataDic.js' 
 
 function formatObj (obj) {
   Object.keys(obj).forEach(item=>{
@@ -110,7 +111,7 @@ function createService () {
  */
 function createRequestFunction (service) {
   return function (config) {
-    let baseURL = config.baseUrl?config.baseUrl:'http://222.186.81.37:5000/Interface'
+    let baseURL = config.baseUrl?config.baseUrl:domain+'/Interface'
     const token = util.cookies.get('token')
     const configDefault = {
       headers: {

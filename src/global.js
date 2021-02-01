@@ -1,5 +1,6 @@
 import axios from 'axios'
 import util from '@/libs/util'
+import { domain } from '@/dataDic.js' 
 
 const token = util.cookies.get('token')
 
@@ -7,9 +8,10 @@ const token = util.cookies.get('token')
 function uploadFile (url,payload,cancelToken,callback1) {
     let t = util.cookies.get('token')
     console.log(t)
+    let baseURL = domain + '/Interface'
     return new Promise(function(resolve,reject){
         axios({
-            baseURL: 'http://222.186.81.37:5000/Interface',
+            baseURL: baseURL,
             url:url,
             method:'post',
             data:payload,

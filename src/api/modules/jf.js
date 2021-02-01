@@ -92,5 +92,15 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
       method: 'post',
       data
     })
+  },
+
+  // 修改单个积分
+  EDIT_RECORD(data){
+    return request({
+      url: '/edit_record',
+      method: 'post',
+      data
+    })
+
   }
 })

@@ -1,9 +1,11 @@
+import { domain } from '@/dataDic.js' 
+
 export default ({ request }) => ({
   DING_LOGIN (data) {
     return request({
       url: '/getUserInfo',
       method: 'post',
-      baseUrl:'http://222.186.81.37:5000',
+      baseUrl:domain,
       data
     })
   }
