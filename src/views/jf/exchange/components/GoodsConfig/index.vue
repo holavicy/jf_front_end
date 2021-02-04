@@ -36,14 +36,46 @@
                 <el-table-column prop="PointCost" label="所需积分" width="120"></el-table-column>
                 <el-table-column prop="goodsStatus" label="商品状态" width="120"></el-table-column>
                 <el-table-column prop="stock" label="商品库存" width="120"></el-table-column>
-                <el-table-column fixed="right" label="操作" width="80">
+                <el-table-column fixed="right" label="操作" width="120">
                     <template slot-scope="scope">
                         <el-button type="text" size="mini" slot="reference" @click="changeGoodsStatus(scope.row)">{{scope.row.Status == 0?'下架':'上架'}}</el-button>
+                        <el-button type="text" size="mini" slot="reference" @click="getStockDetail(scope.row)">库存明细</el-button>
                     </template>
                 </el-table-column>
             </el-table>
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pagination.currentPage" :page-sizes="[5, 10, 20, 50, 100]" :page-size="pagination.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="pagination.total" style="margin-top:10px"></el-pagination>
         </div>
+
+        <el-dialog title="库存明细" :visible.sync="stockDetailShow">
+            <el-button type="primary" @click="showInnerVisible()" size="mini">修改库存</el-button>
+            <el-table :data="stockList" size="mini" height="250">
+                <!-- <el-table-column property="ChangeType" label="出库/入库" width="150"></el-table-column> -->
+                <el-table-column label="出库/入库" width="100"
+                :filters="[{ text: '出库', value: 2 }, { text: '入库', value: 1 }]"
+                :filter-method="filterTag"
+                filter-placement="bottom-end">
+                    <template slot-scope="scope">
+
+                        {{scope.row.ChangeType == 1?'入库': scope.row.ChangeType == 2?'出库':''}}
+                        
+                    </template>
+                </el-table-column>
+                <el-table-column property="ChangeAmount" label="数量" width="100"></el-table-column>
+                <el-table-column property="CreationDate" label="日期"></el-table-column>
+                <el-table-column property="ChangeDesc" label="库存变化说明"></el-table-column>
+            </el-table>
+            <el-dialog width="30%" title="修改库存" :visible.sync="innerVisible" append-to-body>
+                <div class="filter-item margin-bottom-10">
+                    <span>变化类型： </span>
+                    <el-select size="mini" v-model="newStockItem.stockChangeType" placeholder="请选择">
+                        <el-option v-for="item in changeTypeOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    </el-select>
+                </div>
+                <div class="filter-item margin-bottom-10"><span>变化数量：</span> <el-input size="mini" placeholder="请输入内容" v-model="newStockItem.stockChangeNum" style="width: 100px"></el-input></div>
+                <div class="filter-item margin-bottom-10"><span>变化说明：</span> <el-input size="mini" placeholder="请输入内容" v-model="newStockItem.stockChangeDesc" style="width: 140px"></el-input></div>
+                <el-button size="mini" type="primary" @click="submitStockChange()">确定</el-button>
+            </el-dialog>
+        </el-dialog>
     </div>
 </template>
 
@@ -66,7 +98,17 @@ export default {
             goodsStatus: '',
             file: null,
             goodsFile: null,
-            operator: util.cookies.get('uuid')
+            operator: util.cookies.get('uuid'),
+            stockDetailShow: false,
+            innerVisible: false,
+            changeTypeOptions: [{
+                label: '入库',
+                value: 1
+            }, {
+                label: '出库',
+                value: 2
+            }],
+            newStockItem: {}
         }
     },
     mounted () {
@@ -123,29 +165,29 @@ export default {
       },
 
         /**
-         * 导出
-         */
-        exportFile () {
-            let data = {
-              goodsName: this.goodsName,
-              isBonus: this.addOrMin,
-              isAccounted: this.isEnd,
-              beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
-              endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
-              rewardPointsType: 'A分',
-              Operator: this.operator
-          }
-          this.$api.EXPORT_DETAIL_LIST(data).then(res => {
-              if (res.code === 0) {
-                  window.location.href = res.data
-              } else {
-                  this.$message.error(res.msg || '导出失败，请联系管理员')
-              }
-              
-          }).catch(err => {
-              console.log('err', err)
-          })
-        },
+        * 导出
+        */
+      exportFile () {
+        let data = {
+            goodsName: this.goodsName,
+            isBonus: this.addOrMin,
+            isAccounted: this.isEnd,
+            beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',
+            endDate: this.checkDate? dayjs(this.checkDate[1]).endOf('month').format('YYYY-M-D HH:mm:ss') :'',
+            rewardPointsType: 'A分',
+            Operator: this.operator
+        }
+        this.$api.EXPORT_DETAIL_LIST(data).then(res => {
+            if (res.code === 0) {
+                window.location.href = res.data
+            } else {
+                this.$message.error(res.msg || '导出失败，请联系管理员')
+            }
+            
+        }).catch(err => {
+            console.log('err', err)
+        })
+    },
 
       importFile () {
         const _this = this;
@@ -208,24 +250,73 @@ export default {
                 })
             },
 
-            // 商品上下架
-            changeGoodsStatus(row){
-                console.log(row)
-                let data = {
-                    GoodsCode: String(row.GoodsCode),
-                    Status: row.Status == 0?1:0
-                }
-                this.$api.CHANGE_GOODS_STATUS(data).then((res) => {
-                    console.log(res)
-
-                    if(res.code == 0){
-                        this.getList()
-                    }
-                })
+      // 商品上下架
+      changeGoodsStatus(row){
+            console.log(row)
+            let data = {
+                GoodsCode: String(row.GoodsCode),
+                Status: row.Status == 0?1:0
             }
+            this.$api.CHANGE_GOODS_STATUS(data).then((res) => {
+                console.log(res)
 
-        }
+                if(res.code == 0){
+                    this.getList()
+                }
+            })
+      },
+
+      // 查看库存明细
+      getStockDetail (row) {
+          console.log(row)
+          const data = {
+              goodsId: row.GoodsID
+          }
+          this.stockChangeGoodsId = row.GoodsID
+          this.stockChangeUnit = row.MeasureUnit
+           this.$api.GET_GOODS_STOCK_DETAIL(data).then(res => {
+               console.log(res)
+               this.stockDetailShow = true
+               this.stockList = res.data
+           })
+      },
+
+      //表格出入库筛选
+      filterTag(value, row) {
+        return row.ChangeType === value;
+      },
+
+      // 修改库存
+      showInnerVisible () {
+          this.innerVisible = true
+          this.newStockItem = {
+              GoodsID: this.stockChangeGoodsId,
+              MeasureUnit: this.stockChangeUnit,
+              stockChangeType: 1,
+              stockChangeNum: 0,
+              stockChangeDesc: '',
+              CreatedBy: this.operator
+          }
+      },
+
+      // 提交修改库存
+      submitStockChange () {
+          console.log(this.newStockItem)
+          this.$api.CHANGE_GOODS_STOCK_DETAIL(this.newStockItem).then(res => {
+              console.log(res)
+              if(res.code == 0) {
+                  this.$message.success('修改库存成功')
+                  this.stockDetailShow = false
+                  this.innerVisible = false
+                  this.getList()
+              } else {
+                 this.$message.error(res.msg || '修改失败') 
+              }
+          })
       }
+
+  }
+}
 
 </script>
 
