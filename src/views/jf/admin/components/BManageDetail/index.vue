@@ -26,6 +26,7 @@
 
             <el-button type="primary" size="mini" @click="exportFile" v-loading.fullscreen.lock="fullscreenLoading">导出</el-button>
             <el-button type="primary" plain size="mini" @click="editDetails()">批量编辑</el-button>
+            <el-button type="primary" plain size="mini" @click="addNewRecord()">新增</el-button>
         </el-row>
         <div class="table-wrapper">
             <el-table :data="data" stripe height="400" style="margin-top: 20px" v-loading="loading" size="mini"
@@ -40,6 +41,7 @@
                 <el-table-column prop="BonusPoints" label="加分" width="80"></el-table-column>
                 <el-table-column prop="MinusPoints" label="减分" width="80"></el-table-column>
                 <el-table-column prop="Reason" label="加减分理由" width="240"></el-table-column>
+                <el-table-column prop="Proof" label="加减分依据" width="240"></el-table-column>
                 <el-table-column prop="FunctionalDepartment" label="职能部门/所在部门" width="120"></el-table-column>
                 <el-table-column prop="checkDate" label="考核日期" width="100"></el-table-column>
                 <el-table-column prop="Submit" label="提交部门" width="100"></el-table-column>
@@ -131,7 +133,7 @@
                             <el-option label="加减分依据" value="Proof"></el-option>
                             <el-option label="理由分类" value="ReasonType"></el-option>
                             <el-option label="职能部门/所在部门" value="FunctionalDepartment"></el-option>
-                            <el-option label="考核日期" value="checkDate"></el-option>
+                            <el-option label="考核日期" value="AssessmentDate"></el-option>
                             <el-option label="提交部门" value="Submit"></el-option>
                         </el-select>
                     </el-input>
@@ -143,6 +145,58 @@
             <div slot="footer" class="dialog-footer">
                 <el-button size="mini" @click="dialogFormVisibleTwo = false">取消</el-button>
                 <el-button type="primary" size="mini" @click="editRecords()">确定</el-button>
+            </div>
+        </el-dialog>
+
+        <el-dialog title="新增" :visible.sync="dialogFormVisibleNew">
+            <el-form :model="newItem" label-width="120px" style="height:300px;overflow-y:auto;padding-right:20px">
+                <el-form-item label="工号" size="mini"> 
+                    <el-input v-model="newItem.JobId" autocomplete="off" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="姓名" size="mini">
+                    <el-input v-model="newItem.Name" autocomplete="off" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="一级部门" size="mini">
+                    <el-input v-model="newItem.DepartmentLv1" autocomplete="off" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="二级部门" size="mini">
+                    <el-input v-model="newItem.DepartmentLv2" autocomplete="off" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="三级部门" size="mini">
+                    <el-input v-model="newItem.DepartmentLv3" autocomplete="off" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="职务名称" size="mini">
+                    <el-input v-model="newItem.Post" autocomplete="off" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="加分" size="mini">
+                    <el-input v-model="newItem.BonusPoints" autocomplete="off" clearable oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+                </el-form-item>
+                <el-form-item label="减分" size="mini">
+                    <el-input v-model="newItem.MinusPoints" autocomplete="off" clearable oninput="value=value.replace(/[^\d]/g,'')"></el-input>
+                </el-form-item>
+                <el-form-item label="加减分理由" size="mini">
+                    <el-input v-model="newItem.Reason" autocomplete="off" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="加减分依据" size="mini">
+                    <el-input v-model="newItem.Proof" autocomplete="off" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="理由分类" size="mini">
+                    <el-input v-model="newItem.ReasonType" autocomplete="off" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="职能部门/所在部门" size="mini">
+                    <el-input v-model="newItem.FunctionalDepartment" autocomplete="off" clearable></el-input>
+                </el-form-item>
+                <el-form-item label="考核日期" size="mini">
+                    <!-- <el-input v-model="editItem.checkDate" autocomplete="off" clearable></el-input> -->
+                     <el-date-picker v-model="newItem.AssessmentDate" type="date" placeholder="选择日期"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="提交部门" size="mini">
+                    <el-input v-model="newItem.Submit" autocomplete="off" clearable></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
+                <el-button type="primary" size="mini" @click="submitNewRecord()">确定</el-button>
             </div>
         </el-dialog>
 
@@ -165,6 +219,7 @@ export default {
         return {
             dialogFormVisible:false,
             dialogFormVisibleTwo: false,
+            dialogFormVisibleNew: false,
             editItem: {},
             editArray: [],
             fullscreenLoading:false,
@@ -174,10 +229,10 @@ export default {
             addOrMin: '',
             isEnd: '',
             checkDate: null,
-            editArray: [],
             file: null,
             operator: util.cookies.get('uuid'),
-            selectedArray: []   
+            selectedArray: [],
+            newItem: {} 
         }
     },
     mounted () {
@@ -331,7 +386,33 @@ export default {
             }]
         },
         editRecords(){
-            console.log(this.editArray)
+            if(!this.editArray[0].label){
+                this.$message.error('请填写要修改的内容')
+                return
+            }
+            let idsList = []
+            let data = {}
+            this.selectedArray.forEach((item) => {
+                console.log(item)
+                idsList.push(item.RewardPointsdetailID)
+            })
+            const idsStr = idsList.join(',')
+            this.editArray.forEach((item) => {
+                console.log(item)
+                data[item.label] = item.value
+            })
+            data.ids = idsStr
+            console.log(data)
+            this.$api.EDIT_RECORDS(data).then((res) => {
+                console.log(res)
+                if (res.code === 0) {
+                    this.$message.success('修改成功')
+                    this.dialogFormVisibleTwo = false
+                    this.getList()
+                } else {
+                    this.$message.error(res.msg || '修改失败')
+                }
+            })
         },
         addItem(){
             this.editArray.push({
@@ -377,6 +458,30 @@ export default {
             handleSelectionChange(val){
                 console.log(val);
                 this.selectedArray = val;
+            },
+
+            // 新增B管理积分
+            addNewRecord () {
+                this.newItem = {}
+                this.dialogFormVisibleNew = true
+            },
+
+            submitNewRecord () {
+                this.newItem.CreatedBy = this.operator
+                this.newItem.RewardPointsTypeID = 3
+                this.newItem.AssessmentDate = this.newItem.AssessmentDate? dayjs(this.newItem.AssessmentDate).format('YYYY-MM-DD HH:mm:ss') :''
+                console.log(this.newItem)
+                this.$api.ADD_RECORD(this.newItem).then(res => {
+                    console.log(res)
+                    if (res.code == 0) {
+                        this.dialogFormVisibleNew = false
+                        this.newItem = {}
+                        this.$message.success('新增成功')
+                        this.getList()
+                    } else {
+                       this.$message.error(res.msg || '新增失败') 
+                    }
+                })
             }
         }
       }

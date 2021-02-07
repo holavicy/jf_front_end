@@ -101,6 +101,24 @@ export default ({ service, request, serviceForMock, requestForMock, mock, faker,
       method: 'post',
       data
     })
+  },
+
+  // 修改多条积分记录
+  EDIT_RECORDS(data){
+    return request({
+      url: '/edit_records',
+      method: 'post',
+      data
+    })
+  },
+
+  // 新增单条积分
+  ADD_RECORD(data){
+    return request({
+      url: '/add_record',
+      method: 'post',
+      data
+    })
 
   }
 })
