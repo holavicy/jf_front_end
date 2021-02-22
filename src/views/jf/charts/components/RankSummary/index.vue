@@ -111,6 +111,7 @@
 
           <!-- 个人合计排名 -->
           <el-table :data="tableData" stripe height="400" style="margin-top: 20px" v-loading="loading" size="mini" :default-sort = "{prop: '总累计积分', order: 'descending'}" v-show="type == 8">
+              <el-table-column type="index" width="50"></el-table-column>
               <el-table-column prop="工号" label="工号" width="70"></el-table-column>
               <el-table-column prop="姓名" label="姓名" width="100"></el-table-column>
               <!-- <el-table-column prop="组织" label="一级部门" width="180"></el-table-column>

@@ -203,7 +203,7 @@
                 </el-form-item>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button size="mini" @click="dialogFormVisible = false">取消</el-button>
+                <el-button size="mini" @click="dialogFormVisibleNew = false">取消</el-button>
                 <el-button type="primary" size="mini" @click="submitNewRecord()">确定</el-button>
             </div>
         </el-dialog>
@@ -328,7 +328,7 @@ export default {
         exportFile () {
             let data = {
               name: this.name,
-              jobid: this.staffNo? Number(this.staffNo):'',
+              jobid: this.staffNo? String(this.staffNo):'',
               isBonus: this.addOrMin,
               isAccounted: this.isEnd,
               beginDate: this.checkDate? dayjs(this.checkDate[0]).format('YYYY-M-D HH:mm:ss') :'',

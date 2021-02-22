@@ -47,7 +47,7 @@ const orderStatusOptions = [{
     1: "已下架"
   }
 
-  // const domain = 'http://222.186.81.37:5000'
-  const domain = 'http://127.0.0.1:5000'
+  const domain = 'http://222.186.81.37:5000'
+  // const domain = 'http://127.0.0.1:5000'
 
 export { isEndOptions, orderStatusOptions, orderStatusDic, goodsStatusDic, domain }
